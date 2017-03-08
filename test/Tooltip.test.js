@@ -1153,25 +1153,118 @@ describe("Tooltip", () => {
 	});
 
 	describe("#close", () => {
-		it("stops listening to resize events if this is the last tooltip");
-		it("sets tooltip.visible to false");
-		it("sets display none on the tooltip");
+		beforeEach(() => {
+			fixtures.declarativeCode();
+		});
+
+		afterEach(() => {
+			fixtures.reset();
+		});
+
+		it("stops listening to resize events if this is the last tooltip"); // need to implement this
+
+		it("sets tooltip.visible to false", () => {
+			const testTooltip = Tooltip.init('#tooltip-demo');
+			testTooltip.show();
+			proclaim.isTrue(testTooltip.visible);
+			testTooltip.close();
+			proclaim.isFalse(testTooltip.visible);
+		});
+
+		it("sets display none on the tooltip", () => {
+			const testTooltip = Tooltip.init('#tooltip-demo');
+			testTooltip.show();
+			proclaim.notStrictEqual(testTooltip.tooltipEl.style.display, 'none');
+			testTooltip.close();
+			proclaim.strictEqual(testTooltip.tooltipEl.style.display, 'none');
+		});
 	});
 
 	describe("#closeOnExternalClick", () => {
+		// Leave it off for v1
 	});
 
 	describe("#closeOnKeyUp", () => {
+		beforeEach(() => {
+			fixtures.declarativeCode();
+		});
+
+		afterEach(() => {
+			fixtures.reset();
+		});
+
+		it("only closes of the key was Esc", () => {
+
+			let closeStub = sinon.stub(Tooltip.prototype, 'close');
+
+			const testTooltip = Tooltip.init('#tooltip-demo');
+			testTooltip.show();
+
+			let enterKeypress = document.createEvent('Event');
+			enterKeypress.keyCode = 13;
+
+			testTooltip.closeOnKeyUp(enterKeypress);
+			proclaim.isFalse(closeStub.called);
+
+			let escKeypress = document.createEvent('Event');
+			escKeypress.keyCode = 27;
+			testTooltip.closeOnKeyUp(escKeypress);
+
+			proclaim.isTrue(closeStub.called);
+			closeStub.restore();
+		});
 	});
 
 	describe('throwError', () => {
+		it("thows an error", () => {
+			proclaim.throws(() => { Tooltip.throwError('some message') });
+		});
 	});
 	describe('width', () => {
+		beforeEach(() => {
+			fixtures.declarativeCode();
+		});
+
+		afterEach(() => {
+			fixtures.reset();
+		});
+
+		it("returns a number", () => {
+			const testTooltip = Tooltip.init('#tooltip-demo');
+			testTooltip.show();
+			proclaim.isNumber(testTooltip.width());
+		});
 	});
 	describe('height', () => {
+		beforeEach(() => {
+			fixtures.declarativeCode();
+		});
+
+		afterEach(() => {
+			fixtures.reset();
+		});
+
+		it("returns a number", () => {
+			const testTooltip = Tooltip.init('#tooltip-demo');
+			testTooltip.show();
+			proclaim.isNumber(testTooltip.height());
+		});
 	});
 	describe("#destroy", () => {
-		it("calls close if tooltip.visible is true");
-		it("deletes the tooltip from the tooltip map");
+		beforeEach(() => {
+			fixtures.declarativeCode();
+		});
+
+		afterEach(() => {
+			fixtures.reset();
+		});
+		it("calls close if tooltip.visible is true", () => {
+			const testTooltip = Tooltip.init('#tooltip-demo');
+			testTooltip.visible = true;
+			let closeStub = sinon.stub(Tooltip.prototype, 'close');
+			testTooltip.destroy();
+			proclaim.isTrue(closeStub.called);
+		});
+		it("deletes the tooltip from the tooltip map"); // not yet implemented
 	});
 });

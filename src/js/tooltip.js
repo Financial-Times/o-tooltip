@@ -134,16 +134,14 @@ class Tooltip {
 		this.delegates.doc.destroy();
 		this.delegates.tooltip.destroy();
 
-		//Viewport.stopListeningTo('resize');
+		//Viewport.stopListeningTo('resize'); <- this should only stop listening if it's the only tooltip on the page
 		this.visible = false;
 		this.tooltipEl.style.display = 'none';
 		return false;
 	};
 
 	closeOnExternalClick() {
-		if (false /*!this.tooltip.contains(ev.target)*/){
-			this.close();
-		}
+		// Leave this out for v1. Can add in if people want it.
 	};
 
 	closeOnKeyUp(ev) {
