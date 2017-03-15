@@ -9,9 +9,6 @@ o-tooltip is a component usually used for annotating or highlighting bits of use
 - pa11y demo
 - JSDOC
 
-
-_A table of contents to help people find things_
-
 - [Usage](#usage)
 	- [Markup](#markup)
 	- [JavaScript](#javascript)

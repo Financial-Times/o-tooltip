@@ -6,6 +6,13 @@ import createMockRaf from 'mock-raf';
 const Tooltip = require('./../main');
 
 describe("Tooltip", () => {
+
+	afterEach(() => {
+		Tooltip._tooltips.forEach((tooltip) => {
+			tooltip.destroy();
+		});
+	});
+
 	describe("constructor", () => {
 
 		let getOptionsStub;
@@ -209,6 +216,7 @@ describe("Tooltip", () => {
 		let resizeListenerStub;
 		let targetStub;
 		let closeStub;
+		let closeOnExternalClickSpy;
 
 		beforeEach(() => {
 			getOptionsStub = sinon.stub(Tooltip.prototype, 'getOptions').returns({});
@@ -216,6 +224,7 @@ describe("Tooltip", () => {
 			drawTooltipStub = sinon.stub(Tooltip.prototype, 'drawTooltip');
 			resizeListenerStub = sinon.stub(Tooltip.prototype, 'resizeListener');
 			closeStub = sinon.stub(Tooltip.prototype, 'close');
+			closeOnExternalClickSpy = sinon.stub(Tooltip.prototype, 'closeOnExternalClick').returns(true);
 
 			targetStub = sinon.stub(Tooltip, "Target");
 
@@ -228,14 +237,13 @@ describe("Tooltip", () => {
 			drawTooltipStub.restore();
 			resizeListenerStub.restore();
 			closeStub.restore();
-
+			closeOnExternalClickSpy.restore();
 			targetStub.restore();
 
 			fixtures.reset();
 		});
 
 		it('sets up a touchend handler for the body', () => {
-			const closeOnExternalClickSpy = sinon.stub(Tooltip.prototype, 'closeOnExternalClick');
 			let testTooltip = new Tooltip('#tooltip-demo');
 
 
@@ -248,11 +256,9 @@ describe("Tooltip", () => {
 			document.body.dispatchEvent(e);
 
 			proclaim.isTrue(closeOnExternalClickSpy.called);
-			closeOnExternalClickSpy.restore();
 		});
 
 		it('sets up a click handler for the body', () => {
-			const closeOnExternalClickSpy = sinon.stub(Tooltip.prototype, 'closeOnExternalClick');
 			let testTooltip = new Tooltip('#tooltip-demo');
 
 			document.body.click();
@@ -264,7 +270,6 @@ describe("Tooltip", () => {
 			document.body.click();
 
 			proclaim.isTrue(closeOnExternalClickSpy.called);
-			closeOnExternalClickSpy.restore();
 		});
 
 		it('sets up a close handler for touch on the tooltip-close button', () => {
@@ -285,7 +290,7 @@ describe("Tooltip", () => {
 
 			tooltipCloseEl.dispatchEvent(e);
 			/* this fails, idk why */
-			//proclaim.isTrue(closeStub.called);
+			proclaim.isTrue(closeStub.called);
 		});
 
 		it('sets up a close handler for a click on the tooltip-close button', () => {
@@ -1265,6 +1270,11 @@ describe("Tooltip", () => {
 			testTooltip.destroy();
 			proclaim.isTrue(closeStub.called);
 		});
-		it("deletes the tooltip from the tooltip map"); // not yet implemented
+		it("deletes the tooltip from the tooltip map", () => {
+			const testTooltip = Tooltip.init('#tooltip-demo');
+			const tooltipCount = Tooltip._tooltips.size;
+			testTooltip.destroy();
+			proclaim.strictEqual(tooltipCount -1, Tooltip._tooltips.size);
+		});
 	});
 });

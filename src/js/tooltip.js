@@ -28,6 +28,7 @@ class Tooltip {
 		};
 
 		Viewport.listenTo('resize');
+
 		// Do you render as soon as possible?
 		if (this.opts.renderOnConstruction) {
 			this.render();
@@ -123,11 +124,10 @@ class Tooltip {
 			this.close();
 		}
 
-		//if (this.opts.trigger) {
-		//	this.opts.trigger.removeEventListener('click', triggerClickHandler);
-		//}
-
-		delete Tooltip._tooltips[this.tooltipEl];
+		Tooltip._tooltips.delete(this.tooltipEl);
+		if (Tooltip._tooltips.size === 1) {
+			delete Tooltip._tooltips;
+		}
 	};
 
 	close() {
