@@ -6,7 +6,6 @@ o-tooltip is a component usually used for annotating or highlighting bits of use
 # TODO // todos here until v1 ships
 - Finish README
 - Tests
-- pa11y demo
 - JSDOC
 
 - [Usage](#usage)
