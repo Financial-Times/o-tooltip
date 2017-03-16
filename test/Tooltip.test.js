@@ -1224,6 +1224,7 @@ describe("Tooltip", () => {
 			proclaim.throws(() => { Tooltip.throwError('some message') });
 		});
 	});
+
 	describe('width', () => {
 		beforeEach(() => {
 			fixtures.declarativeCode();
@@ -1239,6 +1240,7 @@ describe("Tooltip", () => {
 			proclaim.isNumber(testTooltip.width());
 		});
 	});
+
 	describe('height', () => {
 		beforeEach(() => {
 			fixtures.declarativeCode();
@@ -1254,6 +1256,7 @@ describe("Tooltip", () => {
 			proclaim.isNumber(testTooltip.height());
 		});
 	});
+
 	describe("#destroy", () => {
 		beforeEach(() => {
 			fixtures.declarativeCode();
