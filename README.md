@@ -4,11 +4,8 @@ o-tooltip [![Circle CI](https://circleci.com/gh/Financial-Times/o-tooltip/tree/m
 o-tooltip is a component usually used for annotating or highlighting bits of user interface.
 
 # TODO // todos here until v1 ships
-- Finish README
-- Tests
 - JSDOC
 - Animation
-- Better demos
 - zindex config
 
 - [Usage](#usage)
@@ -40,7 +37,6 @@ This HTML demonstrates the declarative way to instantiate o-tooltip. If you are 
 	</div>
 </div>
 
-
 ```
 
 Attributes can be set declaratively, or passed in on instantiation in an options object. A full list of data attributes:
@@ -53,7 +49,7 @@ Attributes can be set declaratively, or passed in on instantiation in an options
 ### JavaScript
 
 No code will run automatically unless you are using the Build Service.
-You must either construct an `o-tooltip` object or fire the `o.DOMContentLoaded` event, which oComponent listens for.
+You must either construct an `o-tooltip` object or fire an `o.DOMContentLoaded` event, which oTooltip listens for.
 
 #### Constructing an o-tooltip
 
@@ -74,12 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
 ### Sass
 
 As with all Origami components, o-tooltip has a [silent mode](http://origami.ft.com/docs/syntax/scss/#silent-styles). To use its compiled CSS (rather than using its mixins with your own Sass) set `$o-tooltip-is-silent : false;` in your Sass after you've imported the o-tooltip Sass.
-
-
-## Migration guide
-
-### Migrating from o-overlay to o-tooltip
-
 
 ---
 
