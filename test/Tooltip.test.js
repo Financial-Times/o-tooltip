@@ -25,7 +25,7 @@ describe("Tooltip", () => {
 		beforeEach(() => {
 			getOptionsReturnStub = {};
 			getOptionsStub = sinon.stub(Tooltip, 'getOptions').returns(getOptionsReturnStub);
-			checkOptionsStub = sinon.stub(Tooltip.prototype, 'checkOptions').returnsArg(0);
+			checkOptionsStub = sinon.stub(Tooltip, 'checkOptions').returnsArg(0);
 			renderStub = sinon.stub(Tooltip.prototype, 'render');
 			showStub = sinon.stub(Tooltip.prototype, 'show');
 			targetStub = sinon.stub(Tooltip, "Target");
@@ -142,30 +142,30 @@ describe("Tooltip", () => {
 		});
 
 		it("calls throwError if no target is provided", () => {
-			Tooltip.prototype.checkOptions({});
+			Tooltip.checkOptions({});
 			proclaim.isTrue(throwStub.called);
 		});
 
 		it("calls throwError if position is not one of `above`, `below`, `left`, `right` or falsey", () => {
-			Tooltip.prototype.checkOptions({"target": "#el", "tooltipPosition": "side"});
+			Tooltip.checkOptions({"target": "#el", "tooltipPosition": "side"});
 			proclaim.isTrue(throwStub.called);
 		});
 
 		it("sets opts.tooltipPosition to below if no position was specified", ()=>{
-			let opts = Tooltip.prototype.checkOptions({"target": "#el"});
+			let opts = Tooltip.checkOptions({"target": "#el"});
 			proclaim.isFalse(throwStub.called);
 			proclaim.strictEqual(opts.tooltipPosition, 'below');
 		});
 
 		it("does not error if tooltipPosition is `top`, `bottom`, `left`, `right` or falsey", () => {
 			["above", "left", "right", "below", undefined].forEach((value) => {
-				Tooltip.prototype.checkOptions({"target": "#el", "tooltipPosition": value});
+				Tooltip.checkOptions({"target": "#el", "tooltipPosition": value});
 				proclaim.isFalse(throwStub.called);
 			});
 		});
 
 		it("returns the opts object", () => {
-			let opts = Tooltip.prototype.checkOptions({"target": "#el"});
+			let opts = Tooltip.checkOptions({"target": "#el"});
 			proclaim.isObject(opts);
 		});
 	});
@@ -227,7 +227,7 @@ describe("Tooltip", () => {
 
 		beforeEach(() => {
 			getOptionsStub = sinon.stub(Tooltip, 'getOptions').returns({});
-			checkOptionsStub = sinon.stub(Tooltip.prototype, 'checkOptions').returnsArg(0);
+			checkOptionsStub = sinon.stub(Tooltip, 'checkOptions').returnsArg(0);
 			drawTooltipStub = sinon.stub(Tooltip.prototype, 'drawTooltip');
 			resizeListenerStub = sinon.stub(Tooltip.prototype, 'resizeListener');
 			closeStub = sinon.stub(Tooltip.prototype, 'close');
@@ -375,7 +375,7 @@ describe("Tooltip", () => {
 
 		beforeEach(() => {
 			getStub = sinon.stub(Tooltip, 'getOptions');
-			checkStub = sinon.stub(Tooltip.prototype, 'checkOptions').returns({'position': 'top'});
+			checkStub = sinon.stub(Tooltip, 'checkOptions').returns({'position': 'top'});
 			targetStub = sinon.stub(Tooltip, 'Target');
 			drawStub = sinon.stub(Tooltip.prototype, '_drawTooltip');
 			setArrowStub = sinon.stub(Tooltip.prototype, '_setArrow');
@@ -786,7 +786,7 @@ describe("Tooltip", () => {
 
 		beforeEach(() => {
 			getStub = sinon.stub(Tooltip, 'getOptions');
-			checkStub = sinon.stub(Tooltip.prototype, 'checkOptions').returns({target: 'testValue'});
+			checkStub = sinon.stub(Tooltip, 'checkOptions').returns({target: 'testValue'});
 
 			getLeftStub = sinon.stub(Tooltip.prototype, '_getLeftFor').returns(100);
 			getTopStub = sinon.stub(Tooltip.prototype, '_getTopFor').returns(100);
@@ -912,7 +912,7 @@ describe("Tooltip", () => {
 		beforeEach(() => {
 
 			getStub = sinon.stub(Tooltip, 'getOptions');
-			checkStub = sinon.stub(Tooltip.prototype, 'checkOptions').returns({'position': 'top'});
+			checkStub = sinon.stub(Tooltip, 'checkOptions').returns({'position': 'top'});
 			targetStub = sinon.stub(Tooltip, 'Target').returns({left: 'someLeftValue', right: 7, centrePoint: {x: 5}});
 			let stubEl = document.createElement('div');
 			widthStub = sinon.stub(Tooltip.prototype, 'width').returns(100);
@@ -955,7 +955,7 @@ describe("Tooltip", () => {
 		beforeEach(() => {
 
 			getStub = sinon.stub(Tooltip, 'getOptions');
-			checkStub = sinon.stub(Tooltip.prototype, 'checkOptions').returns({'position': 'top'});
+			checkStub = sinon.stub(Tooltip, 'checkOptions').returns({'position': 'top'});
 			targetStub = sinon.stub(Tooltip, 'Target').returns({top: 'someTopValue', bottom: 9, centrePoint: {y: 6}});
 			let stubEl = document.createElement('div');
 			widthStub = sinon.stub(Tooltip.prototype, 'width').returns(100);
@@ -994,7 +994,7 @@ describe("Tooltip", () => {
 
 		beforeEach(() => {
 			getStub = sinon.stub(Tooltip, 'getOptions');
-			checkStub = sinon.stub(Tooltip.prototype, 'checkOptions').returns({'position': 'above'});
+			checkStub = sinon.stub(Tooltip, 'checkOptions').returns({'position': 'above'});
 			targetStub = sinon.stub(Tooltip, 'Target');
 			let stubEl = document.createElement('div');
 			testTooltip = new Tooltip(stubEl);

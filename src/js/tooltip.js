@@ -21,7 +21,7 @@ class Tooltip {
 		Tooltip._tooltips.set(this.tooltipEl, this);
 
 		this.opts = opts || Tooltip.getOptions(tooltipEl);
-		this.opts = this.checkOptions(this.opts);
+		this.opts = Tooltip.checkOptions(this.opts);
 
 		this.target = new Tooltip.Target(document.getElementById(this.opts.target));
 		this.tooltipPosition = this.opts.position;
@@ -70,9 +70,8 @@ class Tooltip {
 	 * @throws o-tooltip error: opts.target us not set
 	 * @throws o-tooltip error: opts.tooltipPosition is not one of "above", "below"
 	 * "left" or "right"
-	 * @TODO: make this static
 	*/
-		checkOptions(opts) {
+		static checkOptions(opts) {
 
 		if(!opts.target) {
 			Tooltip.throwError("tooltip.target is not set. An target for the tooltip to point at must be provided");
