@@ -77,6 +77,13 @@ describe("Tooltip", () => {
 			new Tooltip(stubEl, {"renderOnConstruction": true});
 			proclaim.isTrue(renderStub.called);
 		});
+
+		it("Adds the tooltip to the global tooltip map", () => {
+			proclaim.strictEqual(Tooltip._tooltips.size, 0);
+
+			let tooltip = new Tooltip("stubEL");
+			proclaim.strictEqual(Tooltip._tooltips.size, 1);
+		});
 	});
 
 	describe("getOptions", () => {
