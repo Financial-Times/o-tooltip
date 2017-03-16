@@ -20,7 +20,7 @@ class Tooltip {
 		this.tooltipEl = tooltipEl;
 		Tooltip._tooltips.set(this.tooltipEl, this);
 
-		this.opts = opts || this.getOptions(tooltipEl);
+		this.opts = opts || Tooltip.getOptions(tooltipEl);
 		this.opts = this.checkOptions(this.opts);
 
 		this.target = new Tooltip.Target(document.getElementById(this.opts.target));
@@ -47,9 +47,8 @@ class Tooltip {
 	 * declaratively, this method is used to extract the data attributes from
 	 * the DOM.
 	 * @param {HTMLElement} tooltipEl - The tooltip element in the DOM (Required)
-	 * @TODO: make this static
 	*/
-	getOptions(tooltipEl) {
+	static getOptions(tooltipEl) {
 		let opts = {};
 		if (tooltipEl.hasAttribute('data-o-tooltip-position')) {
 			opts.position = tooltipEl.getAttribute('data-o-tooltip-position');
