@@ -84,7 +84,6 @@ class Tooltip {
 		const button = document.createElement('a');
 		button.className = 'o-tooltip-close';
 		button.setAttribute('role', 'button');
-		//button.setAttribute('tabindex', '0');
 		button.setAttribute('href', '#void');
 		button.setAttribute('aria-label', 'Close');
 		button.setAttribute('title', 'Close');
