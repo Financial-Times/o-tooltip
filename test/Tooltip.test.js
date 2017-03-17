@@ -94,6 +94,13 @@ describe("Tooltip", () => {
 			proclaim.isUndefined(options.arrowPosition);
 		});
 
+		it("doesn't extract zIndex if it's not set", () => {
+			const el = document.createElement('div');
+			const options = Tooltip.getOptions(el);
+
+			proclaim.isUndefined(options.zIndex);
+		});
+
 		it("doesn't extract target if none is set", () => {
 			const el = document.createElement('div');
 			const options = Tooltip.getOptions(el);
@@ -126,6 +133,13 @@ describe("Tooltip", () => {
 
 			const options = Tooltip.getOptions(el);
 			proclaim.isTrue(options.renderOnConstruction);
+		});
+		it("extracts renderOnConstruction if it's set on the el passed in", () => {
+			const el = document.createElement('div');
+			el.setAttribute('data-o-tooltip-z-index', "20");
+
+			const options = Tooltip.getOptions(el);
+			proclaim.strictEqual(options.zIndex, "20");
 		});
 	});
 
@@ -199,7 +213,7 @@ describe("Tooltip", () => {
 		it("sets the z-index if a z-index was set in the opts", () => {
 			const tooltip = Tooltip.init('#tooltip-demo');
 			const fakeZ = "4";
-			tooltip.opts.zindex = fakeZ;
+			tooltip.opts.zIndex = fakeZ;
 
 			tooltip.render();
 			proclaim.strictEqual(tooltipEl.style.zIndex, fakeZ);

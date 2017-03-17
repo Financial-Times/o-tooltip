@@ -47,6 +47,7 @@ class Tooltip {
 	 * declaratively, this method is used to extract the data attributes from
 	 * the DOM.
 	 * @param {HTMLElement} tooltipEl - The tooltip element in the DOM (Required)
+	 * @todo - refactor this out to smartly iterate over data attributes
 	*/
 	static getOptions(tooltipEl) {
 		let opts = {};
@@ -59,6 +60,10 @@ class Tooltip {
 
 		if (tooltipEl.hasAttribute('data-o-tooltip-render-on-construction')){
 			opts.renderOnConstruction = (tooltipEl.getAttribute('data-o-tooltip-render-on-construction') === 'true');
+		}
+
+		if (tooltipEl.hasAttribute('data-o-tooltip-z-index')){
+			opts.zIndex = tooltipEl.getAttribute('data-o-tooltip-z-index');
 		}
 		return opts;
 	};
@@ -97,8 +102,8 @@ class Tooltip {
 		this.tooltipEl.setAttribute('role', 'tooltip');
 		this.tooltipEl.classList.add('o-tooltip');
 
-		if (this.opts.zindex) {
-			this.tooltipEl.style.zIndex = this.opts.zindex;
+		if (this.opts.zIndex) {
+			this.tooltipEl.style.zIndex = this.opts.zIndex;
 		}
 
 		// Build and append the close button
