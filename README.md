@@ -7,7 +7,6 @@ o-tooltip is a component usually used for annotating or highlighting bits of use
 	- [Markup](#markup)
 	- [JavaScript](#javascript)
 	- [Sass](#sass)
-- [Migration guide](#migration-guide)
 - [Contact](#contact)
 - [Licence](#licence)
 
