@@ -1,3 +1,5 @@
+@import "o-normalise/main";
+
 @import "src/scss/tooltip";
 
 
@@ -16,10 +18,10 @@
 	.o-tooltip--arrow-right {
 		@include oTooltipRightArrow;
 	}
-	.o-tooltip--arrow-top {
+	.o-tooltip--arrow-above {
 		@include oTooltipUpArrow;
 	}
-	.o-tooltip--arrow-bottom {
+	.o-tooltip--arrow-below {
 		@include oTooltipDownArrow;
 	}
 

@@ -1,0 +1,17 @@
+$o-tooltip-is-silent: false;
+@import '../../main';
+
+body {
+	font-family: MetricWeb;
+}
+
+.demo-tooltip-container {
+	height: 100px;
+	width: 200px;
+	display: inline-block;
+	margin: 30px;
+}
+
+[data-o-component="o-tooltip"] {
+	display: none;
+}
