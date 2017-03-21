@@ -1,3 +1,5 @@
+import Delegate from 'ftdomdelegate';
+
 class Target {
 
 	constructor(targetEl) {

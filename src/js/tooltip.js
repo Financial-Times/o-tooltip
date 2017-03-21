@@ -12,7 +12,6 @@ class Tooltip {
 	 * @param {Object} opts - An options object for configuring the tooltip (Optional)
 	*/
 	constructor (tooltipEl, opts) {
-
 		if (!Tooltip._tooltips) {
 			Tooltip._tooltips = new Map();
 		}
@@ -22,16 +21,25 @@ class Tooltip {
 
 		this.opts = opts || Tooltip.getOptions(tooltipEl);
 		this.opts = Tooltip.checkOptions(this.opts);
-
 		this.target = new Tooltip.Target(document.getElementById(this.opts.target));
 		this.tooltipPosition = this.opts.position;
 		this.tooltipAlignment = null;
 		this.visible = false;
 
 		this.delegates = {
+			target: new Delegate(this.target.targetEl),
 			doc: new Delegate(),
 			tooltip: new Delegate(),
 		};
+
+		if (this.opts.showOnClick) {
+			this.delegates.target.on('click', this.show.bind(this));
+		}
+
+		if (this.opts.showOnHover) {
+			this.delegates.target.on('mouseover', this.show.bind(this));
+			this.delegates.target.on('mouseout', this.close.bind(this));
+		}
 
 		Viewport.listenTo('resize');
 
@@ -63,9 +71,18 @@ class Tooltip {
 			opts.showOnConstruction = (tooltipEl.getAttribute('data-o-tooltip-show-on-construction') === 'true');
 		}
 
+		if (tooltipEl.hasAttribute('data-o-tooltip-show-on-hover')){
+			opts.showOnHover = (tooltipEl.getAttribute('data-o-tooltip-show-on-hover') === 'true');
+		}
+
+		if (tooltipEl.hasAttribute('data-o-tooltip-show-on-click')){
+			opts.showOnClick = (tooltipEl.getAttribute('data-o-tooltip-show-on-click') === 'true');
+		}
+
 		if (tooltipEl.hasAttribute('data-o-tooltip-z-index')){
 			opts.zIndex = tooltipEl.getAttribute('data-o-tooltip-z-index');
 		}
+
 		return opts;
 	};
 
@@ -168,6 +185,11 @@ class Tooltip {
 
 		this.visible = false;
 		this.tooltipEl.style.display = 'none';
+
+		if (this.opts.showOnClick) {
+			this.delegates.target.on('click', null, this.show.bind(this)); // Re-attach click handler
+		}
+
 		return false;
 	};
 
