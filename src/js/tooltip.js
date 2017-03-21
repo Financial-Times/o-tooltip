@@ -27,6 +27,27 @@ class Tooltip {
 		this.tooltipPosition = this.opts.position;
 		this.tooltipAlignment = null;
 		this.visible = false;
+		this.animationTimeout = false;
+		this.animationSpeed = this.opts.animationSpeed || 500;
+		this.animationDistance = this.opts.animationDistance || '10px';
+
+		switch(this.tooltipPosition) {
+			case 'below':
+			default:
+				this.animationDirection = 'Top';
+			break;
+			case 'above':
+				this.animationDirection = 'Top';
+				this.animationDistance = -this.animationDistance;
+			break;
+			case 'left':
+				this.animationDirection = 'Left';
+				this.animationDistance = -this.animationDistance;
+			break;
+			case 'right':
+				this.animationDirection = 'Left';
+			break;
+		}
 
 		this.delegates = {
 			doc: new Delegate(),
@@ -55,6 +76,7 @@ class Tooltip {
 		if (tooltipEl.hasAttribute('data-o-tooltip-position')) {
 			opts.position = tooltipEl.getAttribute('data-o-tooltip-position');
 		}
+
 		if (tooltipEl.hasAttribute('data-o-tooltip-target')) {
 			opts.target = tooltipEl.getAttribute('data-o-tooltip-target');
 		}
@@ -66,6 +88,15 @@ class Tooltip {
 		if (tooltipEl.hasAttribute('data-o-tooltip-z-index')){
 			opts.zIndex = tooltipEl.getAttribute('data-o-tooltip-z-index');
 		}
+
+		if (tooltipEl.hasAttribute('data-o-tooltip-animation-speed')) {
+			opts.animationSpeed = tooltipEl.getAttribute('data-o-tooltip-animation-speed');
+		}
+
+		if (tooltipEl.hasAttribute('data-o-tooltip-animation-distance')) {
+			opts.animationDistance = tooltipEl.getAttribute('data-o-tooltip-animation-distance');
+		}
+
 		return opts;
 	};
 
@@ -116,6 +147,11 @@ class Tooltip {
 		button.setAttribute('title', 'Close');
 		this.tooltipEl.appendChild(button);
 
+
+		this.tooltipEl.style.transition = `opacity ${this.animationSpeed / 1000}s cubic-bezier(0.165, 0.84, 0.44, 1), ` +
+																			`margin ${this.animationSpeed / 1000}s cubic-bezier(1, 0, 0.5, 1.275)`;
+		this.tooltipEl.style.opacity = 0;
+		this.tooltipEl.style[`margin${this.animationDirection}`] = this.animationDistance;
 	};
 
 	/**
@@ -142,6 +178,11 @@ class Tooltip {
 
 		this.drawTooltip();
 		this.visible = true;
+
+		clearTimeout(this.animationTimeout);
+		this.tooltipEl.style.display = 'block';
+		this.tooltipEl.style.opacity = 1;
+		this.tooltipEl.style[`margin${this.animationDirection}`] = 0;
 	};
 
 	/**
@@ -167,7 +208,19 @@ class Tooltip {
 		this.delegates.tooltip.destroy();
 
 		this.visible = false;
-		this.tooltipEl.style.display = 'none';
+		this.tooltipEl.style.opacity = 0;
+		this.tooltipEl.style[`margin${this.animationDirection}`] = this.animationDistance;
+
+		clearTimeout(this.animationTimeout);
+		this.animationTimeout = setTimeout(() => {
+			this.tooltipEl.style.display = 'none';
+		}, this.animationSpeed);
+
+
+		if (this.opts.showOnClick) {
+			this.delegates.target.on('click', null, this.show.bind(this)); // Re-attach click handler
+		}
+
 		return false;
 	};
 

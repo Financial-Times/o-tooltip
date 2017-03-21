@@ -38,6 +38,8 @@ Attributes can be set declaratively, or passed in on instantiation in an options
 - `data-o-tooltip-position`: Optional. The preferred position of the tooltip relative to the target. Can be one of `above`, `below`, `left`, `right`. If there isn't room to render the tooltip where the option passed in would render it, this value is flipped (above becomes below, left becomes right). Defaults to below.
 - `data-o-tooltip-show-on-construction`: Optional. Boolean value. Set to true if you want the tooltip to be rendered immediately after it is constructed. Defaults to false.
 - `data-o-tooltip-z-index`: Optional. The z-index for the tooltip.
+- `data-o-tooltip-animation-speed`: Optional. Integer value. Speed in milliseconds for the animation. Defaults to 500.
+- `data-o-tooltip-animation-distance`: Optional. String with `px` suffix. Distance away from target to start and end animation. Defaults to '10px'.
 
 
 ### JavaScript
