@@ -1162,12 +1162,15 @@ describe("Tooltip", () => {
 			proclaim.isFalse(testTooltip.visible);
 		});
 
-		it("sets display none on the tooltip", () => {
+		it("sets display none on the tooltip", done => {
 			const testTooltip = Tooltip.init('#tooltip-demo');
 			testTooltip.show();
 			proclaim.notStrictEqual(testTooltip.tooltipEl.style.display, 'none');
 			testTooltip.close();
-			proclaim.strictEqual(testTooltip.tooltipEl.style.display, 'none');
+			setTimeout(() => {
+				proclaim.strictEqual(testTooltip.tooltipEl.style.display, 'none');
+				done();
+			}, 500);
 		});
 	});
 
