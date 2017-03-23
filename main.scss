@@ -1,4 +1,5 @@
 @import "o-normalise/main";
+@import "o-visual-effects/main";
 @import "src/scss/variables";
 @import "src/scss/tooltip";
 
@@ -6,6 +7,8 @@
 @if ($o-tooltip-is-silent == false) {
 	 .o-tooltip {
 		@include oTooltip;
+		transition: opacity $o-tooltip-animation-duration $o-visual-effects-transition-fade,
+								margin $o-tooltip-animation-duration $o-visual-effects-transition-slide;
 	}
 
 	.o-tooltip-content {

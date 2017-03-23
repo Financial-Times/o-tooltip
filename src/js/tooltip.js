@@ -28,7 +28,7 @@ class Tooltip {
 		this.tooltipAlignment = null;
 		this.visible = false;
 		this.animationTimeout = false;
-		this.animationSpeed = this.opts.animationSpeed || 500;
+		this.animationSpeed = 500; // Needs to be the same as $o-tooltip-animation-duration!
 		this.animationDistance = this.opts.animationDistance || '10px';
 
 		switch(this.tooltipPosition) {
@@ -147,9 +147,6 @@ class Tooltip {
 		button.setAttribute('title', 'Close');
 		this.tooltipEl.appendChild(button);
 
-
-		this.tooltipEl.style.transition = `opacity ${this.animationSpeed / 1000}s cubic-bezier(0.165, 0.84, 0.44, 1), ` +
-																			`margin ${this.animationSpeed / 1000}s cubic-bezier(1, 0, 0.5, 1.275)`;
 		this.tooltipEl.style.opacity = 0;
 		this.tooltipEl.style[`margin${this.animationDirection}`] = this.animationDistance;
 	};
@@ -163,6 +160,7 @@ class Tooltip {
 		// Delegate pattern
 		this.delegates.doc.root(document.body);
 		this.delegates.tooltip.root(this.tooltipEl);
+		this.tooltipEl.dispatchEvent(new CustomEvent('o.tooltipShown'));
 
 		// Set up all the ways to close the tooltip
 		this.closeHandler = this.close.bind(this);
@@ -204,6 +202,7 @@ class Tooltip {
 	 * Close the tooltip. (Visually hide it and remove event listeners)
 	*/
 	close() {
+		this.tooltipEl.dispatchEvent(new CustomEvent('o.tooltipClosed'));
 		this.delegates.doc.destroy();
 		this.delegates.tooltip.destroy();
 
