@@ -29,7 +29,8 @@ class Tooltip {
 		this.visible = false;
 		this.animationTimeout = false;
 		this.animationSpeed = 500; // Needs to be the same as $o-tooltip-animation-duration!
-		this.animationDistance = this.opts.animationDistance || '10px';
+		this.animationDistance = this.opts.animationDistance ?
+			(this.opts.animationDistance.replace('px', '') + 'px') : '10px';
 
 		switch(this.tooltipPosition) {
 			case 'below':
@@ -38,11 +39,11 @@ class Tooltip {
 			break;
 			case 'above':
 				this.animationDirection = 'Top';
-				this.animationDistance = -this.animationDistance;
+				this.animationDistance = '-' + this.animationDistance;
 			break;
 			case 'left':
 				this.animationDirection = 'Left';
-				this.animationDistance = -this.animationDistance;
+				this.animationDistance = '-' + this.animationDistance;
 			break;
 			case 'right':
 				this.animationDirection = 'Left';
