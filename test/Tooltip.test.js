@@ -224,13 +224,6 @@ describe("Tooltip", () => {
 			proclaim.isTrue(buttonEl.hasAttribute('title'));
 			proclaim.isTrue(buttonEl.hasAttribute('role'));
 		});
-
-		it('sets the tooltip element margin with default options', () => {
-			const tooltip = Tooltip.init('#tooltip-demo');
-
-			tooltip.render();
-			proclaim.strictEqual(tooltipEl.style.marginTop, '10px');
-		});
 	});
 
 	describe("show", () => {
@@ -1179,13 +1172,19 @@ describe("Tooltip", () => {
 
 		it("sets display none on the tooltip", done => {
 			const testTooltip = Tooltip.init('#tooltip-demo');
+			testTooltip.tooltipEl.style.transition = 'all .1s linear'; // Needed to fire transitionend
 			testTooltip.show();
 			proclaim.notStrictEqual(testTooltip.tooltipEl.style.display, 'none');
+
+			testTooltip.tooltipEl.addEventListener('transitionend', () => {
+				setImmediate(() => { // This is a bit race-y for some reason.
+					proclaim.strictEqual(testTooltip.tooltipEl.style.display, 'none');
+					done();
+				});
+
+			});
+
 			testTooltip.close();
-			setTimeout(() => {
-				proclaim.strictEqual(testTooltip.tooltipEl.style.display, 'none');
-				done();
-			}, 500);
 		});
 
 		it('emits o.tooltipClosed event', function(done) {
