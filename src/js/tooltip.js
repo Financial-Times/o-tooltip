@@ -28,7 +28,7 @@ class Tooltip {
 		this.visible = false;
 
 		this.delegates = {
-			target: new Delegate(this.target.targetEl),
+			target: new Delegate(document.getElementById(this.opts.target)),
 			doc: new Delegate(),
 			tooltip: new Delegate(),
 		};

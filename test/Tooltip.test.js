@@ -92,24 +92,28 @@ describe("Tooltip", () => {
 			proclaim.strictEqual(Tooltip._tooltips.size, 1);
 		});
 
-		// DISABLED because I have no idea why these are failing. :sob:
-		xdescribe('adding target event listeners', () => {
+		describe('adding target event listeners', () => {
 			beforeEach(fixtures.declarativeCode);
 			afterEach(fixtures.reset);
 
 			it('adds event listeners when opts.showOnClick is set to true', () => {
-				const testTooltip = new Tooltip("tooltip-demo-3");
+				getOptionsStub.restore(); // !! IMPORTANT !!
+				const testTooltip = new Tooltip(document.getElementById('tooltip-demo-3'));
+
 				document.getElementById('demo-tooltip-target-3').click();
-				console.log(showStub);
-				proclaim.isTrue(showStub.called); // Y U NO PASSS?!?!~?!
+
+				proclaim.isTrue(showStub.called);
 			});
 
 			it('adds event listeners when opts.showOnHover is set to true', () => {
-				const testTooltip = new Tooltip("tooltip-demo-4");
+				getOptionsStub.restore(); // !! IMPORTANT !!
+				const testTooltip = new Tooltip(document.getElementById('tooltip-demo-4'));
+
 				document.getElementById('demo-tooltip-target-4').dispatchEvent(new Event('mouseover'));
 				document.getElementById('demo-tooltip-target-4').dispatchEvent(new Event('mouseout'));
-				proclaim.isTrue(showStub.called); // GRRRRRR
-				proclaim.isTrue(closeStub.called); // GRRRRRR
+
+				proclaim.isTrue(showStub.called);
+				proclaim.isTrue(closeStub.called);
 			});
 		});
 	});

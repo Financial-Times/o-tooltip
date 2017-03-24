@@ -40,9 +40,9 @@ function declarativeCode () {
 				Tooltip content
 		</div>
 
-		<div class='tooltip-target' id="demo-tooltip-target-3">
+		<button class='tooltip-target' id="demo-tooltip-target-3">
 				Thing to point the tooltip at.
-		</div>
+		</button>
 
 		<div id="tooltip-demo-3"
 			data-o-component="o-tooltip"

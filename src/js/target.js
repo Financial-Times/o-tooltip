@@ -1,7 +1,6 @@
 import Delegate from 'ftdomdelegate';
 
 class Target {
-
 	constructor(targetEl) {
 		this.targetEl = targetEl;
 		this.rectObject = targetEl.getBoundingClientRect();
