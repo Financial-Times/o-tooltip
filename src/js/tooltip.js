@@ -22,13 +22,12 @@ class Tooltip {
 		this.opts = opts || Tooltip.getOptions(tooltipEl);
 		this.opts = Tooltip.checkOptions(this.opts);
 		this.target = new Tooltip.Target(document.getElementById(this.opts.target));
-		this.targetEl = this.target.targetEl;
 		this.tooltipPosition = this.opts.position;
 		this.tooltipAlignment = null;
 		this.visible = false;
 
 		this.delegates = {
-			target: new Delegate(document.getElementById(this.opts.target)),
+			target: new Delegate(this.target.targetEl),
 			doc: new Delegate(),
 			tooltip: new Delegate(),
 		};

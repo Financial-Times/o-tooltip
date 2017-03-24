@@ -98,6 +98,7 @@ describe("Tooltip", () => {
 
 			it('adds event listeners when opts.showOnClick is set to true', () => {
 				getOptionsStub.restore(); // !! IMPORTANT !!
+				targetStub.restore();
 				const testTooltip = new Tooltip(document.getElementById('tooltip-demo-3'));
 
 				document.getElementById('demo-tooltip-target-3').click();
@@ -107,6 +108,7 @@ describe("Tooltip", () => {
 
 			it('adds event listeners when opts.showOnHover is set to true', () => {
 				getOptionsStub.restore(); // !! IMPORTANT !!
+				targetStub.restore();
 				const testTooltip = new Tooltip(document.getElementById('tooltip-demo-4'));
 
 				document.getElementById('demo-tooltip-target-4').dispatchEvent(new Event('mouseover'));
