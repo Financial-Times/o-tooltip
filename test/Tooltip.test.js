@@ -66,7 +66,6 @@ describe("Tooltip", () => {
 			new Tooltip(stubEl, stubOpts);
 
 			proclaim.isTrue(checkOptionsStub.calledWith(stubOpts));
-
 		});
 
 		it("calls checkOptions with the return values of getOptions if no options were passed in", () => {
@@ -87,40 +86,6 @@ describe("Tooltip", () => {
 
 			new Tooltip("stubEL");
 			proclaim.strictEqual(Tooltip._tooltips.size, 1);
-		});
-
-		describe('animation', () => {
-			it('sets direction to "top" if position is below', () => {
-				const stubEl = "stubEL";
-				const testTooltip = new Tooltip(stubEl, {"position": 'below', "animationDistance": '20px'});
-				proclaim.strictEqual(testTooltip.animationDirection, 'Top');
-				proclaim.strictEqual(testTooltip.animationDistance, '20px');
-				proclaim.strictEqual(testTooltip.animationSpeed, 500);
-			});
-
-			it('sets direction to "top" and distance to negative if position is above', () => {
-				const stubEl = "stubEL";
-				const testTooltip = new Tooltip(stubEl, {"position": 'above', "animationDistance": '20px'});
-				proclaim.strictEqual(testTooltip.animationDirection, 'Top');
-				proclaim.strictEqual(testTooltip.animationDistance, '-20px');
-				proclaim.strictEqual(testTooltip.animationSpeed, 500);
-			});
-
-			it('sets direction to "left" and distance to negative if position is left', () => {
-				const stubEl = "stubEL";
-				const testTooltip = new Tooltip(stubEl, {"position": 'left', "animationDistance": '20px'});
-				proclaim.strictEqual(testTooltip.animationDirection, 'Left');
-				proclaim.strictEqual(testTooltip.animationDistance, '-20px');
-				proclaim.strictEqual(testTooltip.animationSpeed, 500);
-			});
-
-			it('sets animationDirection to "left" if position is right', () => {
-				const stubEl = "stubEL";
-				const testTooltip = new Tooltip(stubEl, {"position": 'right', "animationDistance": '20px'});
-				proclaim.strictEqual(testTooltip.animationDirection, 'Left');
-				proclaim.strictEqual(testTooltip.animationDistance, '20px');
-				proclaim.strictEqual(testTooltip.animationSpeed, 500);
-			});
 		});
 	});
 
@@ -178,14 +143,6 @@ describe("Tooltip", () => {
 
 			const options = Tooltip.getOptions(el);
 			proclaim.strictEqual(options.zIndex, "20");
-		});
-
-		it("extracts animationDistance if it's set on the el passed in", () => {
-			const el = document.createElement('div');
-			el.setAttribute('data-o-tooltip-animation-distance', "20");
-
-			const options = Tooltip.getOptions(el);
-			proclaim.strictEqual(options.animationDistance, "20");
 		});
 	});
 

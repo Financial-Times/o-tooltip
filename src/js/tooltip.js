@@ -27,28 +27,6 @@ class Tooltip {
 		this.tooltipPosition = this.opts.position;
 		this.tooltipAlignment = null;
 		this.visible = false;
-		this.animationTimeout = false;
-		this.animationSpeed = 500; // Needs to be the same as $o-tooltip-animation-duration!
-		this.animationDistance = this.opts.animationDistance ?
-			(this.opts.animationDistance.replace('px', '') + 'px') : '10px';
-
-		switch(this.tooltipPosition) {
-			case 'below':
-			default:
-				this.animationDirection = 'Top';
-			break;
-			case 'above':
-				this.animationDirection = 'Top';
-				this.animationDistance = '-' + this.animationDistance;
-			break;
-			case 'left':
-				this.animationDirection = 'Left';
-				this.animationDistance = '-' + this.animationDistance;
-			break;
-			case 'right':
-				this.animationDirection = 'Left';
-			break;
-		}
 
 		this.delegates = {
 			doc: new Delegate(),
@@ -88,14 +66,6 @@ class Tooltip {
 
 		if (tooltipEl.hasAttribute('data-o-tooltip-z-index')){
 			opts.zIndex = tooltipEl.getAttribute('data-o-tooltip-z-index');
-		}
-
-		if (tooltipEl.hasAttribute('data-o-tooltip-animation-speed')) {
-			opts.animationSpeed = tooltipEl.getAttribute('data-o-tooltip-animation-speed');
-		}
-
-		if (tooltipEl.hasAttribute('data-o-tooltip-animation-distance')) {
-			opts.animationDistance = tooltipEl.getAttribute('data-o-tooltip-animation-distance');
 		}
 
 		return opts;
@@ -147,9 +117,6 @@ class Tooltip {
 		button.setAttribute('aria-label', 'Close');
 		button.setAttribute('title', 'Close');
 		this.tooltipEl.appendChild(button);
-
-		this.tooltipEl.style.opacity = 0;
-		this.tooltipEl.style[`margin${this.animationDirection}`] = this.animationDistance;
 	};
 
 	/**
@@ -178,10 +145,10 @@ class Tooltip {
 		this.drawTooltip();
 		this.visible = true;
 
-		clearTimeout(this.animationTimeout);
+		// Run show tooltip transition
 		this.tooltipEl.style.display = 'block';
 		this.tooltipEl.style.opacity = 1;
-		this.tooltipEl.style[`margin${this.animationDirection}`] = 0;
+		this.tooltipEl.classList.add('visible');
 	};
 
 	/**
@@ -208,18 +175,15 @@ class Tooltip {
 		this.delegates.tooltip.destroy();
 
 		this.visible = false;
+
+		// Run close tooltip transition
 		this.tooltipEl.style.opacity = 0;
-		this.tooltipEl.style[`margin${this.animationDirection}`] = this.animationDistance;
+		this.tooltipEl.classList.remove('visible');
 
-		clearTimeout(this.animationTimeout);
-		this.animationTimeout = setTimeout(() => {
+		// Set `display: none` after animation & remove listener
+		this.tooltipEl.addEventListener('transitionend', () => {
 			this.tooltipEl.style.display = 'none';
-		}, this.animationSpeed);
-
-
-		if (this.opts.showOnClick) {
-			this.delegates.target.on('click', null, this.show.bind(this)); // Re-attach click handler
-		}
+		}, {once: true});
 
 		return false;
 	};
