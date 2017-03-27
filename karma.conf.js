@@ -26,7 +26,7 @@ module.exports = function(config) {
 
 		// list of files / patterns to load in the browser
 		files: [
-			'http://cdn.polyfill.io/v2/polyfill.js?features=fetch,default,setImmediate&flags=gated',
+			'http://cdn.polyfill.io/v2/polyfill.js?features=fetch,default&flags=gated&ua=safari/4',
 			'test/*.test.js',
 		],
 
