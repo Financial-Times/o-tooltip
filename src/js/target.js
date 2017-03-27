@@ -1,5 +1,3 @@
-import Delegate from 'ftdomdelegate';
-
 class Target {
 	constructor(targetEl) {
 		this.targetEl = targetEl;
