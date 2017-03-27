@@ -1177,7 +1177,7 @@ describe("Tooltip", () => {
 			proclaim.notStrictEqual(testTooltip.tooltipEl.style.display, 'none');
 
 			testTooltip.tooltipEl.addEventListener('transitionend', () => {
-				setImmediate(() => { // This is a bit race-y for some reason.
+				window.setImmediate(() => { // This is a bit race-y for some reason.
 					proclaim.strictEqual(testTooltip.tooltipEl.style.display, 'none');
 					done();
 				});
