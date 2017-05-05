@@ -16,12 +16,19 @@ class Tooltip {
 			Tooltip._tooltips = new Map();
 		}
 
-		this.tooltipEl = tooltipEl;
+		if (typeof tooltipEl === 'string') {
+			this.tooltipEl = Tooltip.constructElement(tooltipEl);
+		} else {
+			this.tooltipEl = tooltipEl;
+		}
+
+
 		Tooltip._tooltips.set(this.tooltipEl, this);
 
 		this.opts = opts || Tooltip.getOptions(tooltipEl);
 		this.opts = Tooltip.checkOptions(this.opts);
-		this.target = new Tooltip.Target(document.getElementById(this.opts.target));
+		this.targetNode = document.getElementById(this.opts.target)
+		this.target = new Tooltip.Target(this.targetNode);
 		this.tooltipPosition = this.opts.position;
 		this.tooltipAlignment = null;
 		this.visible = false;
@@ -99,10 +106,27 @@ class Tooltip {
 		return opts;
 	};
 
+	static constructElement(html) {
+
+		const element = document.createElement('div');
+		element.setAttribute('data-o-component', 'o-tooltip');
+		element.insertAdjacentHTML('afterbegin', `<div class='o-tooltip-content'>${html}</div>`);
+		return element;
+	};
+
 	/**
 	 * Render the tooltip. Adds markup and attributes to this.tooltipEl in the DOM
 	*/
 	render() {
+		// make sure the tooltip is the next sibling of the target and (in the case of genereated tooltip els)
+		// is attached to the DOM
+		if (this.targetNode.nextSibling !== this.tooltipEl) {
+			if (this.targetNode.nextSibling) {
+				this.targetNode.parentNode.insertBefore(this.tooltipEl, this.targetNode.nextSibling)
+			} else {
+				this.targetNode.parentNode.appendChild(this.tooltipEl);
+			}
+		}
 
 		this.tooltipEl.setAttribute('role', 'tooltip');
 		this.tooltipEl.classList.add('o-tooltip');
