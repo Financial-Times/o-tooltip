@@ -16,8 +16,8 @@ class Tooltip {
 			Tooltip._tooltips = new Map();
 		}
 
-		if (typeof tooltipEl === 'string') {
-			this.tooltipEl = Tooltip.constructElement(tooltipEl);
+		if (opts && opts.content) {
+			this.tooltipEl = Tooltip.constructElement(tooltipEl, opts);
 		} else {
 			this.tooltipEl = tooltipEl;
 		}
@@ -106,11 +106,12 @@ class Tooltip {
 		return opts;
 	};
 
-	static constructElement(html) {
+	static constructElement(targetEl, opts) {
+		targetEl.setAttribute('id', opts.target);
 
 		const element = document.createElement('div');
 		element.setAttribute('data-o-component', 'o-tooltip');
-		element.insertAdjacentHTML('afterbegin', `<div class='o-tooltip-content'>${html}</div>`);
+		element.insertAdjacentHTML('afterbegin', `<div class='o-tooltip-content'>${opts.content}</div>`);
 		return element;
 	};
 
