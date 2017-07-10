@@ -6,6 +6,5 @@ document.addEventListener('DOMContentLoaded', function() {
 		target: 'demo-tooltip-target-imperative',
 		showOnHover: true,
 		position: 'right'
-	})
+	});
 });
-

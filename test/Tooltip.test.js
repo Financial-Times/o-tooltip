@@ -56,7 +56,7 @@ describe("Tooltip", () => {
 			new Tooltip(stubEl, stubOpts);
 
 			proclaim.isTrue(constructElementStub.called);
-		})
+		});
 
 		it("doesn't call constructElement if element passed in", () => {
 			const stubEl = document.createElement('div');
@@ -65,7 +65,7 @@ describe("Tooltip", () => {
 			new Tooltip(stubEl, stubOpts);
 
 			proclaim.isFalse(constructElementStub.called);
-		})
+		});
 
 		it("doesn't call getOptions if options are passed in", () => {
 			const stubEl = "stubEL";
@@ -247,7 +247,7 @@ describe("Tooltip", () => {
 			proclaim.strictEqual(tooltip.firstElementChild.className, 'o-tooltip-content');
 			proclaim.strictEqual(tooltip.firstElementChild.innerHTML, '<p>my content</p>');
 		});
-	})
+	});
 
 	describe("render", () => {
 

@@ -27,7 +27,7 @@ class Tooltip {
 
 		this.opts = opts || Tooltip.getOptions(tooltipEl);
 		this.opts = Tooltip.checkOptions(this.opts);
-		this.targetNode = document.getElementById(this.opts.target)
+		this.targetNode = document.getElementById(this.opts.target);
 		this.target = new Tooltip.Target(this.targetNode);
 		this.tooltipPosition = this.opts.position;
 		this.tooltipAlignment = null;
@@ -120,9 +120,9 @@ class Tooltip {
 	render() {
 		// make sure the tooltip is the next sibling of the target and (in the case of genereated tooltip els)
 		// is attached to the DOM
-		if (this.targetNode.nextSibling !== this.tooltipEl) {
+		if (this.targetNode && this.targetNode.nextSibling !== this.tooltipEl) {
 			if (this.targetNode.nextSibling) {
-				this.targetNode.parentNode.insertBefore(this.tooltipEl, this.targetNode.nextSibling)
+				this.targetNode.parentNode.insertBefore(this.tooltipEl, this.targetNode.nextSibling);
 			} else {
 				this.targetNode.parentNode.appendChild(this.tooltipEl);
 			}
@@ -249,7 +249,6 @@ class Tooltip {
 	 * target and a preference set by the user.
 	*/
 	drawTooltip(){
-
 		// render the tooltip so we know how big it is
 		this.tooltipEl.style.display = 'block';
 
