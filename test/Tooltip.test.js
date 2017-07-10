@@ -27,6 +27,7 @@ describe("Tooltip", () => {
 		let showStub;
 		let closeStub;
 		let targetStub;
+		const stubEl = document.createElement('div');
 
 		beforeEach(() => {
 			getOptionsReturnStub = {};
@@ -49,17 +50,15 @@ describe("Tooltip", () => {
 			targetStub.restore();
 		});
 
-		it("calls constructElement if string passed in", () => {
-			const stubEl = "stubEL";
-			const stubOpts = {};
+		it("calls constructElement if content string passed in", () => {
+			const stubOpts = {content: 'Click this button'};
 
 			new Tooltip(stubEl, stubOpts);
 
 			proclaim.isTrue(constructElementStub.called);
 		});
 
-		it("doesn't call constructElement if element passed in", () => {
-			const stubEl = document.createElement('div');
+		it("doesn't call constructElement if no content string is passed in", () => {
 			const stubOpts = {};
 
 			new Tooltip(stubEl, stubOpts);
@@ -68,7 +67,6 @@ describe("Tooltip", () => {
 		});
 
 		it("doesn't call getOptions if options are passed in", () => {
-			const stubEl = "stubEL";
 			const stubOpts = {};
 
 			new Tooltip(stubEl, stubOpts);
@@ -77,7 +75,6 @@ describe("Tooltip", () => {
 		});
 
 		it("calls getOptions if no options were passed in", () => {
-			const stubEl = "stubEL";
 			new Tooltip(stubEl);
 
 			proclaim.isTrue(getOptionsStub.calledWith(stubEl));
@@ -85,7 +82,6 @@ describe("Tooltip", () => {
 
 		it("calls checkOptions with the options passed in if some options were passed in", () => {
 			const stubOpts = {};
-			const stubEl = "stubEL";
 
 			new Tooltip(stubEl, stubOpts);
 
@@ -93,14 +89,12 @@ describe("Tooltip", () => {
 		});
 
 		it("calls checkOptions with the return values of getOptions if no options were passed in", () => {
-			const stubEl = "stubEL";
 			new Tooltip(stubEl);
 
 			proclaim.isTrue(checkOptionsStub.calledWith(getOptionsReturnStub));
 		});
 
 		it("calls render if opts.showOnConstruction is set to true", () => {
-			const stubEl = "stubEL";
 			new Tooltip(stubEl, {"showOnConstruction": true});
 			proclaim.isTrue(renderStub.called);
 		});
@@ -240,7 +234,8 @@ describe("Tooltip", () => {
 
 	describe('constructElement', () => {
 		it("returns a tooltip element", () => {
-			const tooltip = Tooltip.constructElement('<p>my content</p>');
+			let targetEl = document.createElement('div');
+			const tooltip = Tooltip.constructElement(targetEl, {content: '<p>my content</p>'});
 			proclaim.strictEqual(tooltip.nodeName, 'DIV');
 			proclaim.strictEqual(tooltip.getAttribute('data-o-component'), 'o-tooltip');
 			proclaim.strictEqual(tooltip.firstElementChild.nodeName, 'DIV');
