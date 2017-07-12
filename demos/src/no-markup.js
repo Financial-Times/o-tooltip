@@ -2,9 +2,11 @@
 import Tooltip from './../../main.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-	new Tooltip('content declared in js', {
+	let targetElement = document.querySelector('.imperative-tooltip-target');
+	new Tooltip(targetElement, {
 		target: 'demo-tooltip-target-imperative',
-		showOnHover: true,
+		content: 'Click to save to somewhere',
+		showOnConstruction: true,
 		position: 'right'
 	});
 });
