@@ -23,15 +23,18 @@ describe("Tooltip", () => {
 		let getOptionsReturnStub;
 		let checkOptionsStub;
 		let renderStub;
+		let constructElementStub;
 		let showStub;
 		let closeStub;
 		let targetStub;
+		const stubEl = document.createElement('div');
 
 		beforeEach(() => {
 			getOptionsReturnStub = {};
 			getOptionsStub = sinon.stub(Tooltip, 'getOptions').returns(getOptionsReturnStub);
 			checkOptionsStub = sinon.stub(Tooltip, 'checkOptions').returnsArg(0);
 			renderStub = sinon.stub(Tooltip.prototype, 'render');
+			constructElementStub = sinon.stub(Tooltip, 'constructElement').returns(document.createElement('div'));
 			showStub = sinon.stub(Tooltip.prototype, 'show');
 			closeStub = sinon.stub(Tooltip.prototype, 'close');
 			targetStub = sinon.stub(Tooltip, "Target");
@@ -41,13 +44,29 @@ describe("Tooltip", () => {
 			getOptionsStub.restore();
 			checkOptionsStub.restore();
 			renderStub.restore();
+			constructElementStub.restore();
 			showStub.restore();
 			closeStub.restore();
 			targetStub.restore();
 		});
 
+		it("calls constructElement if content string passed in", () => {
+			const stubOpts = {content: 'Click this button'};
+
+			new Tooltip(stubEl, stubOpts);
+
+			proclaim.isTrue(constructElementStub.called);
+		});
+
+		it("doesn't call constructElement if no content string is passed in", () => {
+			const stubOpts = {};
+
+			new Tooltip(stubEl, stubOpts);
+
+			proclaim.isFalse(constructElementStub.called);
+		});
+
 		it("doesn't call getOptions if options are passed in", () => {
-			const stubEl = "stubEL";
 			const stubOpts = {};
 
 			new Tooltip(stubEl, stubOpts);
@@ -56,7 +75,6 @@ describe("Tooltip", () => {
 		});
 
 		it("calls getOptions if no options were passed in", () => {
-			const stubEl = "stubEL";
 			new Tooltip(stubEl);
 
 			proclaim.isTrue(getOptionsStub.calledWith(stubEl));
@@ -64,7 +82,6 @@ describe("Tooltip", () => {
 
 		it("calls checkOptions with the options passed in if some options were passed in", () => {
 			const stubOpts = {};
-			const stubEl = "stubEL";
 
 			new Tooltip(stubEl, stubOpts);
 
@@ -72,14 +89,12 @@ describe("Tooltip", () => {
 		});
 
 		it("calls checkOptions with the return values of getOptions if no options were passed in", () => {
-			const stubEl = "stubEL";
 			new Tooltip(stubEl);
 
 			proclaim.isTrue(checkOptionsStub.calledWith(getOptionsReturnStub));
 		});
 
 		it("calls render if opts.showOnConstruction is set to true", () => {
-			const stubEl = "stubEL";
 			new Tooltip(stubEl, {"showOnConstruction": true});
 			proclaim.isTrue(renderStub.called);
 		});
@@ -217,6 +232,18 @@ describe("Tooltip", () => {
 		});
 	});
 
+	describe('constructElement', () => {
+		it("returns a tooltip element", () => {
+			let targetEl = document.createElement('div');
+			const tooltip = Tooltip.constructElement(targetEl, {content: '<p>my content</p>'});
+			proclaim.strictEqual(tooltip.nodeName, 'DIV');
+			proclaim.strictEqual(tooltip.getAttribute('data-o-component'), 'o-tooltip');
+			proclaim.strictEqual(tooltip.firstElementChild.nodeName, 'DIV');
+			proclaim.strictEqual(tooltip.firstElementChild.className, 'o-tooltip-content');
+			proclaim.strictEqual(tooltip.firstElementChild.innerHTML, '<p>my content</p>');
+		});
+	});
+
 	describe("render", () => {
 
 		let tooltipEl;
@@ -254,6 +281,36 @@ describe("Tooltip", () => {
 			proclaim.isTrue(buttonEl.hasAttribute('title'));
 			proclaim.isTrue(buttonEl.hasAttribute('role'));
 		});
+
+// 		// <div id="demo-tooltip-insertion-test-1">
+// // 			<div class='tooltip-target' id="demo-tooltip-insertion-test-1-target">
+// // 				Thing to point the tooltip at.
+// // 			</div>
+// // 		</div>
+
+// // 		<div id="demo-tooltip-insertion-test-2">
+// // 			<div class='tooltip-target' id="demo-tooltip-insertion-test-2-target">
+// // 				Thing to point the tooltip at.
+// // 			</div>
+// // 			<div></div>
+// // 		</div>
+
+
+
+
+// 		it("Inserts adjacent to target element when target has no next sibling", () => {
+// 			const parent = document.getElementById('demo-tooltip-insertion-test-1');
+// 			sinon.stub(parent, 'appendChild');
+// 			new Tooltip("stubEL", {target: 'demo-tooltip-insertion-test-1-target'});
+// 			proclaim.isTrue(parent.appendChild.called);
+// 			proclaim.isTrue(/stubEl/, parent.appendChild.args[0][0].textContent);
+// 		});
+
+// 		it("Inserts adjacent to target element when target has next sibling", () => {
+
+// 			new Tooltip("stubEL", {target: 'demo-tooltip-insertion-test-2-target'});
+// 		});
+
 	});
 
 	describe("show", () => {
@@ -290,7 +347,7 @@ describe("Tooltip", () => {
 
 		it('sets up a close handler for touch on the tooltip-close button', () => {
 			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl);
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 			testTooltip.render();
 
 			const tooltipCloseEl = tooltipEl.querySelector('.o-tooltip-close');
@@ -309,7 +366,7 @@ describe("Tooltip", () => {
 
 		it('sets up a close handler for a click on the tooltip-close button', () => {
 			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl);
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 			testTooltip.render();
 			const tooltipCloseEl = tooltipEl.querySelector('.o-tooltip-close');
 
@@ -328,7 +385,7 @@ describe("Tooltip", () => {
 		it('sets up a viewport resize handler', () => {
 
 			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl);
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 
 			testTooltip.render();
 
@@ -347,7 +404,7 @@ describe("Tooltip", () => {
 		it('sets up a key listener to handle esc key', () => {
 			const keyUpListenerSpy = sinon.spy(Tooltip.prototype, 'closeOnKeyUp');
 			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl);
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 
 			testTooltip.render();
 
@@ -365,7 +422,7 @@ describe("Tooltip", () => {
 
 		it('calls drawTooltip', () => {
 			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl);
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 
 			testTooltip.show();
 			proclaim.isTrue(drawTooltipStub.called);
@@ -374,7 +431,7 @@ describe("Tooltip", () => {
 		it('emits o.tooltipShown event', function(done) {
 			this.timeout(1000);
 			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl);
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 			testTooltip.delegates.tooltip.on('o.tooltipShown', () => done());
 
 			testTooltip.show();
@@ -396,8 +453,9 @@ describe("Tooltip", () => {
 			targetStub = sinon.stub(Tooltip, 'Target');
 			drawStub = sinon.stub(Tooltip.prototype, '_drawTooltip');
 			setArrowStub = sinon.stub(Tooltip.prototype, '_setArrow');
+			fixtures.declarativeCode();
 			let stubEl = document.createElement('div');
-			testTooltip = new Tooltip(stubEl);
+			testTooltip = new Tooltip(stubEl, {target: 'demo-tooltip-target'});
 		});
 
 		afterEach(() => {
@@ -407,6 +465,7 @@ describe("Tooltip", () => {
 			drawStub.restore();
 			setArrowStub.restore();
 			testTooltip.destroy();
+			fixtures.reset();
 		});
 
 		/* Happy path */
@@ -1220,7 +1279,7 @@ describe("Tooltip", () => {
 		it('emits o.tooltipClosed event', function(done) {
 			this.timeout(1000);
 			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl);
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 			testTooltip.delegates.tooltip.on('o.tooltipClosed', () => done());
 
 			testTooltip.show();
