@@ -330,13 +330,11 @@ class Tooltip {
 
 		switch (this.tooltipPosition) {
 			case 'above':
-				rect.top = this.target.top + scrollPos.top - (height + Tooltip.arrowDepth);
-				rect.left = this._getLeftFor('middle');
+				rect.top = (this.target.targetEl.offsetTop - this.target.targetEl.clientHeight - Tooltip.arrowDepth);
+				rect.left = (this.target.left - this.target.targetEl.offsetParent.getClientRects()[0].left) + (this.target.width / 2) - (this.tooltipEl.offsetWidth / 2);
 				break;
 
 			case 'below':
-				rect.top = this.target.bottom + scrollPos.top + Tooltip.arrowDepth;
-				rect.left = this._getLeftFor('middle');
 				rect.top = (this.target.targetEl.offsetTop + this.target.targetEl.clientHeight + Tooltip.arrowDepth);
 				rect.left = (this.target.left - this.target.targetEl.offsetParent.getClientRects()[0].left) + (this.target.width / 2) - (this.tooltipEl.offsetWidth / 2);
 				break;
