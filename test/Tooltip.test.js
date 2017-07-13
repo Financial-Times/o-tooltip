@@ -848,6 +848,22 @@ describe("Tooltip", () => {
 				let returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
 			});
+			
+			it("returns a rect with the expected values when the page has been scrolled", () => {
+				const scrollTop = 30;
+				const getScrollPositionStub = sinon.stub(Tooltip.prototype, '_getScrollPosition').returns({ top: scrollTop, left: 0 });
+				
+				const expectedLeft = testTooltip._getLeftFor();
+				const expectedRight = expectedLeft + testTooltip.width();
+				const expectedTop = testTooltip.target.top + scrollTop - (testTooltip.height() + Tooltip.arrowDepth);
+				const expectedBottom = expectedTop + testTooltip.height();
+				
+				const expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
+				const returnValue = testTooltip.calculateTooltipRect();
+				proclaim.deepEqual(expectedValue, returnValue);
+				
+				getScrollPositionStub.restore();
+			});
 		});
 
 		describe("when position is below", () => {
@@ -870,6 +886,22 @@ describe("Tooltip", () => {
 				let expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
 				let returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
+			});
+			
+			it("returns a rect with the expected values when the page has been scrolled", () => {
+				const scrollTop = 30;
+				const getScrollPositionStub = sinon.stub(Tooltip.prototype, '_getScrollPosition').returns({ top: scrollTop, left: 0 });
+				
+				const expectedLeft = testTooltip._getLeftFor();
+				const expectedRight = expectedLeft + testTooltip.width();
+				const expectedTop = testTooltip.target.bottom + scrollTop + Tooltip.arrowDepth;
+				const expectedBottom = expectedTop + testTooltip.height();
+				
+				const expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
+				const returnValue = testTooltip.calculateTooltipRect();
+				proclaim.deepEqual(expectedValue, returnValue);
+				
+				getScrollPositionStub.restore();
 			});
 		});
 
@@ -894,6 +926,22 @@ describe("Tooltip", () => {
 				let returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
 			});
+			
+			it("returns a rect with the expected values when the page has been scrolled", () => {
+				const scrollLeft = 30;
+				const getScrollPositionStub = sinon.stub(Tooltip.prototype, '_getScrollPosition').returns({ top: 0, left: scrollLeft });
+				
+				const expectedLeft = testTooltip.target.left + scrollLeft - (testTooltip.width() + Tooltip.arrowDepth);
+				const expectedRight = expectedLeft + testTooltip.width();
+				const expectedTop = testTooltip._getTopFor();
+				const expectedBottom = expectedTop + testTooltip.height();
+				
+				const expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
+				const returnValue = testTooltip.calculateTooltipRect();
+				proclaim.deepEqual(expectedValue, returnValue);
+				
+				getScrollPositionStub.restore();
+			});
 		});
 
 		describe("when position is right", () => {
@@ -917,6 +965,22 @@ describe("Tooltip", () => {
 				let returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
 			});
+			
+			it("returns a rect with the expected values when the page has been scrolled", () => {
+				const scrollLeft = 30;
+				const getScrollPositionStub = sinon.stub(Tooltip.prototype, '_getScrollPosition').returns({ top: 0, left: scrollLeft });
+				
+				const expectedLeft = testTooltip.target.right + scrollLeft + Tooltip.arrowDepth;
+				const expectedRight = expectedLeft + testTooltip.width();
+				const expectedTop = testTooltip._getTopFor();
+				const expectedBottom = expectedTop + testTooltip.height();
+				
+				const expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
+				const returnValue = testTooltip.calculateTooltipRect();
+				proclaim.deepEqual(expectedValue, returnValue);
+				
+				getScrollPositionStub.restore();
+			});
 		});
 	});
 
@@ -933,7 +997,7 @@ describe("Tooltip", () => {
 
 			getStub = sinon.stub(Tooltip, 'getOptions');
 			checkStub = sinon.stub(Tooltip, 'checkOptions').returns({'position': 'top'});
-			targetStub = sinon.stub(Tooltip, 'Target').returns({left: 'someLeftValue', right: 7, centrePoint: {x: 5}});
+			targetStub = sinon.stub(Tooltip, 'Target').returns({left: 0, right: 7, centrePoint: {x: 5}});
 			let stubEl = document.createElement('div');
 			widthStub = sinon.stub(Tooltip.prototype, 'width').returns(100);
 			heightStub = sinon.stub(Tooltip.prototype, 'height').returns(500);
@@ -949,7 +1013,7 @@ describe("Tooltip", () => {
 		});
 
 		it("returns target left for 'left'", () => {
-			proclaim.strictEqual(testTooltip._getLeftFor('left'), "someLeftValue");
+			proclaim.strictEqual(testTooltip._getLeftFor('left'), 0);
 		});
 		it("returns the target right, offset by the tooltip width", () => {
 			let leftValue = testTooltip._getLeftFor('right');
@@ -976,7 +1040,7 @@ describe("Tooltip", () => {
 
 			getStub = sinon.stub(Tooltip, 'getOptions');
 			checkStub = sinon.stub(Tooltip, 'checkOptions').returns({'position': 'top'});
-			targetStub = sinon.stub(Tooltip, 'Target').returns({top: 'someTopValue', bottom: 9, centrePoint: {y: 6}});
+			targetStub = sinon.stub(Tooltip, 'Target').returns({top: 0, bottom: 9, centrePoint: {y: 6}});
 			let stubEl = document.createElement('div');
 			widthStub = sinon.stub(Tooltip.prototype, 'width').returns(100);
 			heightStub = sinon.stub(Tooltip.prototype, 'height').returns(500);
@@ -992,7 +1056,7 @@ describe("Tooltip", () => {
 		});
 
 		it("returns target top for 'top'", () => {
-			proclaim.strictEqual(testTooltip._getTopFor('top'), "someTopValue");
+			proclaim.strictEqual(testTooltip._getTopFor('top'), 0);
 		});
 		it("returns the target bottom, offset by the tooltip height for 'bottom'", () => {
 			let topValue = testTooltip._getTopFor('bottom');
@@ -1207,11 +1271,10 @@ describe("Tooltip", () => {
 			proclaim.notStrictEqual(testTooltip.tooltipEl.style.display, 'none');
 
 			testTooltip.tooltipEl.addEventListener('transitionend', () => {
-				window.setImmediate(() => { // This is a bit race-y for some reason.
+				window.setTimeout(() => { // This is a bit race-y for some reason.
 					proclaim.strictEqual(testTooltip.tooltipEl.style.display, 'none');
 					done();
-				});
-
+				}, 0);
 			});
 
 			testTooltip.close();

@@ -302,25 +302,26 @@ class Tooltip {
 		const rect = {};
 		const width = this.width();
 		const height = this.height();
+		const scrollPos = this._getScrollPosition();
 
 		switch (this.tooltipPosition) {
 			case 'above':
-				rect.top = this.target.top - (height + Tooltip.arrowDepth);
+				rect.top = this.target.top + scrollPos.top - (height + Tooltip.arrowDepth);
 				rect.left = this._getLeftFor('middle');
 				break;
 
 			case 'below':
-				rect.top = this.target.bottom + Tooltip.arrowDepth;
+				rect.top = this.target.bottom + scrollPos.top + Tooltip.arrowDepth;
 				rect.left = this._getLeftFor('middle');
 				break;
 
 			case 'right':
-				rect.left = this.target.right + Tooltip.arrowDepth;
+				rect.left = this.target.right + scrollPos.left + Tooltip.arrowDepth;
 				rect.top = this._getTopFor('middle');
 				break;
 
 			case 'left':
-				rect.left = this.target.left - (width + Tooltip.arrowDepth);
+				rect.left = this.target.left + scrollPos.left - (width + Tooltip.arrowDepth);
 				rect.top = this._getTopFor('middle');
 				break;
 		};
@@ -331,23 +332,34 @@ class Tooltip {
 		return rect;
 	}
 
+	_getScrollPosition() {
+		return {
+			left: document.body.scrollLeft || document.documentElement.scrollLeft,
+			top: document.body.scrollTop || document.documentElement.scrollTop
+		};
+	}
+
 	_getLeftFor(alignment) {
+		const scrollPos = this._getScrollPosition();
+
 		if (alignment === "middle") {
-			return this.target.centrePoint.x - this.width()/2;
+			return this.target.centrePoint.x + scrollPos.left - this.width()/2;
 		} else if (alignment === "left") {
-			return this.target.left;
+			return this.target.left + scrollPos.left;
 		} else if (alignment === "right") {
-			return this.target.right - this.width();
+			return this.target.right + scrollPos.left - this.width();
 		}
 	};
 
 	_getTopFor(alignment) {
+		const scrollPos = this._getScrollPosition();
+
 		if (alignment === "middle") {
-			return this.target.centrePoint.y - this.height()/2;
+			return this.target.centrePoint.y + scrollPos.top - this.height()/2;
 		} else if (alignment === "top") {
-			return this.target.top;
+			return this.target.top + scrollPos.top;
 		} else if (alignment === "bottom") {
-			return this.target.bottom - this.height();
+			return this.target.bottom + scrollPos.top - this.height();
 		}
 	}
 
