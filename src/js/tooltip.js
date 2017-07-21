@@ -15,7 +15,7 @@ class Tooltip {
 		if (!Tooltip._tooltips) {
 			Tooltip._tooltips = new Map();
 		}
-
+		debugger
 		if (opts && opts.content) {
 			this.tooltipEl = Tooltip.constructElement(tooltipEl, opts);
 		} else {
@@ -95,12 +95,12 @@ class Tooltip {
 		}
 
 		// Check that the value of tooltip position is valid. Default to below.
-		if (opts.tooltipPosition) {
-			if (Tooltip.validTooltipPositions.indexOf(opts.tooltipPosition) === -1) {
+		if (opts.position) {
+			if (Tooltip.validTooltipPositions.indexOf(opts.position) === -1) {
 				Tooltip.throwError("Invalid value for tooltip position. Valid values are:" + Tooltip.validTooltipPositions.toString() +" or nothing which will default to a value of `below`");
 			}
 		} else {
-			opts.tooltipPosition = "below";
+			opts.position = "below";
 		}
 
 		return opts;
