@@ -15,7 +15,7 @@ class Tooltip {
 		if (!Tooltip._tooltips) {
 			Tooltip._tooltips = new Map();
 		}
-		debugger
+
 		if (opts && opts.content) {
 			this.tooltipEl = Tooltip.constructElement(tooltipEl, opts);
 		} else {
