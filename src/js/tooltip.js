@@ -231,18 +231,14 @@ class Tooltip {
 	};
 
 	/**
-	 * Respond to resize events. Re-position the tooltip if its target has moved.
-	 * @todo: There are a few optimisations to make here, getRect is being called
-	 * by the target more than once. We're checking edge positions we don't care
-	 * about, and moving based on them
+	 * Respond to resize events. Redraw the tooltip in case the target has moved.
+	 * @todo: There are many optimisations to make here- we're redrawing even if
+	 * the target hasn't moved. 
 	*/
 	resizeListener() {
-		if (this.target.hasMoved()) {
-			window.requestAnimationFrame(() => {
-				this.target.refreshRect();
-				this.drawTooltip();
-			});
-		}
+		window.requestAnimationFrame(() => {
+			this.drawTooltip();
+		});
 	};
 
 	/**

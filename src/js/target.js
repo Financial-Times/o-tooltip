@@ -4,45 +4,33 @@ class Target {
 		this.rectObject = targetEl.getBoundingClientRect();
 	}
 
-	refreshRect() {
-		this.rectObject = this.targetEl.getBoundingClientRect();
-	}
-
-	hasMoved(){
-		let newRect = this.targetEl.getBoundingClientRect();
-		return (this.top !== newRect.top ||
-			this.bottom !== newRect.bottom ||
-			this.left !== newRect.left ||
-			this.right !== newRect.right);
-	}
-
 	getEdge(edge){
 		const edges = {"top": this.top, "bottom": this.bottom, "right": this.right, "left": this.left};
 		return edges[edge];
 	}
 
 	get left() {
-		return this.rectObject.left;
+		return this.targetEl.getBoundingClientRect().left;
 	}
 
 	get right() {
-		return this.rectObject.right;
+		return this.targetEl.getBoundingClientRect().right;
 	}
 
 	get top() {
-		return this.rectObject.top;
+		return this.targetEl.getBoundingClientRect().top;
 	}
 
 	get bottom() {
-		return this.rectObject.bottom;
+		return this.targetEl.getBoundingClientRect().bottom;
 	}
 
 	get width() {
-		return this.rectObject.width;
+		return this.targetEl.getBoundingClientRect().width;
 	}
 
 	get height() {
-		return this.rectObject.height;
+		return this.targetEl.getBoundingClientRect().height;
 	}
 
 	get centrePoint(){
