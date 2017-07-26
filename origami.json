@@ -40,6 +40,12 @@
 				"description": "Tooltip declared in js, with no markup"
 			},
 			{
+				"name": "scroll-test",
+				"template": "demos/src/scroll-test.mustache",
+				"hidden": true,
+				"description": "Demo testcase for scrolling bug"
+			},
+			{
 				"name": "pa11y",
 				"template": "demos/src/pa11y.mustache",
 				"hidden": true,

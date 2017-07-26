@@ -15,3 +15,12 @@ body {
 [data-o-component="o-tooltip"] {
 	display: none;
 }
+
+.demo-scrollable-container {
+	height: 9000px;
+	width: 500px;
+
+	.demo-tooltip-container {
+		padding-top:500px
+	}
+}
