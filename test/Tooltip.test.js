@@ -209,19 +209,19 @@ describe("Tooltip", () => {
 		});
 
 		it("calls throwError if position is not one of `above`, `below`, `left`, `right` or falsey", () => {
-			Tooltip.checkOptions({"target": "#el", "tooltipPosition": "side"});
+			Tooltip.checkOptions({"target": "#el", "position": "side"});
 			proclaim.isTrue(throwStub.called);
 		});
 
-		it("sets opts.tooltipPosition to below if no position was specified", ()=>{
+		it("sets opts.position to below if no position was specified", ()=>{
 			let opts = Tooltip.checkOptions({"target": "#el"});
 			proclaim.isFalse(throwStub.called);
-			proclaim.strictEqual(opts.tooltipPosition, 'below');
+			proclaim.strictEqual(opts.position, 'below');
 		});
 
-		it("does not error if tooltipPosition is `top`, `bottom`, `left`, `right` or falsey", () => {
+		it("does not error if position is `top`, `bottom`, `left`, `right` or falsey", () => {
 			["above", "left", "right", "below", undefined].forEach((value) => {
-				Tooltip.checkOptions({"target": "#el", "tooltipPosition": value});
+				Tooltip.checkOptions({"target": "#el", "position": value});
 				proclaim.isFalse(throwStub.called);
 			});
 		});
