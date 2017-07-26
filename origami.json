@@ -46,6 +46,12 @@
 				"description": "Demo testcase for scrolling bug"
 			},
 			{
+				"name": "relative-position-test",
+				"template": "demos/src/relative-position-test.mustache",
+				"hidden": true,
+				"description": "relative parent position testcase"
+			},
+			{
 				"name": "pa11y",
 				"template": "demos/src/pa11y.mustache",
 				"hidden": true,
