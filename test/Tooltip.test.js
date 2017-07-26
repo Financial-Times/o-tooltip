@@ -907,20 +907,20 @@ describe("Tooltip", () => {
 				let returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
 			});
-			
+
 			it("returns a rect with the expected values when the page has been scrolled", () => {
 				const scrollTop = 30;
 				const getScrollPositionStub = sinon.stub(Tooltip.prototype, '_getScrollPosition').returns({ top: scrollTop, left: 0 });
-				
+
 				const expectedLeft = testTooltip._getLeftFor();
 				const expectedRight = expectedLeft + testTooltip.width();
 				const expectedTop = testTooltip.target.top + scrollTop - (testTooltip.height() + Tooltip.arrowDepth);
 				const expectedBottom = expectedTop + testTooltip.height();
-				
+
 				const expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
 				const returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
-				
+
 				getScrollPositionStub.restore();
 			});
 		});
@@ -946,20 +946,20 @@ describe("Tooltip", () => {
 				let returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
 			});
-			
+
 			it("returns a rect with the expected values when the page has been scrolled", () => {
 				const scrollTop = 30;
 				const getScrollPositionStub = sinon.stub(Tooltip.prototype, '_getScrollPosition').returns({ top: scrollTop, left: 0 });
-				
+
 				const expectedLeft = testTooltip._getLeftFor();
 				const expectedRight = expectedLeft + testTooltip.width();
 				const expectedTop = testTooltip.target.bottom + scrollTop + Tooltip.arrowDepth;
 				const expectedBottom = expectedTop + testTooltip.height();
-				
+
 				const expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
 				const returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
-				
+
 				getScrollPositionStub.restore();
 			});
 		});
@@ -985,20 +985,20 @@ describe("Tooltip", () => {
 				let returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
 			});
-			
+
 			it("returns a rect with the expected values when the page has been scrolled", () => {
 				const scrollLeft = 30;
 				const getScrollPositionStub = sinon.stub(Tooltip.prototype, '_getScrollPosition').returns({ top: 0, left: scrollLeft });
-				
+
 				const expectedLeft = testTooltip.target.left + scrollLeft - (testTooltip.width() + Tooltip.arrowDepth);
 				const expectedRight = expectedLeft + testTooltip.width();
 				const expectedTop = testTooltip._getTopFor();
 				const expectedBottom = expectedTop + testTooltip.height();
-				
+
 				const expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
 				const returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
-				
+
 				getScrollPositionStub.restore();
 			});
 		});
@@ -1024,20 +1024,20 @@ describe("Tooltip", () => {
 				let returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
 			});
-			
+
 			it("returns a rect with the expected values when the page has been scrolled", () => {
 				const scrollLeft = 30;
 				const getScrollPositionStub = sinon.stub(Tooltip.prototype, '_getScrollPosition').returns({ top: 0, left: scrollLeft });
-				
+
 				const expectedLeft = testTooltip.target.right + scrollLeft + Tooltip.arrowDepth;
 				const expectedRight = expectedLeft + testTooltip.width();
 				const expectedTop = testTooltip._getTopFor();
 				const expectedBottom = expectedTop + testTooltip.height();
-				
+
 				const expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
 				const returnValue = testTooltip.calculateTooltipRect();
 				proclaim.deepEqual(expectedValue, returnValue);
-				
+
 				getScrollPositionStub.restore();
 			});
 		});
