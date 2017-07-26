@@ -233,7 +233,7 @@ class Tooltip {
 	/**
 	 * Respond to resize events. Redraw the tooltip in case the target has moved.
 	 * @todo: There are many optimisations to make here- we're redrawing even if
-	 * the target hasn't moved. 
+	 * the target hasn't moved.
 	*/
 	resizeListener() {
 		window.requestAnimationFrame(() => {
@@ -326,22 +326,22 @@ class Tooltip {
 
 		switch (this.tooltipPosition) {
 			case 'above':
-				rect.top = (this.target.targetEl.offsetTop - this.target.height - Tooltip.arrowDepth);
-				rect.left = (this.target.left - this.target.targetEl.offsetParent.getBoundingClientRect().left) + (this.target.width / 2) - (this.tooltipEl.offsetWidth / 2);
+				rect.top = this.target.top - height - Tooltip.arrowDepth;
+				rect.left = this._getLeftFor("middle");
 				break;
 
 			case 'below':
-				rect.top = (this.target.targetEl.offsetTop + this.target.height + Tooltip.arrowDepth);
-				rect.left = (this.target.left - this.target.targetEl.offsetParent.getBoundingClientRect().left) + (this.target.width / 2) - (this.tooltipEl.offsetWidth / 2);
+				rect.top = this.target.bottom + Tooltip.arrowDepth;
+				rect.left = this._getLeftFor("middle");
 				break;
 
 			case 'right':
-				rect.left = this.target.right + scrollPos.left + Tooltip.arrowDepth;
+				rect.left = this.target.right + Tooltip.arrowDepth;
 				rect.top = this._getTopFor('middle');
 				break;
 
 			case 'left':
-				rect.left = this.target.left + scrollPos.left - (width + Tooltip.arrowDepth);
+				rect.left = this.target.left - width - Tooltip.arrowDepth;
 				rect.top = this._getTopFor('middle');
 				break;
 		};
@@ -360,26 +360,22 @@ class Tooltip {
 	}
 
 	_getLeftFor(alignment) {
-		const scrollPos = this._getScrollPosition();
-
 		if (alignment === "middle") {
-			return this.target.centrePoint.x + scrollPos.left - this.width()/2;
+			return this.target.centrePoint.x - this.width()/2;
 		} else if (alignment === "left") {
-			return this.target.left + scrollPos.left;
+			return this.target.left;
 		} else if (alignment === "right") {
-			return this.target.right + scrollPos.left - this.width();
+			return this.target.right - this.width();
 		}
 	};
 
 	_getTopFor(alignment) {
-		const scrollPos = this._getScrollPosition();
-
 		if (alignment === "middle") {
-			return this.target.centrePoint.y + scrollPos.top - this.height()/2;
+			return this.target.centrePoint.y - this.height()/2;
 		} else if (alignment === "top") {
-			return this.target.top + scrollPos.top;
+			return this.target.top;
 		} else if (alignment === "bottom") {
-			return this.target.bottom + scrollPos.top - this.height();
+			return this.target.bottom - this.height();
 		}
 	}
 
