@@ -9,20 +9,24 @@ class Target {
 		return edges[edge];
 	}
 
+	get offsetTop() {
+		return this.targetEl.offsetTop;
+	}
+
 	get left() {
-		return this.targetEl.getBoundingClientRect().left;
+		return this.targetEl.getBoundingClientRect().left - this.targetEl.offsetParent.getBoundingClientRect().left;
 	}
 
 	get right() {
-		return this.targetEl.getBoundingClientRect().right;
+		return this.left + this.width;
 	}
 
 	get top() {
-		return this.targetEl.getBoundingClientRect().top;
+		return this.targetEl.getBoundingClientRect().top - this.targetEl.offsetParent.getBoundingClientRect().top;
 	}
 
 	get bottom() {
-		return this.targetEl.getBoundingClientRect().bottom;
+		return this.top + this.height;
 	}
 
 	get width() {
