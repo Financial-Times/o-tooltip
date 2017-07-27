@@ -107,8 +107,6 @@ class Tooltip {
 	};
 
 	static constructElement(targetEl, opts) {
-		targetEl.setAttribute('id', opts.target);
-
 		const element = document.createElement('div');
 		element.setAttribute('data-o-component', 'o-tooltip');
 		element.insertAdjacentHTML('afterbegin', `<div class='o-tooltip-content'>${opts.content}</div>`);
@@ -119,7 +117,7 @@ class Tooltip {
 	 * Render the tooltip. Adds markup and attributes to this.tooltipEl in the DOM
 	*/
 	render() {
-		// make sure the tooltip is the next sibling of the target and (in the case of genereated tooltip els)
+		// make sure the tooltip is the next sibling of the target and (in the case of generated tooltip el)
 		// is attached to the DOM
 		if (this.targetNode && this.targetNode.nextSibling !== this.tooltipEl) {
 			if (this.targetNode.nextSibling) {

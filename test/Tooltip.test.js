@@ -282,34 +282,28 @@ describe("Tooltip", () => {
 			proclaim.isTrue(buttonEl.hasAttribute('role'));
 		});
 
-// 		// <div id="demo-tooltip-insertion-test-1">
-// // 			<div class='tooltip-target' id="demo-tooltip-insertion-test-1-target">
-// // 				Thing to point the tooltip at.
-// // 			</div>
-// // 		</div>
+		it("Inserts adjacent to target element when target has no next sibling", () => {
+			const parent = document.getElementById('demo-tooltip-insertion-test-1');
+			sinon.stub(parent, 'appendChild');
+			new Tooltip("stubEL", {
+				target: 'demo-tooltip-insertion-test-1-target',
+				content: 'content'
+			});
+			proclaim.isTrue(parent.appendChild.called);
+			proclaim.isTrue(parent.appendChild.args[0][0].textContent === "content");
+		});
 
-// // 		<div id="demo-tooltip-insertion-test-2">
-// // 			<div class='tooltip-target' id="demo-tooltip-insertion-test-2-target">
-// // 				Thing to point the tooltip at.
-// // 			</div>
-// // 			<div></div>
-// // 		</div>
+		it("Inserts adjacent to target element when target has no next sibling", () => {
+			const parent = document.getElementById('demo-tooltip-insertion-test-2');
+			sinon.stub(parent, 'insertBefore');
+			new Tooltip("stubEL", {
+				target: 'demo-tooltip-insertion-test-2-target',
+				content: 'content'
+			});
 
-
-
-
-// 		it("Inserts adjacent to target element when target has no next sibling", () => {
-// 			const parent = document.getElementById('demo-tooltip-insertion-test-1');
-// 			sinon.stub(parent, 'appendChild');
-// 			new Tooltip("stubEL", {target: 'demo-tooltip-insertion-test-1-target'});
-// 			proclaim.isTrue(parent.appendChild.called);
-// 			proclaim.isTrue(/stubEl/, parent.appendChild.args[0][0].textContent);
-// 		});
-
-// 		it("Inserts adjacent to target element when target has next sibling", () => {
-
-// 			new Tooltip("stubEL", {target: 'demo-tooltip-insertion-test-2-target'});
-// 		});
+			proclaim.isTrue(parent.insertBefore.called);
+			proclaim.isTrue(parent.insertBefore.args[0][0].textContent === "content");
+		});
 
 	});
 
