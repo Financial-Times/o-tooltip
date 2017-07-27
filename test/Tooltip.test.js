@@ -1201,15 +1201,26 @@ describe("Tooltip", () => {
 			window.requestAnimationFrame.restore();
 		});
 
-		it("redraws if the target has moved", () => {
+		it("redraws if triggered and if the tooltip is visible", () => {
 			const testTooltip = Tooltip.init('#tooltip-demo');
-
+			testTooltip.visible = true;
 			sinon.stub(window, 'requestAnimationFrame', mockRaf.raf);
 
 			testTooltip.resizeListener();
 			mockRaf.step({ count: 1 });
 
 			proclaim.isTrue(drawTooltipStub.called);
+		});
+
+		it("does not redraw if the tooltip is not visible", () => {
+			const testTooltip = Tooltip.init('#tooltip-demo');
+			testTooltip.visible = false;
+			sinon.stub(window, 'requestAnimationFrame', mockRaf.raf);
+
+			testTooltip.resizeListener();
+			mockRaf.step({ count: 1 });
+
+			proclaim.isFalse(drawTooltipStub.called);
 		});
 
 	});

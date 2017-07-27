@@ -234,9 +234,11 @@ class Tooltip {
 	 * the target hasn't moved.
 	*/
 	resizeListener() {
-		window.requestAnimationFrame(() => {
-			this.drawTooltip();
-		});
+		if (this.visible) {
+			window.requestAnimationFrame(() => {
+				this.drawTooltip();
+			});
+		}
 	};
 
 	/**
