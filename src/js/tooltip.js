@@ -326,12 +326,12 @@ class Tooltip {
 		switch (this.tooltipPosition) {
 			case 'above':
 				rect.top = this.target.top - height - Tooltip.arrowDepth;
-				rect.left = this._getLeftFor("middle");
+				rect.left = this._getLeftFor('middle');
 				break;
 
 			case 'below':
 				rect.top = this.target.bottom + Tooltip.arrowDepth;
-				rect.left = this._getLeftFor("middle");
+				rect.left = this._getLeftFor('middle');
 				break;
 
 			case 'right':
