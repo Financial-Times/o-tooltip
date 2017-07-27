@@ -322,7 +322,6 @@ class Tooltip {
 		const rect = {};
 		const width = this.width();
 		const height = this.height();
-		const scrollPos = this._getScrollPosition();
 
 		switch (this.tooltipPosition) {
 			case 'above':
