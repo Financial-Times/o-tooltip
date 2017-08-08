@@ -52,7 +52,6 @@ describe("Tooltip", () => {
 
 		it("calls constructElement if content string passed in", () => {
 			const stubOpts = {content: 'Click this button'};
-
 			new Tooltip(stubEl, stubOpts);
 
 			proclaim.isTrue(constructElementStub.called);
@@ -60,7 +59,6 @@ describe("Tooltip", () => {
 
 		it("doesn't call constructElement if no content string is passed in", () => {
 			const stubOpts = {};
-
 			new Tooltip(stubEl, stubOpts);
 
 			proclaim.isFalse(constructElementStub.called);
@@ -68,7 +66,6 @@ describe("Tooltip", () => {
 
 		it("doesn't call getOptions if options are passed in", () => {
 			const stubOpts = {};
-
 			new Tooltip(stubEl, stubOpts);
 
 			proclaim.isFalse(getOptionsStub.called);
