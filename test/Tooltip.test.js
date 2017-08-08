@@ -244,7 +244,7 @@ describe("Tooltip", () => {
 	describe("render", () => {
 
 		let tooltipEl;
-
+		const stubEl = document.createElement('div');
 		beforeEach(() => {
 			fixtures.declarativeCode();
 			tooltipEl = document.getElementById('tooltip-demo');
@@ -282,7 +282,7 @@ describe("Tooltip", () => {
 		it("Inserts adjacent to target element when target has no next sibling", () => {
 			const parent = document.getElementById('demo-tooltip-insertion-test-1');
 			sinon.stub(parent, 'appendChild');
-			new Tooltip("stubEL", {
+			new Tooltip(stubEl, {
 				target: 'demo-tooltip-insertion-test-1-target',
 				content: 'content'
 			});
@@ -293,7 +293,7 @@ describe("Tooltip", () => {
 		it("Inserts adjacent to target element when target has no next sibling", () => {
 			const parent = document.getElementById('demo-tooltip-insertion-test-2');
 			sinon.stub(parent, 'insertBefore');
-			new Tooltip("stubEL", {
+			new Tooltip(stubEl, {
 				target: 'demo-tooltip-insertion-test-2-target',
 				content: 'content'
 			});

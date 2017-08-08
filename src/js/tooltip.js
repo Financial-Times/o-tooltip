@@ -107,6 +107,7 @@ class Tooltip {
 	};
 
 	static constructElement(targetEl, opts) {
+		console.log(opts.target);
 		const element = document.createElement('div');
 		targetEl.setAttribute('id', opts.target);
 		element.setAttribute('data-o-component', 'o-tooltip');
