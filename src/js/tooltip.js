@@ -256,20 +256,60 @@ class Tooltip {
 		// First pass at positioning the tooltip...
 		let tooltipRect = this.calculateTooltipRect();
 
-		// Check there's enough room above / below / to the left / right to draw the tooltip
-		if (this.tooltipPosition === 'above' || this.tooltipPosition === 'below') {
-			if ((Tooltip._isOutOfBounds(tooltipRect.top, "y") || Tooltip._isOutOfBounds(tooltipRect.bottom, "y"))) {
-				this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
-				tooltipRect = this.calculateTooltipRect();
+		let count = 0;
+		while (count < 4) {
+			count++
+			switch(this.tooltipPosition) {
+				case 'above':
+				if((Tooltip._isOutOfBounds(tooltipRect.top, 'y'))) {
+					this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
+					tooltipRect = this.calculateTooltipRect();
+				} else {
+					console.log('break', this.tooltipPosition);
+					break
+				}
+				case 'right':
+				if((Tooltip._isOutOfBounds(tooltipRect.right, 'x'))) {
+					this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
+					tooltipRect = this.calculateTooltipRect();
+				} else {
+					console.log('break', this.tooltipPosition);
+					break
+				}
+				case 'below':
+				if((Tooltip._isOutOfBounds(tooltipRect.bottom, 'y'))) {
+					this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
+					tooltipRect = this.calculateTooltipRect();
+				} else {
+					console.log('break', this.tooltipPosition);
+					break
+				}
+				case 'left':
+				if((Tooltip._isOutOfBounds(tooltipRect.left, 'x'))) {
+					this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
+					tooltipRect = this.calculateTooltipRect();
+				} else {
+					console.log('break', this.tooltipPosition);
+					break
+				}
 			}
 		}
 
-		if (this.tooltipPosition === 'left' || this.tooltipPosition === 'right') {
-			if ((Tooltip._isOutOfBounds(tooltipRect.left, "x") || Tooltip._isOutOfBounds(tooltipRect.right, "x"))) {
-				this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
-				tooltipRect = this.calculateTooltipRect();
-			}
-		}
+		tooltipRect = this.calculateTooltipRect()
+		// Check there's enough room above / below / to the left / right to draw the tooltip
+		// if (this.tooltipPosition === 'above' || this.tooltipPosition === 'below') {
+		// 	if ((Tooltip._isOutOfBounds(tooltipRect.top, "y") || Tooltip._isOutOfBounds(tooltipRect.bottom, "y"))) {
+		// 		this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
+		// 		tooltipRect = this.calculateTooltipRect();
+		// 	}
+		// }
+		//
+		// if (this.tooltipPosition === 'left' || this.tooltipPosition === 'right') {
+		// 	if ((Tooltip._isOutOfBounds(tooltipRect.left, "x") || Tooltip._isOutOfBounds(tooltipRect.right, "x"))) {
+		// 		this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
+		// 		tooltipRect = this.calculateTooltipRect();
+		// 	}
+		// }
 
 		/* Now align the tooltip to the left | right | top | bottom  of the target
 			if there's not enough room for it to aligned to the middle of the target
@@ -403,6 +443,7 @@ class Tooltip {
 	};
 
 	static _isOutOfBounds(point, axis) {
+		console.log({point});
 		if (point < 0) {
 			return true;
 		}
@@ -416,10 +457,10 @@ class Tooltip {
 
 	static _flipOrientation(orientation) {
 		const flip = {
-			"above": "below",
-			"below": "above",
-			"left": "right",
-			"right": "left"
+			"above": "right",
+			"right": "below",
+			"below": "left",
+			"left": "above"
 		};
 
 		return flip[orientation];
