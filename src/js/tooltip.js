@@ -256,8 +256,9 @@ class Tooltip {
 		// First pass at positioning the tooltip...
 		let tooltipRect = this.calculateTooltipRect();
 
+		// check bounds for every position (4 counts)
+		// if chosen position cannot fit the toolip.
 		let count = 0;
-
 		while (count < 5) {
 			switch(this.tooltipPosition) {
 				case 'above':
