@@ -257,59 +257,51 @@ class Tooltip {
 		let tooltipRect = this.calculateTooltipRect();
 
 		let count = 0;
-		while (count < 4) {
-			count++
+
+		while (count < 5) {
 			switch(this.tooltipPosition) {
 				case 'above':
-				if((Tooltip._isOutOfBounds(tooltipRect.top, 'y'))) {
-					this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
-					tooltipRect = this.calculateTooltipRect();
-				} else {
-					console.log('break', this.tooltipPosition);
-					break
-				}
+					count++;
+					if((Tooltip._isOutOfBounds(tooltipRect.top, 'y'))) {
+						this.tooltipPosition = Tooltip._rotateOrientation(this.tooltipPosition);
+						tooltipRect = this.calculateTooltipRect();
+					} else {
+						count = 5;
+						break;
+					}
 				case 'right':
-				if((Tooltip._isOutOfBounds(tooltipRect.right, 'x'))) {
-					this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
-					tooltipRect = this.calculateTooltipRect();
-				} else {
-					console.log('break', this.tooltipPosition);
-					break
-				}
+					count++;
+					if((Tooltip._isOutOfBounds(tooltipRect.right, 'x'))) {
+						this.tooltipPosition = Tooltip._rotateOrientation(this.tooltipPosition);
+						tooltipRect = this.calculateTooltipRect();
+					} else {
+						count = 5;
+						break;
+					}
 				case 'below':
-				if((Tooltip._isOutOfBounds(tooltipRect.bottom, 'y'))) {
-					this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
-					tooltipRect = this.calculateTooltipRect();
-				} else {
-					console.log('break', this.tooltipPosition);
-					break
-				}
+					count++;
+					if((Tooltip._isOutOfBounds(tooltipRect.bottom, 'y'))) {
+						this.tooltipPosition = Tooltip._rotateOrientation(this.tooltipPosition);
+						tooltipRect = this.calculateTooltipRect();
+					} else {
+						count = 5;
+						break;
+					}
 				case 'left':
-				if((Tooltip._isOutOfBounds(tooltipRect.left, 'x'))) {
-					this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
-					tooltipRect = this.calculateTooltipRect();
-				} else {
-					console.log('break', this.tooltipPosition);
-					break
-				}
+					count++;
+					if((Tooltip._isOutOfBounds(tooltipRect.left, 'x'))) {
+						this.tooltipPosition = Tooltip._rotateOrientation(this.tooltipPosition);
+						tooltipRect = this.calculateTooltipRect();
+					} else {
+						count = 5;
+						break;
+					}
 			}
 		}
 
-		tooltipRect = this.calculateTooltipRect()
-		// Check there's enough room above / below / to the left / right to draw the tooltip
-		// if (this.tooltipPosition === 'above' || this.tooltipPosition === 'below') {
-		// 	if ((Tooltip._isOutOfBounds(tooltipRect.top, "y") || Tooltip._isOutOfBounds(tooltipRect.bottom, "y"))) {
-		// 		this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
-		// 		tooltipRect = this.calculateTooltipRect();
-		// 	}
-		// }
-		//
-		// if (this.tooltipPosition === 'left' || this.tooltipPosition === 'right') {
-		// 	if ((Tooltip._isOutOfBounds(tooltipRect.left, "x") || Tooltip._isOutOfBounds(tooltipRect.right, "x"))) {
-		// 		this.tooltipPosition = Tooltip._flipOrientation(this.tooltipPosition);
-		// 		tooltipRect = this.calculateTooltipRect();
-		// 	}
-		// }
+		if (count > 5) {
+			Tooltip.throwError("There is not enough space in the client window to draw the tooltip.")
+		}
 
 		/* Now align the tooltip to the left | right | top | bottom  of the target
 			if there's not enough room for it to aligned to the middle of the target
@@ -359,6 +351,7 @@ class Tooltip {
 	 * @returns {Object} An object with values `left`, `right`, `top` and `bottom`
 	 * representing the bounding box of the tooltip (including the arrow)
 	*/
+
 	calculateTooltipRect() {
 		const rect = {};
 		const width = this.width();
@@ -443,27 +436,26 @@ class Tooltip {
 	};
 
 	static _isOutOfBounds(point, axis) {
-		console.log({point});
 		if (point < 0) {
 			return true;
 		}
-		if (axis === 'y' && point > document.body.offsetHeight) {
+		if (axis === 'y' && point > document.documentElement.clientHeight) {
 			return true;
-		} else if (axis === 'x' && point > document.body.offsetWidth) {
+		} else if (axis === 'x' && point > document.documentElement.clientWidth) {
 			return true;
 		}
 		return false;
 	}
 
-	static _flipOrientation(orientation) {
-		const flip = {
+	static _rotateOrientation(orientation) {
+		const rotate = {
 			"above": "right",
 			"right": "below",
 			"below": "left",
 			"left": "above"
 		};
 
-		return flip[orientation];
+		return rotate[orientation];
 	}
 
 	static throwError(message) {
