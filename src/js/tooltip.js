@@ -32,7 +32,7 @@ class Tooltip {
 		this.tooltipPosition = this.opts.position;
 		this.tooltipAlignment = null;
 		this.visible = false;
-		this.rect;
+		this.tooltipRect;
 
 		this.delegates = {
 			target: new Delegate(this.target.targetEl),
@@ -263,53 +263,54 @@ class Tooltip {
 		let tooltipSet = false;
 
 		while (count < 5 && !tooltipSet) {
+			count++;
 			switch(this.tooltipPosition) {
 				case 'above':
-					count++;
-					tooltipSet = this._resetPosition(this.rect.top, 'y')
+					tooltipSet = this.resetPosition(this.tooltipRect.top, 'y');
+					break;
 				case 'right':
-					count++;
-					tooltipSet = this._resetPosition(this.rect.right, 'x')
+					tooltipSet = this.resetPosition(this.tooltipRect.right, 'x');
+					break;
 				case 'below':
-					count++;
-					tooltipSet = this._resetPosition(this.rect.bottom, 'y')
+					tooltipSet = this.resetPosition(this.tooltipRect.bottom, 'y');
+					break;
 				case 'left':
-					count++;
-					tooltipSet = this._resetPosition(this.rect.left, 'x')
+					tooltipSet = this.resetPosition(this.tooltipRect.left, 'x');
+					break;
 			}
 		}
 
-		if (count > 5) {
+		if (count >= 5) {
 			Tooltip.throwError("There is not enough space in the client window to draw the tooltip.");
 		}
 
 		/* Now align the tooltip to the left | right | top | bottom  of the target
 			if there's not enough room for it to aligned to the middle of the target
-			NB once this.rect.top is set, this.rect.bottom is no longer correct and should be
+			NB once this.tooltipRect.top is set, this.tooltipRect.bottom is no longer correct and should be
 			recalculated before use */
 		if (this.tooltipPosition === 'above' || this.tooltipPosition === 'below') {
-			if (Tooltip._isOutOfBounds(this.rect.left, 'x')) {
-				this.rect.left = this._getLeftFor('left');
+			if (Tooltip._isOutOfBounds(this.tooltipRect.left, 'x')) {
+				this.tooltipRect.left = this._getLeftFor('left');
 				this.tooltipAlignment = 'left';
 			}
-			if (Tooltip._isOutOfBounds(this.rect.right, 'x')) {
-				this.rect.left = this._getLeftFor('right');
+			if (Tooltip._isOutOfBounds(this.tooltipRect.right, 'x')) {
+				this.tooltipRect.left = this._getLeftFor('right');
 				this.tooltipAlignment = 'right';
 			}
 		}
 
 		if (this.tooltipPosition === 'left' || this.tooltipPosition === 'right') {
-			if (Tooltip._isOutOfBounds(this.rect.top, 'y')) {
-				this.rect.top = this._getTopFor('top');
+			if (Tooltip._isOutOfBounds(this.tooltipRect.top, 'y')) {
+				this.tooltipRect.top = this._getTopFor('top');
 				this.tooltipAlignment = 'top';
 			}
-			if (Tooltip._isOutOfBounds(this.rect.bottom, 'y')) {
-				this.rect.top = this._getTopFor('bottom');
+			if (Tooltip._isOutOfBounds(this.tooltipRect.bottom, 'y')) {
+				this.tooltipRect.top = this._getTopFor('bottom');
 				this.tooltipAlignment = 'bottom';
 			}
 		}
 
-		this._drawTooltip(this.rect);
+		this._drawTooltip(this.tooltipRect);
 		this._setArrow();
 	};
 
@@ -331,6 +332,16 @@ class Tooltip {
 	 * @returns {Object} An object with values `left`, `right`, `top` and `bottom`
 	 * representing the bounding box of the tooltip (including the arrow)
 	*/
+
+	resetPosition(side, axis) {
+		if (Tooltip._isOutOfBounds(side, axis)) {
+			this.tooltipPosition = Tooltip._rotateOrientation(this.tooltipPosition);
+			this.calculateTooltipRect();
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	calculateTooltipRect() {
 		const rect = {};
@@ -362,17 +373,7 @@ class Tooltip {
 		rect.right = rect.left + width;
 		rect.bottom = rect.top + height;
 
-		this.rect = rect;
-	}
-
-	_resetPosition(side, axis) {
-		if(Tooltip._isOutOfBounds(side, axis)) {
-			this.tooltipPosition = Tooltip._rotateOrientation(this.tooltipPosition)
-			this.calculateTooltipRect();
-			return false
-		} else {
-			return true;
-		}
+		this.tooltipRect = rect;
 	}
 
 	_getScrollPosition() {
