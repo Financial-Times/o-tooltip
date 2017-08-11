@@ -43,9 +43,9 @@ class Tooltip {
 			this.delegates.target.on('click', this.show.bind(this));
 		}
 
-        if (this.opts.toggleOnClick) {
-            this.delegates.target.on('click', this.toggle.bind(this));
-        }
+		if (this.opts.toggleOnClick) {
+			this.delegates.target.on('click', this.toggle.bind(this));
+		}
 
 		if (this.opts.showOnHover) {
 			this.delegates.target.on('mouseover', this.show.bind(this));
@@ -60,15 +60,15 @@ class Tooltip {
 		if (this.opts.showOnConstruction) {
 			this.show();
 
-            if(this.opts.closeAfter) {
+			if(this.opts.closeAfter) {
 				this.closeAfter(this.opts.closeAfter);
 			}
 		}
 		else {
-            if (this.opts.showAfter) {
-                this.showAfter(this.opts.showAfter);
-            }
-        }
+			if (this.opts.showAfter) {
+				this.showAfter(this.opts.showAfter);
+			}
+		}
 	};
 
 
@@ -193,39 +193,39 @@ class Tooltip {
 	};
 
 
-    /**
-     * Toggle the tooltip open and close
-     */
-    toggle() {
-        if(this.visible) {
-            this.close();
-        }
-        else {
-            this.show();
-        }
-    }
+	/**
+	 * Toggle the tooltip open and close
+	 */
+	toggle() {
+		if(this.visible) {
+			this.close();
+		}
+		else {
+			this.show();
+		}
+	}
 
 
-    /**
-     * Close the tooltip after set time
-     * @param seconds
-     */
-    closeAfter(seconds) {
-        this.closeTimeout = setTimeout(() => {
-            this.close();
-        }, seconds*1000);
-    }
+	/**
+	 * Close the tooltip after set time
+	 * @param seconds
+	 */
+	closeAfter(seconds) {
+		this.closeTimeout = setTimeout(() => {
+			this.close();
+		}, seconds*1000);
+	}
 
 
-    /**
-     * Show the tooltip after set time
-     * @param seconds
-     */
-    showAfter(seconds) {
-        this.showTimeout = setTimeout(() => {
-            this.show();
-        }, seconds*1000);
-    }
+	/**
+	 * Show the tooltip after set time
+	 * @param seconds
+	 */
+	showAfter(seconds) {
+		this.showTimeout = setTimeout(() => {
+			this.show();
+		}, seconds*1000);
+	}
 
 	/**
 	 * Destroy the tooltip.
