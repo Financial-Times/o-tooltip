@@ -12,6 +12,7 @@ class Tooltip {
 	 * @param {Object} opts - An options object for configuring the tooltip (Optional)
 	*/
 	constructor (tooltipEl, opts) {
+	    console.log("Constructor");
 		if (!Tooltip._tooltips) {
 			Tooltip._tooltips = new Map();
 		}
@@ -39,9 +40,16 @@ class Tooltip {
 			tooltip: new Delegate(),
 		};
 
+		console.log(this.opts);
+
 		if (this.opts.showOnClick) {
 			this.delegates.target.on('click', this.show.bind(this));
 		}
+
+        if (this.opts.toggleOnClick) {
+		    console.log("Toggle on click set up");
+            this.delegates.target.on('click', this.toggle.bind(this));
+        }
 
 		if (this.opts.showOnHover) {
 			this.delegates.target.on('mouseover', this.show.bind(this));
@@ -55,8 +63,19 @@ class Tooltip {
 		// Do you render as soon as possible?
 		if (this.opts.showOnConstruction) {
 			this.show();
+
+            if(this.opts.closeAfter) {
+                this.closeAfter(this.opts.closeAfter);
+            }
 		}
+		else {
+            if(this.opts.showAfter) {
+                this.showAfter(this.opts.showAfter);
+            }
+        }
+
 	};
+
 
 	/**
 	 * Get the data attributes from the tooltipEl. If the tooltip is being set up
@@ -151,6 +170,7 @@ class Tooltip {
 	 * pattern. Calls DrawTooltip.
 	*/
 	show() {
+		console.log("show called....");
 		// Delegate pattern
 		this.delegates.doc.root(document.body);
 		this.delegates.tooltip.root(this.tooltipEl);
@@ -170,12 +190,51 @@ class Tooltip {
 
 		this.drawTooltip();
 		this.visible = true;
+		clearTimeout(this.showTimeout);
 
 		// Run show tooltip transition
 		this.tooltipEl.style.display = 'block';
 		this.tooltipEl.style.opacity = 1;
 		this.tooltipEl.classList.add('visible');
 	};
+
+
+    /**
+     * Toggle the tooltip open and close
+     */
+    toggle() {
+    	console.log("Toggling...", this.visible);
+        if(this.visible) {
+        	console.log('Closing...');
+            this.close();
+        }
+        else {
+        	console.log("showing...");
+            this.show();
+        }
+    }
+
+
+    /**
+     * Close the tooltip after set time
+     * @param seconds
+     */
+    closeAfter(seconds) {
+        this.closeTimeout = setTimeout(() => {
+            this.close();
+        }, seconds*1000)
+    }
+
+
+    /**
+     * Show the tooltip after set time
+     * @param seconds
+     */
+    showAfter(seconds) {
+        this.showTimeout = setTimeout(() => {
+            this.show();
+        }, seconds*1000)
+    }
 
 	/**
 	 * Destroy the tooltip.
@@ -200,6 +259,7 @@ class Tooltip {
 		this.delegates.doc.destroy();
 		this.delegates.tooltip.destroy();
 
+		clearTimeout(this.closeTimeout);
 		this.visible = false;
 
 		// Run close tooltip transition
@@ -228,6 +288,10 @@ class Tooltip {
 			this.close();
 		}
 	};
+
+	closeOnClick() {
+
+	}
 
 	/**
 	 * Respond to resize events. Redraw the tooltip in case the target has moved.
