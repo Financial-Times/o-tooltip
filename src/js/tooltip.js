@@ -61,15 +61,14 @@ class Tooltip {
 			this.show();
 
             if(this.opts.closeAfter) {
-                this.closeAfter(this.opts.closeAfter);
-            }
+				this.closeAfter(this.opts.closeAfter);
+			}
 		}
 		else {
-            if(this.opts.showAfter) {
+            if (this.opts.showAfter) {
                 this.showAfter(this.opts.showAfter);
             }
         }
-
 	};
 
 

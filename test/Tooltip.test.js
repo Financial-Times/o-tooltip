@@ -104,20 +104,20 @@ describe("Tooltip", () => {
 			});
 
 			it("calls the closeAfter() method if closeAfter prop is set", () => {
-                new Tooltip(stubEl, { "showOnConstruction": true, "closeAfter": 3 });
-                proclaim.isTrue(showStub.called);
-                proclaim.isTrue(closeAfterStub.called);
+				new Tooltip(stubEl, { "showOnConstruction": true, "closeAfter": 3 });
+				proclaim.isTrue(showStub.called);
+				proclaim.isTrue(closeAfterStub.called);
 
-                // If show() is called after closeAfter(), it will clear the timeout.
-                sinon.assert.callOrder(showStub, closeAfterStub);
+				// If show() is called after closeAfter(), it will clear the timeout.
+				sinon.assert.callOrder(showStub, closeAfterStub);
 			});
 		});
-        context("opts.showOnConstruction is set to false", () => {
-            it("calls the showAfter() method if showAfter prop is set", () => {
-                new Tooltip(stubEl, { "showAfter": 3 });
-                proclaim.isTrue(showAfterStub.called);
-            });
-        });
+		context("opts.showOnConstruction is set to false", () => {
+			it("calls the showAfter() method if showAfter prop is set", () => {
+				new Tooltip(stubEl, { "showAfter": 3 });
+				proclaim.isTrue(showAfterStub.called);
+			});
+		});
 
 		it("Adds the tooltip to the global tooltip map", () => {
 			proclaim.isUndefined(Tooltip._tooltips);
@@ -452,15 +452,14 @@ describe("Tooltip", () => {
 		});
 
 		it('clears the showAfter timeout if there is one ongoing', () => {
-            const clearTimeoutStub = sinon.spy(window, 'clearTimeout');
-		    const tooltipEl = document.getElementById('tooltip-demo');
-            const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
+			const clearTimeoutStub = sinon.spy(window, 'clearTimeout');
+			const tooltipEl = document.getElementById('tooltip-demo');
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 
-            testTooltip.show();
-            proclaim.isTrue(clearTimeoutStub.calledWith(testTooltip.showTimeout));
-            clearTimeoutStub.restore();
-
-        });
+			testTooltip.show();
+			proclaim.isTrue(clearTimeoutStub.calledWith(testTooltip.showTimeout));
+			clearTimeoutStub.restore();
+		});
 	});
 
 	describe("drawTooltip", () => {
@@ -1300,14 +1299,14 @@ describe("Tooltip", () => {
 		});
 
 		it('clears closeAfter timeout if there is one set', () => {
-		    const clearTimeoutStub = sinon.spy(window, 'clearTimeout');
-            const tooltipEl = document.getElementById('tooltip-demo');
-            const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
+			const clearTimeoutStub = sinon.spy(window, 'clearTimeout');
+			const tooltipEl = document.getElementById('tooltip-demo');
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 
-            testTooltip.close();
-            proclaim.isTrue(clearTimeoutStub.calledWith(testTooltip.closeTimeout));
-            clearTimeoutStub.restore();
-        });
+			testTooltip.close();
+			proclaim.isTrue(clearTimeoutStub.calledWith(testTooltip.closeTimeout));
+			clearTimeoutStub.restore();
+		});
 	});
 
 	describe("#closeOnKeyUp", () => {
@@ -1343,58 +1342,58 @@ describe("Tooltip", () => {
 
 
 	describe("toggle()", () => {
-        beforeEach(() => {
-            fixtures.declarativeCode();
-        });
+		beforeEach(() => {
+			fixtures.declarativeCode();
+		});
 
-        afterEach(() => {
-            fixtures.reset();
-        });
+		afterEach(() => {
+			fixtures.reset();
+		});
 
-        context('trigger clicked', () => {
-            it('should call show() when not visible', () => {
-                const showStub = sinon.stub(Tooltip.prototype, 'show');
-                const tooltipEl = document.getElementById('tooltip-demo');
-                new Tooltip(tooltipEl,
+		context('trigger clicked', () => {
+			it('should call show() when not visible', () => {
+				const showStub = sinon.stub(Tooltip.prototype, 'show');
+				const tooltipEl = document.getElementById('tooltip-demo');
+				new Tooltip(tooltipEl,
 					{
 						target: 'demo-tooltip-target',
 						toggleOnClick: true
 					});
-                document.getElementById('demo-tooltip-target').click();
-                proclaim.isTrue(showStub.called);
-                showStub.restore();
-            });
+				document.getElementById('demo-tooltip-target').click();
+				proclaim.isTrue(showStub.called);
+				showStub.restore();
+			});
 
-            it('should call close() when visible', () => {
-                const closeStub = sinon.stub(Tooltip.prototype, 'close');
-                const tooltipEl = document.getElementById('tooltip-demo');
-                new Tooltip(tooltipEl, {
-                    target: 'demo-tooltip-target',
-                    toggleOnClick: true,
-                    showOnConstruction: true
-                });
-                document.getElementById('demo-tooltip-target').click();
-                proclaim.isTrue(closeStub.called);
-                closeStub.restore();
-            });
+			it('should call close() when visible', () => {
+				const closeStub = sinon.stub(Tooltip.prototype, 'close');
+				const tooltipEl = document.getElementById('tooltip-demo');
+				new Tooltip(tooltipEl, {
+					target: 'demo-tooltip-target',
+					toggleOnClick: true,
+					showOnConstruction: true
+				});
+				document.getElementById('demo-tooltip-target').click();
+				proclaim.isTrue(closeStub.called);
+				closeStub.restore();
+			});
 
-            it('should toggle the visibility of the tooltip', () => {
-                const tooltipEl = document.getElementById('tooltip-demo');
-                const testTooltip = new Tooltip(tooltipEl, {
-                   target: 'demo-tooltip-target',
-                   toggleOnClick: true
-                });
+			it('should toggle the visibility of the tooltip', () => {
+				const tooltipEl = document.getElementById('tooltip-demo');
+				const testTooltip = new Tooltip(tooltipEl, {
+					target: 'demo-tooltip-target',
+					toggleOnClick: true
+				});
 
-                proclaim.isFalse(testTooltip.visible);
-                document.getElementById('demo-tooltip-target').click();
-                proclaim.isTrue(testTooltip.visible);
-                document.getElementById('demo-tooltip-target').click();
-                proclaim.isFalse(testTooltip.visible);
+				proclaim.isFalse(testTooltip.visible);
+				document.getElementById('demo-tooltip-target').click();
+				proclaim.isTrue(testTooltip.visible);
+				document.getElementById('demo-tooltip-target').click();
+				proclaim.isFalse(testTooltip.visible);
 
-            });
-        });
+			});
+		});
 
-    });
+	});
 
 	describe('throwError', () => {
 		it("thows an error", () => {

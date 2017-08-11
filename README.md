@@ -49,7 +49,7 @@ Attributes can be set declaratively, or passed in on instantiation in an options
 - `data-o-tooltip-show-on-construction`: Optional. Boolean value. Set to true if you want the tooltip to be rendered immediately after it is constructed. Defaults to false.
 - `data-o-tooltip-show-on-hover`: Optional. Boolean value. Set to true if you want to show and hide the tooltip based on the mouseover and mouseout events (respectively) of the target. Defaults to false.
 - `data-o-tooltip-show-on-click`: Optional. Boolean value. Set to true if you want to show the tooltip upon clicking the target element. Defaults to false.
-- `data-o-tooltip-toggle-on-click`: Optional. Boolean value. Set to true if you want to show and hide the tooltip by licking on the target.
+- `data-o-tooltip-toggle-on-click`: Optional. Boolean value. Set to true if you want to show and hide the tooltip by clicking on the target.
 - `data-o-tooltip-show-after`: Optional. Integer value. Specify the number of seconds to wait before showing the tooltip. Only applies when `data-o-tooltip-show-on-construction` is set to `false`
 - `data-o-tooltip-close-after`: Optional. Integer value. Specify the number of seconds to wait before closing the tooltip. Only applies when `data-o-tooltip-show-on-construction` is set to `true`
 - `data-o-tooltip-z-index`: Optional. The z-index for the tooltip.
