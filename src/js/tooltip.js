@@ -281,9 +281,6 @@ class Tooltip {
 		}
 	};
 
-	closeOnClick() {
-
-	}
 
 	/**
 	 * Respond to resize events. Redraw the tooltip in case the target has moved.

@@ -38,9 +38,9 @@ describe("Tooltip", () => {
 			renderStub = sinon.stub(Tooltip.prototype, 'render');
 			constructElementStub = sinon.stub(Tooltip, 'constructElement').returns(document.createElement('div'));
 			showStub = sinon.stub(Tooltip.prototype, 'show');
-            showAfterStub = sinon.stub(Tooltip.prototype, 'showAfter');
+			showAfterStub = sinon.stub(Tooltip.prototype, 'showAfter');
 			closeStub = sinon.stub(Tooltip.prototype, 'close');
-            closeAfterStub = sinon.stub(Tooltip.prototype, 'closeAfter');
+			closeAfterStub = sinon.stub(Tooltip.prototype, 'closeAfter');
 			targetStub = sinon.stub(Tooltip, "Target");
 		});
 
