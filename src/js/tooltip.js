@@ -214,7 +214,7 @@ class Tooltip {
     closeAfter(seconds) {
         this.closeTimeout = setTimeout(() => {
             this.close();
-        }, seconds*1000)
+        }, seconds*1000);
     }
 
 
@@ -225,7 +225,7 @@ class Tooltip {
     showAfter(seconds) {
         this.showTimeout = setTimeout(() => {
             this.show();
-        }, seconds*1000)
+        }, seconds*1000);
     }
 
 	/**

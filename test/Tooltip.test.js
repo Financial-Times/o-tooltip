@@ -460,7 +460,7 @@ describe("Tooltip", () => {
             proclaim.isTrue(clearTimeoutStub.calledWith(testTooltip.showTimeout));
             clearTimeoutStub.restore();
 
-        })
+        });
 	});
 
 	describe("drawTooltip", () => {
@@ -1307,7 +1307,7 @@ describe("Tooltip", () => {
             testTooltip.close();
             proclaim.isTrue(clearTimeoutStub.calledWith(testTooltip.closeTimeout));
             clearTimeoutStub.restore();
-        })
+        });
 	});
 
 	describe("#closeOnKeyUp", () => {
@@ -1355,7 +1355,7 @@ describe("Tooltip", () => {
             it('should call show() when not visible', () => {
                 const showStub = sinon.stub(Tooltip.prototype, 'show');
                 const tooltipEl = document.getElementById('tooltip-demo');
-                const testTooltip = new Tooltip(tooltipEl,
+                new Tooltip(tooltipEl,
 					{
 						target: 'demo-tooltip-target',
 						toggleOnClick: true
@@ -1368,7 +1368,7 @@ describe("Tooltip", () => {
             it('should call close() when visible', () => {
                 const closeStub = sinon.stub(Tooltip.prototype, 'close');
                 const tooltipEl = document.getElementById('tooltip-demo');
-                const testTooltip = new Tooltip(tooltipEl, {
+                new Tooltip(tooltipEl, {
                     target: 'demo-tooltip-target',
                     toggleOnClick: true,
                     showOnConstruction: true
@@ -1391,7 +1391,7 @@ describe("Tooltip", () => {
                 document.getElementById('demo-tooltip-target').click();
                 proclaim.isFalse(testTooltip.visible);
 
-            })
+            });
         });
 
     });
