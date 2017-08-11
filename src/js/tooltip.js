@@ -12,7 +12,6 @@ class Tooltip {
 	 * @param {Object} opts - An options object for configuring the tooltip (Optional)
 	*/
 	constructor (tooltipEl, opts) {
-	    console.log("Constructor");
 		if (!Tooltip._tooltips) {
 			Tooltip._tooltips = new Map();
 		}
@@ -40,14 +39,11 @@ class Tooltip {
 			tooltip: new Delegate(),
 		};
 
-		console.log(this.opts);
-
 		if (this.opts.showOnClick) {
 			this.delegates.target.on('click', this.show.bind(this));
 		}
 
         if (this.opts.toggleOnClick) {
-		    console.log("Toggle on click set up");
             this.delegates.target.on('click', this.toggle.bind(this));
         }
 
@@ -170,7 +166,6 @@ class Tooltip {
 	 * pattern. Calls DrawTooltip.
 	*/
 	show() {
-		console.log("show called....");
 		// Delegate pattern
 		this.delegates.doc.root(document.body);
 		this.delegates.tooltip.root(this.tooltipEl);
@@ -203,13 +198,10 @@ class Tooltip {
      * Toggle the tooltip open and close
      */
     toggle() {
-    	console.log("Toggling...", this.visible);
         if(this.visible) {
-        	console.log('Closing...');
             this.close();
         }
         else {
-        	console.log("showing...");
             this.show();
         }
     }
