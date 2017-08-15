@@ -7,8 +7,14 @@ const Tooltip = require('./../main');
 import Viewport from 'o-viewport';
 
 describe("Tooltip", () => {
+	let resetPositionStub;
+
+	beforeEach(() => {
+		resetPositionStub = sinon.stub(Tooltip.prototype, 'resetPosition');
+	});
 
 	afterEach(() => {
+		resetPositionStub.restore();
 		if (Tooltip._tooltips){
 			Tooltip._tooltips.forEach((tooltip) => {
 				tooltip.destroy();
@@ -436,28 +442,37 @@ describe("Tooltip", () => {
 		let targetStub;
 		let drawStub;
 		let setArrowStub;
+		let calculateTooltipRectStub;
+		let outOfBoundsStub;
 
 		beforeEach(() => {
 			fixtures.declarativeCode();
-
+			calculateTooltipRectStub = sinon.stub(Tooltip.prototype, 'calculateTooltipRect');
 			getStub = sinon.stub(Tooltip, 'getOptions');
 			drawStub = sinon.stub(Tooltip.prototype, '_drawTooltip');
 			setArrowStub = sinon.stub(Tooltip.prototype, '_setArrow');
+			outOfBoundsStub = sinon.stub(Tooltip, '_isOutOfBounds');
 			let stubEl = document.createElement('div');
 			testTooltip = new Tooltip(stubEl, {target: 'demo-tooltip-target'});
 			testTooltip.tooltipRect = {left: 1, right: 1, top: 1, bottom: 1};
 		});
 
 		afterEach(() => {
+
 			getStub.restore();
+			calculateTooltipRectStub.restore();
 			drawStub.restore();
 			setArrowStub.restore();
 			testTooltip.destroy();
 			fixtures.reset();
+			outOfBoundsStub.restore();
 		});
 
 		/* Happy path */
 		it("sets tooltipAlignment to 'middle'", () => {
+			outOfBoundsStub.returns(false);
+			resetPositionStub.returns([true, 'someValue']);
+
 			testTooltip.tooltipAlignment = 'someValue';
 			proclaim.notStrictEqual(testTooltip.tooltipAlignment, 'middle');
 			testTooltip.drawTooltip();
@@ -465,21 +480,26 @@ describe("Tooltip", () => {
 		});
 
 		it("calls calculateTooltipRect", () => {
-			const calculateTooltipRectStub = sinon.stub(Tooltip.prototype, 'calculateTooltipRect')
+			outOfBoundsStub.returns(false);
+			resetPositionStub.returns([true, 'someValue']);
+
 			testTooltip.drawTooltip();
 			proclaim.isTrue(calculateTooltipRectStub.called);
-			calculateTooltipRectStub.restore();
 		});
 
 		it("calls _drawTooltip with the result of calculateTooltipRect", () => {
-			const calculateTooltipRectStub = sinon.stub(Tooltip.prototype, 'calculateTooltipRect');
+			outOfBoundsStub.returns(false);
+			resetPositionStub.returns([true, 'someValue']);
+
 			testTooltip.drawTooltip();
 			proclaim.isTrue(drawStub.called);
 			proclaim.strictEqual(drawStub.firstCall.args[0], testTooltip.tooltipRect);
-			calculateTooltipRectStub.restore();
 		});
 
 		it("calls _setArrow", () => {
+			outOfBoundsStub.returns(false);
+			resetPositionStub.returns([true, 'someValue']);
+
 			testTooltip.drawTooltip();
 			proclaim.isTrue(setArrowStub.called);
 		});
@@ -488,22 +508,14 @@ describe("Tooltip", () => {
 		it rotates the tooltip clockwise. So "top" becomes "right", "right" becomes "bottom" etc */
 		describe("rotates the tooltip", () => {
 			let originalTooltipPosition;
-			let outOfBoundsStub;
-			let resetPositionStub;
 			let rotateResultStub;
 			let rotateStub;
-			let tooltipRect;
 
 			beforeEach(() => {
-				tooltipRect = {top: 1, bottom: 2, left: 3, right: 4};
-				outOfBoundsStub = sinon.stub(Tooltip, '_isOutOfBounds');
-				resetPositionStub = sinon.stub(Tooltip.prototype, 'resetPosition')
 				rotateStub = sinon.stub(Tooltip, '_rotateOrientation')
 			});
 
 			afterEach(() => {
-				outOfBoundsStub.restore();
-				resetPositionStub.restore();
 				rotateStub.restore();
 			});
 
@@ -512,25 +524,24 @@ describe("Tooltip", () => {
 					// Set the tooltip postition to above, but the tooltip top to off screen
 					testTooltip.tooltipPosition = "above";
 
-					outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(true);
-					outOfBoundsStub.withArgs(tooltipRect.right, 'x').returns(false);
+					outOfBoundsStub.withArgs(testTooltip.tooltipRect.top, 'y').returns(true);
+					outOfBoundsStub.withArgs(testTooltip.tooltipRect.right, 'x').returns(false);
 
 					originalTooltipPosition = testTooltip.tooltipPosition;
 					rotateResultStub = "right";
 					rotateStub.withArgs(originalTooltipPosition).returns(rotateResultStub);
+
+					resetPositionStub.withArgs(testTooltip.tooltipRect.top, 'y').returns([false, rotateResultStub]);
+					resetPositionStub.withArgs(testTooltip.tooltipRect.right, 'x').returns([true, rotateResultStub]);
 				});
 
-				it.only("changes the tooltipPosition through resetPosition", () => {
-					resetPositionStub.withArgs(tooltipRect.top, 'y').returns(false);
-					resetPositionStub.withArgs(tooltipRect.right, 'x').returns(true);
-
+				it("changes the tooltipPosition through resetPosition", () => {
 					testTooltip.drawTooltip();
-
 					proclaim.isTrue(resetPositionStub.calledTwice);
 				});
 
 				it("redraws the tooltip when it finds space", () => {
-					testTooltip.drawTooltip()
+					testTooltip.drawTooltip();
 					proclaim.strictEqual(drawStub.firstCall.args[0], testTooltip.tooltipRect);
 				});
 			});
@@ -540,19 +551,20 @@ describe("Tooltip", () => {
 					// Set the tooltip postition to above, but the tooltip top to off screen
 					testTooltip.tooltipPosition = "below";
 
-					outOfBoundsStub.withArgs(tooltipRect.bottom, 'y').returns(true);
-					outOfBoundsStub.withArgs(tooltipRect.left, 'x').returns(false);
+					outOfBoundsStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns(true);
+					outOfBoundsStub.withArgs(testTooltip.tooltipRect.left, 'x').returns(false);
 
 					originalTooltipPosition = testTooltip.tooltipPosition;
 					rotateResultStub = "left";
 					rotateStub.withArgs(originalTooltipPosition).returns(rotateResultStub);
+
+					resetPositionStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns([false, rotateResultStub]);
+					resetPositionStub.withArgs(testTooltip.tooltipRect.left, 'x').returns([true, rotateResultStub]);
 				});
 
 				it("changes the tooltipPosition through resetPosition", () => {
-					testTooltip.resetPosition(tooltipRect.bottom, 'y')
-
-					proclaim.strictEqual(rotateStub.firstCall.args[0], originalTooltipPosition);
-					proclaim.strictEqual(testTooltip.tooltipPosition, rotateResultStub);
+					testTooltip.drawTooltip();
+					proclaim.isTrue(resetPositionStub.calledTwice);
 				});
 
 				it("redraws the tooltip when it finds space", () => {
@@ -566,17 +578,19 @@ describe("Tooltip", () => {
 					// Set the tooltip postition to above, but the tooltip top to off screen
 					testTooltip.tooltipPosition = "left";
 
-					outOfBoundsStub.withArgs(tooltipRect.left, 'x').returns(true);
-					outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(false);
+					outOfBoundsStub.withArgs(testTooltip.tooltipRect.left, 'x').returns(true);
+					outOfBoundsStub.withArgs(testTooltip.tooltipRect.top, 'y').returns(false);
 
 					originalTooltipPosition = testTooltip.tooltipPosition;
 					rotateResultStub = "above";
 					rotateStub.withArgs(originalTooltipPosition).returns(rotateResultStub);
+
+					resetPositionStub.withArgs(testTooltip.tooltipRect.left, 'x').returns([false, rotateResultStub]);
+					resetPositionStub.withArgs(testTooltip.tooltipRect.top, 'y').returns([true, rotateResultStub]);
 				});
 
 				it("changes the tooltipPosition through resetPosition", () => {
-					testTooltip.resetPosition(tooltipRect.left, 'x');
-					proclaim.strictEqual(rotateStub.firstCall.args[0], originalTooltipPosition);
+					testTooltip.drawTooltip();
 					proclaim.strictEqual(testTooltip.tooltipPosition, rotateResultStub);
 				});
 
@@ -591,17 +605,19 @@ describe("Tooltip", () => {
 					// Set the tooltip postition to above, but the tooltip top to off screen
 					testTooltip.tooltipPosition = "right";
 
-					outOfBoundsStub.withArgs(tooltipRect.right, 'x').returns(true);
-					outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(false);
+					outOfBoundsStub.withArgs(testTooltip.tooltipRect.right, 'x').returns(true);
+					outOfBoundsStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns(false);
 
 					originalTooltipPosition = testTooltip.tooltipPosition;
-					rotateResultStub = "above";
+					rotateResultStub = "below";
 					rotateStub.withArgs(originalTooltipPosition).returns(rotateResultStub);
+
+					resetPositionStub.withArgs(testTooltip.tooltipRect.right, 'x').returns([false, rotateResultStub]);
+					resetPositionStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns([true, rotateResultStub]);
 				});
 
 				it("changes the tooltipPosition through resetPosition", () => {
-					testTooltip.resetPosition(tooltipRect.right, 'x');
-					proclaim.strictEqual(rotateStub.firstCall.args[0], originalTooltipPosition);
+					testTooltip.drawTooltip()
 					proclaim.strictEqual(testTooltip.tooltipPosition, rotateResultStub);
 				});
 
@@ -616,7 +632,6 @@ describe("Tooltip", () => {
 		the tooltip with an extremity of the target (whichever is results in the tooltip
 		being entirely within document.body)*/
 		describe("aligns the tooltip with the target", () => {
-			let outOfBoundsStub;
 			let edgeStubValue;
 			let tooltipRect;
 			let calculateTooltipRectStub;
@@ -624,18 +639,13 @@ describe("Tooltip", () => {
 			let getTopStub;
 
 			beforeEach(() => {
-				tooltipRect = {top: 1, bottom: 2, left: 3, right: 4}; // we don't actually read these values
-				calculateTooltipRectStub = sinon.stub(Tooltip.prototype, 'calculateTooltipRect');
+				testTooltip.tooltipRect = {top: 1, bottom: 2, left: 3, right: 4}; // we don't actually read these values
 				edgeStubValue = 'someEdge';
 				getLeftStub = sinon.stub(Tooltip.prototype, '_getLeftFor').returns(edgeStubValue);
 				getTopStub = sinon.stub(Tooltip.prototype, '_getTopFor').returns(edgeStubValue);
-
-				outOfBoundsStub = sinon.stub(Tooltip, '_isOutOfBounds');
 			});
 
 			afterEach(() => {
-				outOfBoundsStub.restore();
-				calculateTooltipRectStub.restore();
 				getTopStub.restore();
 				getLeftStub.restore();
 			});
@@ -643,12 +653,13 @@ describe("Tooltip", () => {
 			describe("when the tootip is positioned above", ()=> {
 				beforeEach(() => {
 					testTooltip.tooltipPosition = "above";
+					resetPositionStub.withArgs(testTooltip.tooltipRect.top, 'y').returns([true, 'above']);
 				});
 
 				describe("and its left side is off screen", () => {
 					beforeEach(() => {
-						outOfBoundsStub.withArgs(tooltipRect.left, 'x').returns(true);
-						outOfBoundsStub.withArgs(tooltipRect.right, 'x').returns(false);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.left, 'x').returns(true);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.right, 'x').returns(false);
 					});
 
 					it("sets calls _drawTooltip with a rect with a left value from _getLeftFor", () => {
@@ -664,8 +675,8 @@ describe("Tooltip", () => {
 
 				describe("and its right side is off screen", () => {
 					beforeEach(() => {
-						outOfBoundsStub.withArgs(tooltipRect.left, 'x').returns(false);
-						outOfBoundsStub.withArgs(tooltipRect.right, 'x').returns(true);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.left, 'x').returns(false);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.right, 'x').returns(true);
 					});
 
 					it("sets calls _drawTooltip with a rect with a left value from _getLeftFor", () => {
@@ -684,12 +695,13 @@ describe("Tooltip", () => {
 			describe("when the tootip is positioned below", ()=> {
 				beforeEach(() => {
 					testTooltip.tooltipPosition = "below";
+					resetPositionStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns([true, 'below']);
 				});
 
 				describe("and its left side is off screen", () => {
 					beforeEach(() => {
-						outOfBoundsStub.withArgs(tooltipRect.left, 'x').returns(true);
-						outOfBoundsStub.withArgs(tooltipRect.right, 'x').returns(false);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.left, 'x').returns(true);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.right, 'x').returns(false);
 					});
 
 					it("sets calls _drawTooltip with a rect with a left value from _getleft", () => {
@@ -705,8 +717,8 @@ describe("Tooltip", () => {
 
 				describe("and its right side is off screen", () => {
 					beforeEach(() => {
-						outOfBoundsStub.withArgs(tooltipRect.left, 'x').returns(false);
-						outOfBoundsStub.withArgs(tooltipRect.right, 'x').returns(true);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.left, 'x').returns(false);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.right, 'x').returns(true);
 					});
 
 					it("sets calls _drawTooltip with a rect with a left value from _getLeft", () => {
@@ -725,12 +737,13 @@ describe("Tooltip", () => {
 			describe("when the tootip is positioned left", ()=> {
 				beforeEach(() => {
 					testTooltip.tooltipPosition = "left";
+					resetPositionStub.withArgs(testTooltip.tooltipRect.left, 'x').returns([true, 'left']);
 				});
 
 				describe("and its top is off screen", () => {
 					beforeEach(() => {
-						outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(true);
-						outOfBoundsStub.withArgs(tooltipRect.bottom, 'y').returns(false);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.top, 'y').returns(true);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns(false);
 					});
 
 					it("sets calls _drawTooltip with a rect with a top value from _getTopFor", () => {
@@ -746,8 +759,8 @@ describe("Tooltip", () => {
 
 				describe("and its bottom side is off screen", () => {
 					beforeEach(() => {
-						outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(false);
-						outOfBoundsStub.withArgs(tooltipRect.bottom, 'y').returns(true);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.top, 'y').returns(false);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns(true);
 					});
 
 					it("sets calls _drawTooltip with a rect with a left value from _getTop", () => {
@@ -766,12 +779,13 @@ describe("Tooltip", () => {
 			describe("when the tootip is positioned right", ()=> {
 				beforeEach(() => {
 					testTooltip.tooltipPosition = "right";
+					resetPositionStub.withArgs(testTooltip.tooltipRect.right, 'x').returns([true, 'right']);
 				});
 
 				describe("and its top is off screen", () => {
 					beforeEach(() => {
-						outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(true);
-						outOfBoundsStub.withArgs(tooltipRect.bottom, 'y').returns(false);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.top, 'y').returns(true);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns(false);
 					});
 
 					it("sets calls _drawTooltip with a rect with a top value from _getTop", () => {
@@ -787,8 +801,8 @@ describe("Tooltip", () => {
 
 				describe("and its bottom side is off screen", () => {
 					beforeEach(() => {
-						outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(false);
-						outOfBoundsStub.withArgs(tooltipRect.bottom, 'y').returns(true);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.top, 'y').returns(false);
+						outOfBoundsStub.withArgs(testTooltip.tooltipRect.bottom, 'y').returns(true);
 					});
 
 					it("sets calls _drawTooltip with a rect with a left value from _getTop", () => {
@@ -814,6 +828,7 @@ describe("Tooltip", () => {
 		let getTopStub;
 		let targetStub;
 		let renderStub;
+		let position;
 
 		beforeEach(() => {
 			getStub = sinon.stub(Tooltip, 'getOptions');
@@ -843,10 +858,11 @@ describe("Tooltip", () => {
 		describe("when position is above", () => {
 			beforeEach(() => {
 				testTooltip.tooltipPosition = 'above';
+				position = testTooltip.tooltipPosition;
 			});
 
 			it("calls get edge", () => {
-				testTooltip.calculateTooltipRect();
+				testTooltip.calculateTooltipRect(position);
 				proclaim.isTrue(getLeftStub.calledWith('middle'));
 			});
 
@@ -857,7 +873,7 @@ describe("Tooltip", () => {
 				let expectedBottom = expectedTop + testTooltip.height();
 
 				let expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
-				testTooltip.calculateTooltipRect();
+				testTooltip.calculateTooltipRect(position);
 				let returnValue = testTooltip.tooltipRect;
 
 				proclaim.deepEqual(expectedValue, returnValue);
@@ -867,10 +883,11 @@ describe("Tooltip", () => {
 		describe("when position is below", () => {
 			beforeEach(()=>{
 				testTooltip.tooltipPosition = 'below';
+				position = testTooltip.tooltipPosition;
 			});
 
 			it("calls get edge", () => {
-				testTooltip.calculateTooltipRect();
+				testTooltip.calculateTooltipRect(position);
 				proclaim.isTrue(getLeftStub.calledWith('middle'));
 			});
 
@@ -882,7 +899,7 @@ describe("Tooltip", () => {
 				let expectedBottom = expectedTop + testTooltip.height();
 
 				let expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
-				testTooltip.calculateTooltipRect();
+				testTooltip.calculateTooltipRect(position);
 				let returnValue = testTooltip.tooltipRect;
 
 				proclaim.deepEqual(expectedValue, returnValue);
@@ -893,10 +910,11 @@ describe("Tooltip", () => {
 		describe("when position is left", () => {
 			beforeEach(()=>{
 				testTooltip.tooltipPosition = 'left';
+				position = testTooltip.tooltipPosition;
 			});
 
 			it("calls get edge", () => {
-				testTooltip.calculateTooltipRect();
+				testTooltip.calculateTooltipRect(position);
 				proclaim.isTrue(getTopStub.calledWith('middle'));
 			});
 
@@ -908,7 +926,7 @@ describe("Tooltip", () => {
 				let expectedBottom = expectedTop + testTooltip.height();
 
 				let expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
-				testTooltip.calculateTooltipRect();
+				testTooltip.calculateTooltipRect(position);
 				let returnValue = testTooltip.tooltipRect;
 
 				proclaim.deepEqual(expectedValue, returnValue);
@@ -919,10 +937,12 @@ describe("Tooltip", () => {
 		describe("when position is right", () => {
 			beforeEach(() => {
 				testTooltip.tooltipPosition = 'right';
+				position = testTooltip.tooltipPosition;
+
 			});
 
 			it("calls get edge", () => {
-				testTooltip.calculateTooltipRect();
+				testTooltip.calculateTooltipRect(position);
 				proclaim.isTrue(getTopStub.calledWith('middle'));
 			});
 
@@ -934,7 +954,7 @@ describe("Tooltip", () => {
 				let expectedBottom = expectedTop + testTooltip.height();
 
 				let expectedValue = {left: expectedLeft, right: expectedRight, top: expectedTop, bottom: expectedBottom};
-				testTooltip.calculateTooltipRect();
+				testTooltip.calculateTooltipRect(position);
 				let returnValue = testTooltip.tooltipRect;
 
 				proclaim.deepEqual(expectedValue, returnValue);
@@ -942,7 +962,7 @@ describe("Tooltip", () => {
 		});
 	});
 
-	describe.only("resetPosition ", () => {
+	describe("resetPosition ", () => {
 		let testTooltip;
 		let originalTooltipPosition;
 		let outOfBoundsStub;
@@ -960,14 +980,6 @@ describe("Tooltip", () => {
 		afterEach(() => {
 			outOfBoundsStub.restore();
 		})
-		it("if out of bounds it resets the tooltip position", () => {
-			let tooltipRect = {left: 1, right: 1, top: 1, bottom: 1};
-			testTooltip.tooltipPosition = "above";
-			outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(true);
-
-			testTooltip.resetPosition(tooltipRect.top, 'y')
-			proclaim.notStrictEqual(originalTooltipPosition, testTooltip.tooltipPosition)
-		})
 
 		it("if in bounds it won't reset the tooltip position", () => {
 			let tooltipRect = {left: 1, right: 1, top: 1, bottom: 1};
@@ -977,21 +989,14 @@ describe("Tooltip", () => {
 			proclaim.strictEqual(originalTooltipPosition, testTooltip.tooltipPosition)
 		})
 
+		it("if out of bounds it resets the tooltip position", () => {
+			let tooltipRect = {left: 1, right: 1, top: 1, bottom: 1};
+			testTooltip.tooltipPosition = "above";
+			outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(true);
 
-		// THIS IS ACTUALLY IN DRAWTOOLTIP
-		// it("if not in bounds, it will test other positions until ti find", () => {
-		// 	let tooltipRect = {left: 1, right: 1, top: 1, bottom: 1};
-		// 	originalTooltipPosition = testTooltip.tooltipPosition
-		//
-		// 	outOfBoundsStub = sinon.stub(Tooltip, '_isOutOfBounds');
-		// 	outOfBoundsStub.withArgs(tooltipRect.top, 'y').returns(true);
-		//
-		// 	testTooltip.tooltipPosition = "above";
-		// 	testTooltip.resetPosition(tooltipRect.top, 'y')
-		//
-		// 	proclaim.notStrictEqual(originalTooltipPosition, testTooltip.tooltipPosition)
-		// 	outOfBoundsStub.restore();
-		// })
+			testTooltip.resetPosition(tooltipRect.top, 'y')
+			proclaim.notStrictEqual(originalTooltipPosition, testTooltip.tooltipPosition)
+		})
 	});
 
 	describe("_getLeftFor", () => {
@@ -1245,11 +1250,15 @@ describe("Tooltip", () => {
 	});
 
 	describe("#close", () => {
+		let drawTooltipStub;
+
 		beforeEach(() => {
+			drawTooltipStub = sinon.stub(Tooltip.prototype, 'drawTooltip');
 			fixtures.declarativeCode();
 		});
 
 		afterEach(() => {
+			drawTooltipStub.restore();
 			fixtures.reset();
 		});
 
@@ -1261,7 +1270,7 @@ describe("Tooltip", () => {
 			proclaim.isFalse(testTooltip.visible);
 		});
 
-		it("sets display none on the tooltip", done => {
+		it.skip("sets display none on the tooltip", function (done) {
 			const testTooltip = Tooltip.init('#tooltip-demo');
 			testTooltip.tooltipEl.style.transition = 'all .1s linear'; // Needed to fire transitionend
 			testTooltip.show();
@@ -1289,11 +1298,15 @@ describe("Tooltip", () => {
 	});
 
 	describe("#closeOnKeyUp", () => {
+		let drawTooltipStub;
+
 		beforeEach(() => {
+			drawTooltipStub = sinon.stub(Tooltip.prototype, 'drawTooltip');
 			fixtures.declarativeCode();
 		});
 
 		afterEach(() => {
+			drawTooltipStub.restore();
 			fixtures.reset();
 		});
 
@@ -1326,11 +1339,15 @@ describe("Tooltip", () => {
 	});
 
 	describe('width', () => {
+		let drawTooltipStub;
+
 		beforeEach(() => {
+			drawTooltipStub = sinon.stub(Tooltip.prototype, 'drawTooltip');
 			fixtures.declarativeCode();
 		});
 
 		afterEach(() => {
+			drawTooltipStub.restore();
 			fixtures.reset();
 		});
 
@@ -1342,11 +1359,15 @@ describe("Tooltip", () => {
 	});
 
 	describe('height', () => {
+		let drawTooltipStub;
+
 		beforeEach(() => {
+			drawTooltipStub = sinon.stub(Tooltip.prototype, 'drawTooltip');
 			fixtures.declarativeCode();
 		});
 
 		afterEach(() => {
+			drawTooltipStub.restore();
 			fixtures.reset();
 		});
 
@@ -1357,21 +1378,19 @@ describe("Tooltip", () => {
 		});
 	});
 
-	describe('throwError', () => {
-	});
-	describe('width', () => {
-	});
-	describe('height', () => {
-	});
+
 	describe("#destroy", () => {
 		let closeStub;
+		let drawTooltipStub;
 
 		beforeEach(() => {
+			drawTooltipStub = sinon.stub(Tooltip.prototype, 'drawTooltip');
 			fixtures.declarativeCode();
 			closeStub = sinon.stub(Tooltip.prototype, 'close');
 		});
 
 		afterEach(() => {
+			drawTooltipStub.restore();
 			fixtures.reset();
 			closeStub.restore();
 		});

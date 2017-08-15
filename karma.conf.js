@@ -19,8 +19,7 @@ module.exports = function(config) {
 			'karma-mocha',
 			'karma-phantomjs-launcher',
 			'karma-webpack',
-			'karma-sinon',
-			'karma-coverage'
+			'karma-sinon'
 		],
 
 
@@ -46,7 +45,7 @@ module.exports = function(config) {
 		// test results reporter to use
 		// possible values: 'dots', 'progress', 'coverage'
 		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-		reporters: ['progress', 'coverage'],
+		reporters: ['progress'],
 
 		coverageReporter: {
 			type : 'text-summary'
@@ -67,7 +66,6 @@ module.exports = function(config) {
 
 		// enable / disable watching file and executing tests whenever any file changes
 		autoWatch: false,
-
 
 		// start these browsers
 		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
@@ -93,13 +91,6 @@ module.exports = function(config) {
 					{
 						test: /\.json$/,
 						loader: 'json'
-					}
-				],
-				postLoaders: [
-					{ //delays coverage til after tests are run, fixing transpiled source coverage error
-						test: /\.js$/,
-						exclude: /(test|node_modules|bower_components)\//,
-						loader: 'istanbul-instrumenter'
 					}
 				],
 				noParse: [

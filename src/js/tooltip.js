@@ -255,7 +255,7 @@ class Tooltip {
 		this.tooltipAlignment = 'middle';
 
 		// First pass at positioning the tooltip...
-		this.calculateTooltipRect();
+		this.calculateTooltipRect(this.tooltipPosition);
 
 		// check bounds for every position (4 counts)
 		// if chosen position cannot fit the toolip.
@@ -266,16 +266,16 @@ class Tooltip {
 			count++;
 			switch(this.tooltipPosition) {
 				case 'above':
-					tooltipSet = this.resetPosition(this.tooltipRect.top, 'y');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.top, 'y');
 					break;
 				case 'right':
-					tooltipSet = this.resetPosition(this.tooltipRect.right, 'x');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.right, 'x');
 					break;
 				case 'below':
-					tooltipSet = this.resetPosition(this.tooltipRect.bottom, 'y');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.bottom, 'y');
 					break;
 				case 'left':
-					tooltipSet = this.resetPosition(this.tooltipRect.left, 'x');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
 					break;
 			}
 		}
@@ -335,20 +335,19 @@ class Tooltip {
 
 	resetPosition(side, axis) {
 		if (Tooltip._isOutOfBounds(side, axis)) {
-			this.tooltipPosition = Tooltip._rotateOrientation(this.tooltipPosition);
-			this.calculateTooltipRect();
-			return false;
+			let position = Tooltip._rotateOrientation(this.tooltipPosition);
+			this.calculateTooltipRect(position);
+			return [false, position];
 		} else {
-			return true;
+			return [true, this.tooltipPosition];
 		}
 	}
 
-	calculateTooltipRect() {
+	calculateTooltipRect(position) {
 		const rect = {};
 		const width = this.width();
 		const height = this.height();
-
-		switch (this.tooltipPosition) {
+		switch (position) {
 			case 'above':
 				rect.top = this.target.top - height - Tooltip.arrowDepth;
 				rect.left = this._getLeftFor('middle');
