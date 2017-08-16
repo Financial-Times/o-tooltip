@@ -381,10 +381,15 @@ class Tooltip {
 	}
 
 	/**
-	 * @returns {Object} An object with values `left`, `right`, `top` and `bottom`
+	 * @returns {Object} sets this.tooltipRect to `left`, `right`, `top` and `bottom`
 	 * representing the bounding box of the tooltip (including the arrow)
 	*/
 
+	/**
+	 * @returns {Array} dependant on the tooltip being in bounds or not —
+	 if not, position of the tooltip is not set (false) and a new position is returned
+	 if it is, position of the tooltip is set (true) and maintains position
+	*/
 	resetPosition(side, axis) {
 		if (Tooltip._isOutOfBounds(side, axis)) {
 			let position = Tooltip._rotateOrientation(this.tooltipPosition);
@@ -477,6 +482,8 @@ class Tooltip {
 		this.tooltipEl.style.left = rect.left + 'px';
 	};
 
+	// the bounds here are the size of the client window to catch all cases
+	// where the tooltip may not realistically fit
 	static _isOutOfBounds(point, axis) {
 		if (point < 0) {
 			return true;
