@@ -381,14 +381,9 @@ class Tooltip {
 	}
 
 	/**
-	 * @returns {Object} sets this.tooltipRect to `left`, `right`, `top` and `bottom`
-	 * representing the bounding box of the tooltip (including the arrow)
-	*/
-
-	/**
 	 * @returns {Array} dependant on the tooltip being in bounds or not —
-	 if not, position of the tooltip is not set (false) and a new position is returned
-	 if it is, position of the tooltip is set (true) and maintains position
+	 * if not, position of the tooltip is not set (false) and a new position is returned
+	 * if it is, position of the tooltip is set (true) and maintains position
 	*/
 	resetPosition(side, axis) {
 		if (Tooltip._isOutOfBounds(side, axis)) {
@@ -400,6 +395,10 @@ class Tooltip {
 		}
 	}
 
+	/**
+	 * @returns {Object} sets this.tooltipRect to `left`, `right`, `top` and `bottom`
+	 * representing the bounding box of the tooltip (including the arrow)
+	*/
 	calculateTooltipRect(position) {
 		const rect = {};
 		const width = this.width();
