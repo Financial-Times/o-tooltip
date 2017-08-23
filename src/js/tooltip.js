@@ -262,7 +262,7 @@ class Tooltip {
 		this.tooltipEl.addEventListener('transitionend', () => {
 			// Check this is still false and that the tooltip hasn't reappeared
 			// in the transition period
-			if(this.visible == false) {
+			if(this.visible === false) {
 				this.tooltipEl.style.display = 'none';
 			}
 		}, {once: true});
