@@ -432,6 +432,15 @@ describe("Tooltip", () => {
 
 			testTooltip.show();
 		});
+
+		it('emits oTooltip.show event', function(done) {
+			this.timeout(1000);
+			const tooltipEl = document.getElementById('tooltip-demo');
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
+			testTooltip.delegates.tooltip.on('oTooltip.show', () => done());
+
+			testTooltip.show();
+		});
 	});
 
 	describe("drawTooltip", () => {
@@ -1287,6 +1296,16 @@ describe("Tooltip", () => {
 			const tooltipEl = document.getElementById('tooltip-demo');
 			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
 			testTooltip.delegates.tooltip.on('o.tooltipClosed', () => done());
+
+			testTooltip.show();
+			testTooltip.close();
+		});
+
+		it('emits oTooltip.close event', function(done) {
+			this.timeout(1000);
+			const tooltipEl = document.getElementById('tooltip-demo');
+			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
+			testTooltip.delegates.tooltip.on('oTooltip.close', () => done());
 
 			testTooltip.show();
 			testTooltip.close();
