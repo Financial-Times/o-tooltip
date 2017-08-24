@@ -169,6 +169,7 @@ class Tooltip {
 		// Delegate pattern
 		this.delegates.doc.root(document.body);
 		this.delegates.tooltip.root(this.tooltipEl);
+		this.tooltipEl.dispatchEvent(new CustomEvent('o.tooltipShown'));
 		this.tooltipEl.dispatchEvent(new CustomEvent('oTooltip.show'));
 
 		// Set up all the ways to close the tooltip
@@ -247,6 +248,7 @@ class Tooltip {
 	 * Close the tooltip. (Visually hide it and remove event listeners)
 	*/
 	close() {
+		this.tooltipEl.dispatchEvent(new CustomEvent('o.tooltipClosed'));
 		this.tooltipEl.dispatchEvent(new CustomEvent('oTooltip.close'));
 		this.delegates.doc.destroy();
 		this.delegates.tooltip.destroy();
