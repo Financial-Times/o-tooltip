@@ -14,12 +14,15 @@ class Target {
     }
     // @deprecated ^^^
 
+	// @deprecated This is not used anywhere in the codebase, seems like we don't need it
 	get offsetTop() {
+		console.warn('The `offsetTop` property is deprecated and will be removed in the next major version of o-tooltip');
 		return this.targetEl.offsetTop;
 	}
+	// @deprecated ^^^
 
 	get left() {
-		return this.targetEl.getBoundingClientRect().left - (this.targetEl.offsetParent && this.targetEl.offsetParent.getBoundingClientRect().left);
+		return this.targetEl.getBoundingClientRect().left;
 	}
 
 	get right() {
@@ -27,7 +30,7 @@ class Target {
 	}
 
 	get top() {
-		return this.targetEl.getBoundingClientRect().top - (this.targetEl.offsetParent && this.targetEl.offsetParent.getBoundingClientRect().top);
+		return this.targetEl.getBoundingClientRect().top + (document.body.scrollTop || document.documentElement.scrollTop);
 	}
 
 	get bottom() {

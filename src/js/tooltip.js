@@ -133,14 +133,9 @@ class Tooltip {
 	 * Render the tooltip. Adds markup and attributes to this.tooltipEl in the DOM
 	*/
 	render() {
-		// make sure the tooltip is the next sibling of the target and (in the case of generated tooltip el)
-		// is attached to the DOM
-		if (this.targetNode && this.targetNode.nextSibling !== this.tooltipEl) {
-			if (this.targetNode.nextSibling) {
-				this.targetNode.parentNode.insertBefore(this.tooltipEl, this.targetNode.nextSibling);
-			} else {
-				this.targetNode.parentNode.appendChild(this.tooltipEl);
-			}
+		// make sure the tooltip is in the body
+		if (this.tooltipEl.parentNode !== document.body) {
+			document.body.appendChild(this.tooltipEl);
 		}
 
 		this.tooltipEl.setAttribute('role', 'tooltip');

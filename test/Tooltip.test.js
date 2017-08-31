@@ -284,27 +284,15 @@ describe("Tooltip", () => {
 			proclaim.isTrue(buttonEl.hasAttribute('role'));
 		});
 
-		it("Inserts adjacent to target element when target has no next sibling", () => {
-			const parent = document.getElementById('demo-tooltip-insertion-test-1');
-			sinon.stub(parent, 'appendChild');
+		it("Inserts in document body if it is not already a child", () => {
+			const appendStub = sinon.stub(document.body, 'appendChild');
 			new Tooltip(stubEl, {
 				target: 'demo-tooltip-insertion-test-1-target',
 				content: 'content'
 			});
-			proclaim.isTrue(parent.appendChild.called);
-			proclaim.isTrue(parent.appendChild.args[0][0].textContent === "content");
-		});
-
-		it("Inserts adjacent to target element when target has no next sibling", () => {
-			const parent = document.getElementById('demo-tooltip-insertion-test-2');
-			sinon.stub(parent, 'insertBefore');
-			new Tooltip(stubEl, {
-				target: 'demo-tooltip-insertion-test-2-target',
-				content: 'content'
-			});
-
-			proclaim.isTrue(parent.insertBefore.called);
-			proclaim.isTrue(parent.insertBefore.args[0][0].textContent === "content");
+			document.body.appendChild.restore();
+			proclaim.isTrue(appendStub.called);
+			proclaim.isTrue(appendStub.args[0][0].textContent === "content");
 		});
 
 	});
