@@ -14,7 +14,7 @@ class Target {
 	}
 
 	get left() {
-		return this.targetEl.getBoundingClientRect().left - this.targetEl.offsetParent.getBoundingClientRect().left;
+		return this.targetEl.getBoundingClientRect().left - (this.targetEl.offsetParent && this.targetEl.offsetParent.getBoundingClientRect().left);
 	}
 
 	get right() {
@@ -22,7 +22,7 @@ class Target {
 	}
 
 	get top() {
-		return this.targetEl.getBoundingClientRect().top - this.targetEl.offsetParent.getBoundingClientRect().top;
+		return this.targetEl.getBoundingClientRect().top - (this.targetEl.offsetParent && this.targetEl.offsetParent.getBoundingClientRect().top);
 	}
 
 	get bottom() {
