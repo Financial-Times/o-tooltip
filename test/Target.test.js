@@ -1,10 +1,13 @@
+/* eslint-env mocha, proclaim */
+
 import proclaim from 'proclaim';
 import * as fixtures from './helpers/fixtures';
 
 import Target from'./../src/js/target';
 
 describe('Target', () => {
-    let target, targetEl;
+    let target;
+    let targetEl;
     beforeEach(() => {
         fixtures.declarativeCode();
         // We are using a tooltip target with fixed position - don't change this
@@ -68,7 +71,7 @@ describe('Target', () => {
             proclaim.deepEqual(target.centrePoint, {
                 x: target.left + (target.width/2),
                 y: target.top + (target.height/2)
-            })
+            });
         });
     });
 });
