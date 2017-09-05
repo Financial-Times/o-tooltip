@@ -489,8 +489,13 @@ class Tooltip {
 	};
 
 	_drawTooltip(rect) {
-		this.tooltipEl.style.top = rect.top + 'px';
 		this.tooltipEl.style.left = rect.left + 'px';
+		this.tooltipEl.style.top = rect.top + 'px';
+		if (this.target.hasFixedParent) {
+			this.tooltipEl.style.position = 'fixed';
+		} else {
+			this.tooltipEl.style.position = 'absolute';
+		}
 	};
 
 	// the bounds here are the size of the client window to catch all cases
