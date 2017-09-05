@@ -34,11 +34,6 @@
 				"description": "Display on click demo"
 			},
 			{
-				"name": "fixed",
-				"template": "demos/src/fixed.mustache",
-				"description": "Fixed positioned tooltip demo"
-			},
-			{
 				"name": "toggle",
 				"template": "demos/src/toggle.mustache",
 				"description": "Toggle on click demo"
