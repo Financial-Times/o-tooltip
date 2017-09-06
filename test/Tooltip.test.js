@@ -636,8 +636,8 @@ describe("Tooltip", () => {
 					testTooltip.drawTooltip();
 					proclaim.strictEqual(drawStub.firstCall.args[0], testTooltip.tooltipRect);
 				});
+			});
 		});
-	});
 
 		/* Unhappy path: If the tooltip is slightly offscreen when it is middle aligned, then it aligns
 		the tooltip with an extremity of the target (whichever is results in the tooltip
@@ -987,6 +987,7 @@ describe("Tooltip", () => {
 		});
 
 		afterEach(() => {
+			fixtures.reset();
 			outOfBoundsStub.restore();
 		});
 
