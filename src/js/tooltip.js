@@ -489,8 +489,8 @@ class Tooltip {
 	};
 
 	_drawTooltip(rect) {
-		this.tooltipEl.style.left = rect.left + 'px';
 		this.tooltipEl.style.top = rect.top + 'px';
+		this.tooltipEl.style.left = rect.left + 'px';
 		if (this.target && this.target.hasFixedParent()) {
 			this.tooltipEl.style.position = 'fixed';
 		} else {

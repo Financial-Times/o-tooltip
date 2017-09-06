@@ -1175,6 +1175,20 @@ describe("Tooltip", () => {
 			testTooltip._drawTooltip({top: 123, left: 456});
 			proclaim.strictEqual(testTooltip.tooltipEl.style.left, "456px");
 		});
+		it('sets the style.position to "absolute"', () => {
+			testTooltip._drawTooltip({top: 123, left: 456});
+			proclaim.strictEqual(testTooltip.tooltipEl.style.position, 'absolute');
+		});
+		describe('when the target element has a fixed position parent', () => {
+			beforeEach(() => {
+				fixtures.declarativeCode();
+				testTooltip = Tooltip.init('#tooltip-demo-5');
+			});
+			it('sets the style.position to "fixed"', () => {
+				testTooltip._drawTooltip({top: 123, left: 456});
+				proclaim.strictEqual(testTooltip.tooltipEl.style.position, 'fixed');
+			});
+		});
 	});
 
 	describe("_isOutOfBounds", () => {
