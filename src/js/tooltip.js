@@ -69,7 +69,7 @@ class Tooltip {
 				this.showAfter(this.opts.showAfter);
 			}
 		}
-	};
+	}
 
 
 	/**
