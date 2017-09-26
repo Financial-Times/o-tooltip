@@ -32,7 +32,6 @@ class Tooltip {
 		this.tooltipPosition = this.opts.position;
 		this.tooltipAlignment = null;
 		this.visible = false;
-		this.tooltipRect;
 
 		this.delegates = {
 			target: new Delegate(this.target.targetEl),
