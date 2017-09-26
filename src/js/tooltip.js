@@ -449,7 +449,7 @@ class Tooltip {
 		this.tooltipRect = rect;
 	}
 
-	_getScrollPosition() {
+	static _getScrollPosition() {
 		return {
 			left: document.body.scrollLeft || document.documentElement.scrollLeft,
 			top: document.body.scrollTop || document.documentElement.scrollTop
