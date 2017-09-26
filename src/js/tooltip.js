@@ -441,7 +441,7 @@ class Tooltip {
 			rect.left = this.target.left - width - Tooltip.arrowDepth;
 			rect.top = this._getTopFor('middle');
 			break;
-		};
+		}
 
 		rect.right = rect.left + width;
 		rect.bottom = rect.top + height;
