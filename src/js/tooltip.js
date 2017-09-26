@@ -480,14 +480,16 @@ class Tooltip {
 		const arrowClassRoot = 'o-tooltip--arrow-';
 		const alignmentClassRoot = 'o-tooltip-arrow--align-';
 
-		let classesToRemove = ["o-tooltip--arrow-left",
-		"o-tooltip--arrow-right",
-		"o-tooltip--arrow-above",
-		"o-tooltip--arrow-below",
-		"o-tooltip-arrow--align-top",
-		"o-tooltip-arrow--align-bottom",
-		"o-tooltip-arrow--align-left",
-		"o-tooltip-arrow--align-right"];
+		let classesToRemove = [
+			"o-tooltip--arrow-left",
+			"o-tooltip--arrow-right",
+			"o-tooltip--arrow-above",
+			"o-tooltip--arrow-below",
+			"o-tooltip-arrow--align-top",
+			"o-tooltip-arrow--align-bottom",
+			"o-tooltip-arrow--align-left",
+			"o-tooltip-arrow--align-right"
+		];
 
 		this.tooltipEl.classList.remove(...classesToRemove);
 		this.tooltipEl.classList.add(arrowClassRoot + Tooltip.positionToArrowPositionMap[this.tooltipPosition]);
