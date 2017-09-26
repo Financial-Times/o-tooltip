@@ -347,6 +347,8 @@ class Tooltip {
 			case 'left':
 				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
 				break;
+			default:
+				throw new Error('drawTooltip entered the default case, which is not expected.');
 			}
 		}
 
@@ -441,6 +443,9 @@ class Tooltip {
 			rect.left = this.target.left - width - Tooltip.arrowDepth;
 			rect.top = this._getTopFor('middle');
 			break;
+
+		default:
+			throw new Error('drawTooltip entered the default case, which is not expected.');
 		}
 
 		rect.right = rect.left + width;
@@ -552,10 +557,12 @@ class Tooltip {
 }
 
 Tooltip.arrowDepth = 10;
-Tooltip.positionToArrowPositionMap = {"above": "below",
-																			"below": "above",
-																			"left": "right",
-																			"right": "left"};
+Tooltip.positionToArrowPositionMap = {
+	"above": "below",
+	"below": "above",
+	"left": "right",
+	"right": "left"
+};
 
 Tooltip.validArrowAlignments = ["top", "bottom", "left", "right"];
 Tooltip.validTooltipPositions = ["above", "below", "left", "right"];
