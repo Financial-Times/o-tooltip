@@ -335,18 +335,18 @@ class Tooltip {
 		while (count < 5 && !tooltipSet) {
 			count++;
 			switch(this.tooltipPosition) {
-				case 'above':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.top, 'y');
-					break;
-				case 'right':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.right, 'x');
-					break;
-				case 'below':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.bottom, 'y');
-					break;
-				case 'left':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
-					break;
+			case 'above':
+				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.top, 'y');
+				break;
+			case 'right':
+				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.right, 'x');
+				break;
+			case 'below':
+				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.bottom, 'y');
+				break;
+			case 'left':
+				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
+				break;
 			}
 		}
 
