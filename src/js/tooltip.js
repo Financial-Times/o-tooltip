@@ -422,25 +422,25 @@ class Tooltip {
 		const width = this.width();
 		const height = this.height();
 		switch (position) {
-			case 'above':
-				rect.top = this.target.top - height - Tooltip.arrowDepth;
-				rect.left = this._getLeftFor('middle');
-				break;
+		case 'above':
+			rect.top = this.target.top - height - Tooltip.arrowDepth;
+			rect.left = this._getLeftFor('middle');
+			break;
 
-			case 'below':
-				rect.top = this.target.bottom + Tooltip.arrowDepth;
-				rect.left = this._getLeftFor('middle');
-				break;
+		case 'below':
+			rect.top = this.target.bottom + Tooltip.arrowDepth;
+			rect.left = this._getLeftFor('middle');
+			break;
 
-			case 'right':
-				rect.left = this.target.right + Tooltip.arrowDepth;
-				rect.top = this._getTopFor('middle');
-				break;
+		case 'right':
+			rect.left = this.target.right + Tooltip.arrowDepth;
+			rect.top = this._getTopFor('middle');
+			break;
 
-			case 'left':
-				rect.left = this.target.left - width - Tooltip.arrowDepth;
-				rect.top = this._getTopFor('middle');
-				break;
+		case 'left':
+			rect.left = this.target.left - width - Tooltip.arrowDepth;
+			rect.top = this._getTopFor('middle');
+			break;
 		};
 
 		rect.right = rect.left + width;
