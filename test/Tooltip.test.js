@@ -1360,7 +1360,7 @@ describe("Tooltip", () => {
 				});
 
 				testTooltip.show();
-				testTooltip.close('', '',  false);
+				testTooltip.close('', '', false);
 			});
 			
 			it('skips emitting oTooltip.close event', function(done) {
