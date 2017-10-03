@@ -1344,7 +1344,7 @@ describe("Tooltip", () => {
 		});
 
 
-		describe.only('when called with fireCloseEvent=false', function () {
+		describe('when called with fireCloseEvent=false', function () {
 			it('skips emitting o.tooltipClosed event', function(done) {
 				this.timeout(1000);
 
