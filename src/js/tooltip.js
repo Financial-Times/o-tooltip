@@ -252,9 +252,9 @@ class Tooltip {
 	/**
 	 * Close the tooltip. (Visually hide it and remove event listeners)
 	*/
-	close(dontFireEvent) {
+	close(event, target, fireCloseEvent = true) {
 
-		if(!dontFireEvent) {
+		if(fireCloseEvent) {
 			// VVV Deprecated - Remove this in V3. VVV
 			console.warn('The event o.tooltipClosed is deprecated and is replaced by the event oTooltip.close');
 			this.tooltipEl.dispatchEvent(new CustomEvent('o.tooltipClosed'));

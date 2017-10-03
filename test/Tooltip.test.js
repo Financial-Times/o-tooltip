@@ -1344,7 +1344,7 @@ describe("Tooltip", () => {
 		});
 
 
-		describe('when called with dontFireEvent=true', function () {
+		describe.only('when called with fireCloseEvent=false', function () {
 			it('skips emitting o.tooltipClosed event', function(done) {
 				this.timeout(1000);
 
@@ -1360,7 +1360,7 @@ describe("Tooltip", () => {
 				});
 
 				testTooltip.show();
-				testTooltip.close(true);
+				testTooltip.close('', '',  false);
 			});
 			
 			it('skips emitting oTooltip.close event', function(done) {
@@ -1378,7 +1378,7 @@ describe("Tooltip", () => {
 				});
 
 				testTooltip.show();
-				testTooltip.close(true);
+				testTooltip.close('', '', false);
 			});
 			
 		});
