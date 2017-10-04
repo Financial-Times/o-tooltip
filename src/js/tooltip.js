@@ -338,20 +338,20 @@ class Tooltip {
 		while (count < 5 && !tooltipSet) {
 			count++;
 			switch(this.tooltipPosition) {
-			case 'above':
-				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.top, 'y');
-				break;
-			case 'right':
-				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.right, 'x');
-				break;
-			case 'below':
-				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.bottom, 'y');
-				break;
-			case 'left':
-				[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
-				break;
-			default:
-				throw new Error('drawTooltip entered the default case, which is not expected.');
+				case 'above':
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.top, 'y');
+					break;
+				case 'right':
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.right, 'x');
+					break;
+				case 'below':
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.bottom, 'y');
+					break;
+				case 'left':
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
+					break;
+				default:
+					throw new Error('drawTooltip entered the default case, which is not expected.');
 			}
 		}
 
@@ -427,28 +427,28 @@ class Tooltip {
 		const width = this.width();
 		const height = this.height();
 		switch (position) {
-		case 'above':
-			rect.top = this.target.top - height - Tooltip.arrowDepth;
-			rect.left = this._getLeftFor('middle');
-			break;
+			case 'above':
+				rect.top = this.target.top - height - Tooltip.arrowDepth;
+				rect.left = this._getLeftFor('middle');
+				break;
 
-		case 'below':
-			rect.top = this.target.bottom + Tooltip.arrowDepth;
-			rect.left = this._getLeftFor('middle');
-			break;
+			case 'below':
+				rect.top = this.target.bottom + Tooltip.arrowDepth;
+				rect.left = this._getLeftFor('middle');
+				break;
 
-		case 'right':
-			rect.left = this.target.right + Tooltip.arrowDepth;
-			rect.top = this._getTopFor('middle');
-			break;
+			case 'right':
+				rect.left = this.target.right + Tooltip.arrowDepth;
+				rect.top = this._getTopFor('middle');
+				break;
 
-		case 'left':
-			rect.left = this.target.left - width - Tooltip.arrowDepth;
-			rect.top = this._getTopFor('middle');
-			break;
+			case 'left':
+				rect.left = this.target.left - width - Tooltip.arrowDepth;
+				rect.top = this._getTopFor('middle');
+				break;
 
-		default:
-			throw new Error('drawTooltip entered the default case, which is not expected.');
+			default:
+				throw new Error('drawTooltip entered the default case, which is not expected.');
 		}
 
 		rect.right = rect.left + width;
