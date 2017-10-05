@@ -24,9 +24,9 @@ This HTML demonstrates the declarative way to instantiate o-tooltip. If you are 
 </div>
 
 <div data-o-component="o-tooltip"
-  data-o-tooltip-position="below"
-  data-o-tooltip-target="demo-tooltip-target"
-  data-o-tooltip-show-on-construction=true
+	data-o-tooltip-position="below"
+	data-o-tooltip-target="demo-tooltip-target"
+	data-o-tooltip-show-on-construction=true
 	id="my-tooltip-element">
 	<div class='o-tooltip-content'>
 		Some text to go in the tooltip
@@ -64,15 +64,15 @@ You must either construct an `o-tooltip` object or fire an `o.DOMContentLoaded` 
 If you have setup your tooltip declaratively, the following applies:
 ```js
 const Tooltip = require('o-tooltip');
-let tooltipEl = Document.getElementById('my-tooltip-element');
-const tooltip = new Tooltip(tooltipEl, '#declarative-tooltip-target');
+const tooltipEl = Document.getElementById('my-tooltip-element');
+const tooltip = new Tooltip(tooltipEl);
 ```
 
 Alternatively, if you want to construct a tooltip imperatively, you can instantiate o-tooltip by passing in your target element and an options object.
 
 ```js
 const Tooltip = require('o-tooltip');
-let tooltipElement = document.querySelector('.imperative-tooltip-element');
+const tooltipEl = document.querySelector('.imperative-tooltip-element');
 const opts = {
 	target: 'tooltip-target-imperative',
 	content: 'Click to save to somewhere',
@@ -80,7 +80,7 @@ const opts = {
 	position: 'right'
 }
 
-const tooltip = new Tooltip(tooltipElement, opts);
+const tooltip = new Tooltip(tooltipEl, opts);
 ```
 
 Since this creates the tooltip from scratch, it is important to include any declarative attributes (as listed above) in the options object, in addition to:
