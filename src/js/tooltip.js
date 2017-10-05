@@ -457,7 +457,7 @@ class Tooltip {
 		this.tooltipRect = rect;
 	}
 
-	_getScrollPosition() {
+	_getScrollPosition() { // eslint-disable-line class-methods-use-this
 		return {
 			left: document.body.scrollLeft || document.documentElement.scrollLeft,
 			top: document.body.scrollTop || document.documentElement.scrollTop
