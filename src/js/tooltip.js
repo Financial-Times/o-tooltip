@@ -1,9 +1,14 @@
 import Delegate from 'ftdomdelegate';
 import Viewport from 'o-viewport';
+import oGrid from 'o-grid';
 
 import Target from './target';
 
 class Tooltip {
+
+	static _getCurrentLayout() {
+		return oGrid.getCurrentLayout();
+	}
 
 	/**
 	 * Represents a tooltip.
@@ -29,7 +34,7 @@ class Tooltip {
 
 		this.targetNode = document.getElementById(this.opts.target);
 		this.target = new Tooltip.Target(this.targetNode);
-		this.tooltipPosition = this.opts.position;
+		this.tooltipPosition = this._getTooltipPosition();
 		this.tooltipAlignment = null;
 		this.visible = false;
 
@@ -324,6 +329,7 @@ class Tooltip {
 
 		// (re) set the arrow alignment to middle
 		this.tooltipAlignment = 'middle';
+		this.tooltipPosition = this._getTooltipPosition();
 
 		// First pass at positioning the tooltip...
 		this.calculateTooltipRect(this.tooltipPosition);
@@ -453,6 +459,23 @@ class Tooltip {
 		rect.bottom = rect.top + height;
 
 		this.tooltipRect = rect;
+	}
+
+	_getTooltipPosition() {
+		const { position, positionS, positionM, positionL, positionXl } = this.opts;
+		const currentBreakpoint = Tooltip._getCurrentLayout();
+		switch (currentBreakpoint) {
+			case 'S':
+				return positionS || position;
+			case 'M':
+				return positionM || positionS || position;
+			case 'L':
+				return positionL || positionM || positionS || position;
+			case 'XL':
+				return positionXl || positionL || positionM || positionS || position;
+			default:
+				return position;
+		}
 	}
 
 	_getScrollPosition() { // eslint-disable-line class-methods-use-this
