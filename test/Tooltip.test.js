@@ -423,23 +423,6 @@ describe("Tooltip", () => {
 			proclaim.isTrue(drawTooltipStub.called);
 		});
 
-		it('emits o.tooltipShown event', function (done) {
-			this.timeout(1000);
-
-			const timer = setTimeout(() => {
-				proclaim.fail('o.tooltipShown event to fire', 'o.tooltipShown event did not fire');
-			}, 500);
-
-			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
-			testTooltip.delegates.tooltip.on('o.tooltipShown', () => {
-				clearTimeout(timer);
-				done();
-			});
-
-			testTooltip.show();
-		});
-
 		it('emits oTooltip.show event', function(done) {
 			this.timeout(1000);
 
@@ -1399,24 +1382,6 @@ describe("Tooltip", () => {
 			testTooltip.close();
 		});
 
-		it('emits o.tooltipClosed event', function(done) {
-			this.timeout(1000);
-
-			const timer = setTimeout(() => {
-				proclaim.fail('o.tooltipClosed event to fire', 'o.tooltipClosed event did not fire');
-			}, 500);
-
-			const tooltipEl = document.getElementById('tooltip-demo');
-			const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
-			testTooltip.delegates.tooltip.on('o.tooltipClosed', () => {
-				clearTimeout(timer);
-				done();
-			});
-
-			testTooltip.show();
-			testTooltip.close();
-		});
-
 		it('emits oTooltip.close event', function(done) {
 			this.timeout(1000);
 
@@ -1437,24 +1402,6 @@ describe("Tooltip", () => {
 
 
 		describe('when called with fireCloseEvent=false', function () {
-			it('skips emitting o.tooltipClosed event', function(done) {
-				this.timeout(1000);
-
-				const timer = setTimeout(() => {
-					done();
-				}, 500);
-
-				const tooltipEl = document.getElementById('tooltip-demo');
-				const testTooltip = new Tooltip(tooltipEl, {target: 'demo-tooltip-target'});
-				testTooltip.delegates.tooltip.on('o.tooltipClosed', () => {
-					clearTimeout(timer);
-					proclaim.fail('oTooltip.close event to not fire', 'oTooltip.close event did fire');
-				});
-
-				testTooltip.show();
-				testTooltip.close('', '', false);
-			});
-
 			it('skips emitting oTooltip.close event', function(done) {
 				this.timeout(1000);
 
