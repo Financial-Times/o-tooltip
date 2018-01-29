@@ -526,7 +526,7 @@ class Tooltip {
 		if (point < 0) {
 			return true;
 		}
-		if (axis === 'y' && point > document.documentElement.clientHeight) {
+		if (axis === 'y' && point > document.documentElement.clientHeight && point > document.body.clientHeight) {
 			return true;
 		} else if (axis === 'x' && point > document.documentElement.clientWidth) {
 			return true;
