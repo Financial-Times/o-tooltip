@@ -1,4 +1,7 @@
 @import "o-overlay/main";
+//
+$o-typography-is-silent: true;
+@import "o-typography/main";
 
 /// Base tooltip style. Inherits from oOverlay.
 @mixin oTooltip {
@@ -14,6 +17,7 @@
 /// Base tooltip content style. Inherits from oOverlay.
 @mixin oTooltipContent {
 	@include oOverlayContent;
+	@include oTypographySans(0);
 	// Breaks long words to fit into smaller screen sizes
 	hyphens: auto;
 	// Override padding provided for o-overlay which is too big
