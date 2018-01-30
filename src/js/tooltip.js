@@ -528,9 +528,9 @@ class Tooltip {
 	static _isOutOfBounds(point, axis, opts) {
 
 		function _checkBounds(element) {
-			if (axis === 'y' && point > element.clientHeight) {
+			if (axis === 'y' && (point > (element.clientHeight + window.scrollY) || point < window.scrollY)) {
 				return true;
-			} else if (axis === 'x' && point > element.clientWidth) {
+			} else if (axis === 'x' && (point > (element.clientWidth + window.scrollX) || point < window.scrollX)) {
 				return true;
 			}
 			return false;
