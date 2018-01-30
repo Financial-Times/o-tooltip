@@ -527,20 +527,25 @@ class Tooltip {
 	*/
 	static _isOutOfBounds(point, axis, opts) {
 
-		function _checkBounds(element) {
-			if (axis === 'y' && (point > (element.clientHeight + window.pageYOffset) || point < window.pageYOffset)) {
-				return true;
-			} else if (axis === 'x' && (point > (element.clientWidth + window.pageXOffset) || point < window.pageXOffset)) {
-				return true;
-			}
-			return false;
-		}
-
 		if (point < 0) {
 			return true;
 		}
 
-		return opts.showOnConstruction ? _checkBounds(document.body) : _checkBounds(document.documentElement);
+		if (opts.showOnConstruction) {
+			if (axis === 'y' && point > document.body.clientHeight) {
+				return true;
+			} else if (axis === 'x' && point > document.body.clientWidth) {
+				return true;
+			}
+		} else {
+			if (axis === 'y' && (point > (document.documentElement.clientHeight + window.pageYOffset) || point < window.pageYOffset)) {
+				return true;
+			} else if (axis === 'x' && (point > (document.documentElement.clientWidth + window.pageXOffset) || point < window.pageXOffset)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	static _rotateOrientation(orientation) {
