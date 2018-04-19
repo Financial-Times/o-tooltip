@@ -328,7 +328,6 @@ class Tooltip {
 		// if chosen position cannot fit the toolip.
 		let count = 0;
 		let tooltipSet = false;
-		debugger;
 		while (count < 5 && !tooltipSet) {
 			count++;
 			switch(this.tooltipPosition) {
