@@ -331,19 +331,18 @@ class Tooltip {
 		debugger;
 		while (count < 5 && !tooltipSet) {
 			count++;
-			this.calculateTooltipPageRect(this.tooltipPosition);
 			switch(this.tooltipPosition) {
 				case 'above':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipPageRect.top, 'y');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.top, 'y');
 					break;
 				case 'right':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipPageRect.right, 'x');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.right, 'x');
 					break;
 				case 'below':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipPageRect.bottom, 'y');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.bottom, 'y');
 					break;
 				case 'left':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipPageRect.left, 'x');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
 					break;
 				default:
 					throw new Error('drawTooltip entered the default case, which is not expected.');
@@ -359,32 +358,28 @@ class Tooltip {
 			NB once this.tooltipRect.top is set, this.tooltipRect.bottom is no longer correct and should be
 			recalculated before use */
 		if (this.tooltipPosition === 'above' || this.tooltipPosition === 'below') {
-			const left = this.tooltipPageRect.left;
-			const right = this.tooltipPageRect.right;
-			if (Tooltip._isOutOfBounds(left, 'x', this.opts)) {
+			if (Tooltip._isOutOfBounds(this.tooltipRect.left, 'x', this.opts)) {
 				this.tooltipRect.left = this._getLeftFor('right');
 				this.tooltipAlignment = 'right';
 			}
-			if (Tooltip._isOutOfBounds(right, 'x', this.opts)) {
+			if (Tooltip._isOutOfBounds(this.tooltipRect.right, 'x', this.opts)) {
 				this.tooltipRect.left = this._getLeftFor('left');
 				this.tooltipAlignment = 'left';
 			}
 		}
 
 		if (this.tooltipPosition === 'left' || this.tooltipPosition === 'right') {
-			const top = this.tooltipPageRect.top;
-			const bottom = this.tooltipPageRect.bottom;
-			if (Tooltip._isOutOfBounds(bottom, 'y', this.opts)) {
-				this.tooltipRect.top = this._getTopFor('top');
-				this.tooltipAlignment = 'top';
-			}
-			if (Tooltip._isOutOfBounds(top, 'y', this.opts)) {
+			if (Tooltip._isOutOfBounds(this.tooltipRect.top, 'y', this.opts)) {
 				this.tooltipRect.top = this._getTopFor('bottom');
 				this.tooltipAlignment = 'bottom';
 			}
+			if (Tooltip._isOutOfBounds(this.tooltipRect.bottom, 'y', this.opts)) {
+				this.tooltipRect.top = this._getTopFor('top');
+				this.tooltipAlignment = 'top';
+			}
 		}
 
-		this._drawTooltip(this.tooltipRect);
+		this._drawTooltip();
 		this._setArrow();
 	}
 
@@ -421,7 +416,7 @@ class Tooltip {
 	 * @returns {Object} sets this.tooltipRect to `left`, `right`, `top` and `bottom`
 	 * representing the bounding box of the tooltip (including the arrow)
 	*/
-	calculateTooltipPageRect(position) {
+	calculateTooltipRect(position) {
 		const rect = {};
 		const width = this.width();
 		const height = this.height();
@@ -444,41 +439,6 @@ class Tooltip {
 			case 'left':
 				rect.left = this.targetNode.getBoundingClientRect().left - width - Tooltip.arrowDepth;
 				rect.top = this.targetNode.getBoundingClientRect().top + (this.targetNode.getBoundingClientRect().height / 2) - height;
-				break;
-
-			default:
-				throw new Error('drawTooltip entered the default case, which is not expected.');
-		}
-
-		rect.right = rect.left + width;
-		rect.bottom = rect.top + height;
-
-		this.tooltipPageRect = rect;
-	}
-
-	calculateTooltipRect(position) {
-		const rect = {};
-		const width = this.width();
-		const height = this.height();
-		switch (position) {
-			case 'above':
-				rect.top = this.target.top - height - Tooltip.arrowDepth;
-				rect.left = this._getLeftFor('middle');
-				break;
-
-			case 'below':
-				rect.top = this.target.bottom + Tooltip.arrowDepth;
-				rect.left = this._getLeftFor('middle');
-				break;
-
-			case 'right':
-				rect.left = this.target.right + Tooltip.arrowDepth;
-				rect.top = this._getTopFor('middle');
-				break;
-
-			case 'left':
-				rect.left = this.target.left - width - Tooltip.arrowDepth;
-				rect.top = this._getTopFor('middle');
 				break;
 
 			default:
@@ -555,9 +515,31 @@ class Tooltip {
 		this.tooltipEl.classList.add(alignmentClassRoot + Tooltip.positionToArrowPositionMap[this.tooltipAlignment]);
 	}
 
-	_drawTooltip(rect) {
-		this.tooltipEl.style.top = rect.top + 'px';
-		this.tooltipEl.style.left = rect.left + 'px';
+	_drawTooltip() {
+		switch (this.tooltipPosition) {
+			case 'above':
+				this.tooltipEl.style.top = (this.target.top - this.height() - Tooltip.arrowDepth) + 'px';
+				this.tooltipEl.style.left = this._getLeftFor(this.tooltipAlignment) + 'px';
+				break;
+
+			case 'below':
+				this.tooltipEl.style.top = (this.target.bottom + Tooltip.arrowDepth) + 'px';
+				this.tooltipEl.style.left = this._getLeftFor(this.tooltipAlignment) + 'px';
+				break;
+
+			case 'right':
+				this.tooltipEl.style.left = (this.target.right + Tooltip.arrowDepth) + 'px';
+				this.tooltipEl.style.top = this._getTopFor(this.tooltipAlignment) + 'px';
+				break;
+
+			case 'left':
+				this.tooltipEl.style.left = (this.target.left - this.width() - Tooltip.arrowDepth) + 'px';
+				this.tooltipEl.style.top = this._getTopFor(this.tooltipAlignment) + 'px';
+				break;
+
+			default:
+				throw new Error('drawTooltip entered the default case, which is not expected.');
+		}
 	}
 
 	/*
@@ -577,9 +559,9 @@ class Tooltip {
 				return true;
 			}
 		} else {
-			if (axis === 'y' && (point > (document.documentElement.clientHeight + window.pageYOffset) || point < window.pageYOffset)) {
+			if (axis === 'y' && (point > document.documentElement.clientHeight)) {
 				return true;
-			} else if (axis === 'x' && (point > (document.documentElement.clientWidth + window.pageXOffset) || point < window.pageXOffset)) {
+			} else if (axis === 'x' && (point > document.documentElement.clientWidth)) {
 				return true;
 			}
 		}
