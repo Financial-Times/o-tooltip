@@ -1232,7 +1232,7 @@ describe("Tooltip", () => {
 
 					testTooltip._setArrow();
 
-					proclaim.isTrue(testTooltip.tooltipEl.classList.contains("o-tooltip-arrow--align-"+alignment));
+					proclaim.isTrue(testTooltip.tooltipEl.classList.contains("o-tooltip-arrow--align-"+positionsAndAlignments[position].arrowPosition));
 					proclaim.isTrue(testTooltip.tooltipEl.classList.contains("o-tooltip--arrow-"+positionsAndAlignments[position].arrowPosition));
 				});
 			}

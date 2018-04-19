@@ -1,0 +1,30 @@
+<style>
+    html,
+    body {
+        overflow: hidden;
+    }
+</style>
+
+<div style="max-width: 1000px; margin: 0 auto; position:relative">
+
+    <div style="width: 100px; position: relative; margin-left: 200px; float: left; background-color: green;">
+        <div class='demo-tooltip-target' style="width: 50px;" id="declarative-tooltip-target">
+            A bit of UI to annotate
+        </div>
+        <div
+            style="white-space: nowrap;"
+            data-o-component="o-tooltip"
+            data-o-tooltip-position="below"
+            data-o-tooltip-target="declarative-tooltip-target"
+            data-o-tooltip-show-on-construction=true
+            id="my-tooltip-element">
+            <div class='o-tooltip-content'>
+                Some text to go in the tooltip
+            </div>
+        </div>
+    </div>
+
+
+    <div style="height: 1000px; background-color: red;"></div>
+
+</div>

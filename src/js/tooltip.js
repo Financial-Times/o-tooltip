@@ -328,21 +328,22 @@ class Tooltip {
 		// if chosen position cannot fit the toolip.
 		let count = 0;
 		let tooltipSet = false;
-
+		debugger;
 		while (count < 5 && !tooltipSet) {
 			count++;
+			this.calculateTooltipPageRect(this.tooltipPosition);
 			switch(this.tooltipPosition) {
 				case 'above':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.top, 'y');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipPageRect.top, 'y');
 					break;
 				case 'right':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.right, 'x');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipPageRect.right, 'x');
 					break;
 				case 'below':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.bottom, 'y');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipPageRect.bottom, 'y');
 					break;
 				case 'left':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
+					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipPageRect.left, 'x');
 					break;
 				default:
 					throw new Error('drawTooltip entered the default case, which is not expected.');
@@ -358,22 +359,26 @@ class Tooltip {
 			NB once this.tooltipRect.top is set, this.tooltipRect.bottom is no longer correct and should be
 			recalculated before use */
 		if (this.tooltipPosition === 'above' || this.tooltipPosition === 'below') {
-			if (Tooltip._isOutOfBounds(this.tooltipRect.left, 'x', this.opts)) {
-				this.tooltipRect.left = this._getLeftFor('left');
-				this.tooltipAlignment = 'left';
-			}
-			if (Tooltip._isOutOfBounds(this.tooltipRect.right, 'x', this.opts)) {
+			const left = this.tooltipPageRect.left;
+			const right = this.tooltipPageRect.right;
+			if (Tooltip._isOutOfBounds(left, 'x', this.opts)) {
 				this.tooltipRect.left = this._getLeftFor('right');
 				this.tooltipAlignment = 'right';
+			}
+			if (Tooltip._isOutOfBounds(right, 'x', this.opts)) {
+				this.tooltipRect.left = this._getLeftFor('left');
+				this.tooltipAlignment = 'left';
 			}
 		}
 
 		if (this.tooltipPosition === 'left' || this.tooltipPosition === 'right') {
-			if (Tooltip._isOutOfBounds(this.tooltipRect.top, 'y', this.opts)) {
+			const top = this.tooltipPageRect.top;
+			const bottom = this.tooltipPageRect.bottom;
+			if (Tooltip._isOutOfBounds(bottom, 'y', this.opts)) {
 				this.tooltipRect.top = this._getTopFor('top');
 				this.tooltipAlignment = 'top';
 			}
-			if (Tooltip._isOutOfBounds(this.tooltipRect.bottom, 'y', this.opts)) {
+			if (Tooltip._isOutOfBounds(top, 'y', this.opts)) {
 				this.tooltipRect.top = this._getTopFor('bottom');
 				this.tooltipAlignment = 'bottom';
 			}
@@ -416,6 +421,41 @@ class Tooltip {
 	 * @returns {Object} sets this.tooltipRect to `left`, `right`, `top` and `bottom`
 	 * representing the bounding box of the tooltip (including the arrow)
 	*/
+	calculateTooltipPageRect(position) {
+		const rect = {};
+		const width = this.width();
+		const height = this.height();
+		switch (position) {
+			case 'above':
+				rect.top = this.targetNode.getBoundingClientRect().top - height - Tooltip.arrowDepth;
+				rect.left = this.targetNode.getBoundingClientRect().left + (this.targetNode.getBoundingClientRect().width / 2) - (width / 2);
+				break;
+
+			case 'below':
+				rect.top = this.targetNode.getBoundingClientRect().bottom + Tooltip.arrowDepth;
+				rect.left = this.targetNode.getBoundingClientRect().left + (this.targetNode.getBoundingClientRect().width / 2) - (width/2);
+				break;
+
+			case 'right':
+				rect.left = this.targetNode.getBoundingClientRect().right + Tooltip.arrowDepth;
+				rect.top = this.targetNode.getBoundingClientRect().top + (this.targetNode.getBoundingClientRect().height / 2) - height;
+				break;
+
+			case 'left':
+				rect.left = this.targetNode.getBoundingClientRect().left - width - Tooltip.arrowDepth;
+				rect.top = this.targetNode.getBoundingClientRect().top + (this.targetNode.getBoundingClientRect().height / 2) - height;
+				break;
+
+			default:
+				throw new Error('drawTooltip entered the default case, which is not expected.');
+		}
+
+		rect.right = rect.left + width;
+		rect.bottom = rect.top + height;
+
+		this.tooltipPageRect = rect;
+	}
+
 	calculateTooltipRect(position) {
 		const rect = {};
 		const width = this.width();
@@ -479,9 +519,9 @@ class Tooltip {
 		if (alignment === "middle") {
 			return this.target.centrePoint.x - this.width()/2;
 		} else if (alignment === "left") {
-			return this.target.left;
-		} else if (alignment === "right") {
 			return this.target.right - this.width();
+		} else if (alignment === "right") {
+			return this.target.left;
 		}
 	}
 
@@ -512,7 +552,7 @@ class Tooltip {
 
 		this.tooltipEl.classList.remove(...classesToRemove);
 		this.tooltipEl.classList.add(arrowClassRoot + Tooltip.positionToArrowPositionMap[this.tooltipPosition]);
-		this.tooltipEl.classList.add(alignmentClassRoot + this.tooltipAlignment);
+		this.tooltipEl.classList.add(alignmentClassRoot + Tooltip.positionToArrowPositionMap[this.tooltipAlignment]);
 	}
 
 	_drawTooltip(rect) {
@@ -526,7 +566,6 @@ class Tooltip {
 		in all other cases, it will be the size of the viewport.
 	*/
 	static _isOutOfBounds(point, axis, opts) {
-
 		if (point < 0) {
 			return true;
 		}
