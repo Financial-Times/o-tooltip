@@ -354,8 +354,8 @@ class Tooltip {
 		this.tooltipRect = tooltipRect;
 		this.tooltipAlignment = alignment;
 		this.tooltipPosition = position;
-		const targetLeftOffset = (this.targetNode.offsetParent && this.targetNode.offsetParent.getBoundingClientRect().left);
-		const targetTopOffset = (this.targetNode.offsetParent && this.targetNode.offsetParent.getBoundingClientRect().top);
+		const targetLeftOffset = (this.target.targetEl.offsetParent && this.target.targetEl.offsetParent.getBoundingClientRect().left);
+		const targetTopOffset = (this.target.targetEl.offsetParent && this.target.targetEl.offsetParent.getBoundingClientRect().top);
 		this.tooltipEl.style.top = (this.tooltipRect.top - targetTopOffset) + 'px';
 		this.tooltipEl.style.left = (this.tooltipRect.left - targetLeftOffset) + 'px';
 
@@ -381,14 +381,14 @@ class Tooltip {
 	 * @returns {Boolean} If the set position is out of bounds.
 	*/
 	_evaulateTooltip(position) {
-		const axis = (position == 'above' || position == 'below' ? 'y' : 'x');
-		const alignments = (axis == 'y' ? ['middle', 'right', 'left'] : ['middle', 'top', 'below'])
+		const axis = (position === 'above' || position === 'below' ? 'y' : 'x');
+		const alignments = (axis === 'y' ? ['middle', 'right', 'left'] : ['middle', 'top', 'below']);
 
 		// Attempt all position alignments.
 		let isOutOfBounds = true;
 		let tooltipRect;
 		let alignment;
-		for (let index = 0; index < alignments.length && isOutOfBounds == true; index++) {
+		for (let index = 0; index < alignments.length && isOutOfBounds === true; index++) {
 			alignment = alignments[index];
 			tooltipRect = this._calculateTooltipRectangle(position, alignment);
 			isOutOfBounds = this._tooltipIsOutOfBounds(tooltipRect);
@@ -409,42 +409,42 @@ class Tooltip {
 	*/
 	_calculateTooltipRectangle(position, alignment) {
 		const rect = {};
-		const axis = (position == 'above' || position == 'below' ? 'y' : 'x');
+		const axis = (position === 'above' || position === 'below' ? 'y' : 'x');
 
 		// Calculate for position above/below.
-		if (axis == 'y') {
-			if (alignment == 'left') {
+		if (axis === 'y') {
+			if (alignment === 'left') {
 				rect.left = this.target.right - this.width();
 			}
-			if (alignment == 'right') {
+			if (alignment === 'right') {
 				rect.left = this.target.centrePoint.x;
 			}
-			if (alignment == 'middle') {
+			if (alignment === 'middle') {
 				rect.left = this.target.centrePoint.x - (this.width() / 2);
 			}
-			if (position == 'above') {
+			if (position === 'above') {
 				rect.top = this.target.top - this.height() - Tooltip.arrowDepth;
 			}
-			if (position == 'below') {
+			if (position === 'below') {
 				rect.top = this.target.bottom + Tooltip.arrowDepth;
 			}
 		}
 
 		// Calculate for position right/left.
-		if (axis == 'x') {
-			if (alignment == 'top') {
+		if (axis === 'x') {
+			if (alignment === 'top') {
 				rect.top = this.target.top;
 			}
-			if (alignment == 'below') {
+			if (alignment === 'below') {
 				rect.top = this.target.bottom - this.height();
 			}
-			if (alignment == 'middle') {
+			if (alignment === 'middle') {
 				rect.top = this.target.centrePoint.y - (this.height() / 2);
 			}
-			if (position == 'right') {
+			if (position === 'right') {
 				rect.left = this.target.right + Tooltip.arrowDepth;
 			}
-			if (position == 'left') {
+			if (position === 'left') {
 				rect.left = this.target.left - this.width() - Tooltip.arrowDepth;
 			}
 		}

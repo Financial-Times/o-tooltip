@@ -36,13 +36,13 @@ describe("Tooltip", () => {
 
 		beforeEach(() => {
 			getOptionsReturnStub = {};
-			getOptionsStub = sandboxsinon.stub(Tooltip, 'getOptions').returns(getOptionsReturnStub);
-			checkOptionsStub = sandboxsinon.stub(Tooltip, 'checkOptions').returnsArg(0);
-			renderStub = sandboxsinon.stub(Tooltip.prototype, 'render');
-			constructElementStub = sandboxsinon.stub(Tooltip, 'constructElement').returns(document.createElement('div'));
-			showStub = sandboxsinon.stub(Tooltip.prototype, 'show');
-			closeStub = sandboxsinon.stub(Tooltip.prototype, 'close');
-			targetStub = sandboxsinon.stub(Tooltip, "Target");
+			getOptionsStub = sandbox.stub(Tooltip, 'getOptions').returns(getOptionsReturnStub);
+			checkOptionsStub = sandbox.stub(Tooltip, 'checkOptions').returnsArg(0);
+			renderStub = sandbox.stub(Tooltip.prototype, 'render');
+			constructElementStub = sandbox.stub(Tooltip, 'constructElement').returns(document.createElement('div'));
+			showStub = sandbox.stub(Tooltip.prototype, 'show');
+			closeStub = sandbox.stub(Tooltip.prototype, 'close');
+			targetStub = sandbox.stub(Tooltip, "Target");
 		});
 
 		afterEach(() => {
@@ -198,7 +198,7 @@ describe("Tooltip", () => {
 		let throwStub;
 
 		beforeEach(() => {
-			throwStub = sandboxsinon.stub(Tooltip, 'throwError');
+			throwStub = sandbox.stub(Tooltip, 'throwError');
 		});
 
 		afterEach(() => {
@@ -246,7 +246,7 @@ describe("Tooltip", () => {
 		});
 	});
 
-	describe.only('is positioned "below" correctly', () => {
+	describe('is positioned "below" correctly', () => {
 		it(' at the top left of the page', () => {
 			fixtures.onConstructionCode();
 			const tooltip = Tooltip.init()[0];
@@ -263,9 +263,9 @@ describe("Tooltip", () => {
 		let drawTooltipStub;
 
 		beforeEach(() => {
-			drawTooltipStub = sandboxsinon.stub(Tooltip.prototype, 'drawTooltip');
+			drawTooltipStub = sandbox.stub(Tooltip.prototype, 'drawTooltip');
 			fixtures.declarativeCode();
-			closeStub = sandboxsinon.stub(Tooltip.prototype, 'close');
+			closeStub = sandbox.stub(Tooltip.prototype, 'close');
 		});
 
 		afterEach(() => {
