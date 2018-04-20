@@ -1,7 +1,6 @@
 import Delegate from 'ftdomdelegate';
 import Viewport from 'o-viewport';
 import oGrid from 'o-grid';
-
 import Target from './target';
 
 class Tooltip {
@@ -16,7 +15,7 @@ class Tooltip {
 	 * @param {HTMLElement} tooltipEl - The tooltip element in the DOM (Required)
 	 * @param {Object} opts - An options object for configuring the tooltip (Optional)
 	*/
-	constructor (tooltipEl, opts) {
+	constructor(tooltipEl, opts) {
 		if (!Tooltip._tooltips) {
 			Tooltip._tooltips = new Map();
 		}
@@ -34,7 +33,7 @@ class Tooltip {
 
 		this.targetNode = document.getElementById(this.opts.target);
 		this.target = new Tooltip.Target(this.targetNode);
-		this.tooltipPosition = this._getTooltipPosition();
+		this.tooltipPosition = this._getConfiguredTooltipPosition();
 		this.tooltipAlignment = null;
 		this.visible = false;
 
@@ -65,7 +64,7 @@ class Tooltip {
 		if (this.opts.showOnConstruction) {
 			this.show();
 
-			if(this.opts.closeAfter) {
+			if (this.opts.closeAfter) {
 				this.closeAfter(this.opts.closeAfter);
 			}
 		}
@@ -111,14 +110,14 @@ class Tooltip {
 	*/
 	static checkOptions(opts) {
 
-		if(!opts.target) {
+		if (!opts.target) {
 			Tooltip.throwError("tooltip.target is not set. An target for the tooltip to point at must be provided");
 		}
 
 		// Check that the value of tooltip position is valid. Default to below.
 		if (opts.position) {
 			if (Tooltip.validTooltipPositions.indexOf(opts.position) === -1) {
-				Tooltip.throwError("Invalid value for tooltip position. Valid values are:" + Tooltip.validTooltipPositions.toString() +" or nothing which will default to a value of `below`");
+				Tooltip.throwError("Invalid value for tooltip position. Valid values are:" + Tooltip.validTooltipPositions.toString() + " or nothing which will default to a value of `below`");
 			}
 		} else {
 			opts.position = "below";
@@ -203,7 +202,7 @@ class Tooltip {
 	 * Toggle the tooltip open and close
 	 */
 	toggle() {
-		if(this.visible) {
+		if (this.visible) {
 			this.close();
 		}
 		else {
@@ -219,7 +218,7 @@ class Tooltip {
 	closeAfter(seconds) {
 		this.closeTimeout = setTimeout(() => {
 			this.close();
-		}, seconds*1000);
+		}, seconds * 1000);
 	}
 
 
@@ -230,7 +229,7 @@ class Tooltip {
 	showAfter(seconds) {
 		this.showTimeout = setTimeout(() => {
 			this.show();
-		}, seconds*1000);
+		}, seconds * 1000);
 	}
 
 	/**
@@ -253,7 +252,7 @@ class Tooltip {
 	*/
 	close(event, target, fireCloseEvent = true) {
 
-		if(fireCloseEvent) {
+		if (fireCloseEvent) {
 			this.tooltipEl.dispatchEvent(new CustomEvent('oTooltip.close'));
 		}
 
@@ -274,7 +273,7 @@ class Tooltip {
 			if (this.visible === false) {
 				this.tooltipEl.style.display = 'none';
 			}
-		}, {once: true});
+		}, { once: true });
 
 		if (this.opts.showOnClick) {
 			this.delegates.target.on('click', null, this.show.bind(this)); // Re-attach click handler
@@ -313,72 +312,54 @@ class Tooltip {
 	 * target and a preference set by the user.
 	 * @throws {Error} if Tooltip can't be drawn in the client window
 	*/
-	drawTooltip(){
+	drawTooltip() {
 		// render the tooltip so we know how big it is
 		this.tooltipEl.style.display = 'block';
-
-		// (re) set the arrow alignment to middle
-		this.tooltipAlignment = 'middle';
-		this.tooltipPosition = this._getTooltipPosition();
-
-		// First pass at positioning the tooltip...
-		this.calculateTooltipRect(this.tooltipPosition);
-
 		// check bounds for every position (4 counts)
-		// if chosen position cannot fit the toolip.
+		// if chosen position cannot fit flip the toolip.
 		let count = 0;
-		let tooltipSet = false;
-		while (count < 5 && !tooltipSet) {
+		let tooltipRect = {};
+		let position = this._getConfiguredTooltipPosition();
+		let alignment = 'middle';
+		// Assume out of bounds until tooltipRect is calculated.
+		let isOutOfBounds = true;
+		while (count < 5 && isOutOfBounds) {
 			count++;
-			switch(this.tooltipPosition) {
+			switch (position) {
 				case 'above':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.top, 'y');
+					({tooltipRect, alignment, isOutOfBounds} = this._evaulateTooltip('above'));
 					break;
 				case 'right':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.right, 'x');
+					({tooltipRect, alignment, isOutOfBounds} = this._evaulateTooltip('right'));
 					break;
 				case 'below':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.bottom, 'y');
+					({tooltipRect, alignment, isOutOfBounds} = this._evaulateTooltip('below'));
 					break;
 				case 'left':
-					[tooltipSet, this.tooltipPosition] = this.resetPosition(this.tooltipRect.left, 'x');
+					({tooltipRect, alignment, isOutOfBounds} = this._evaulateTooltip('left'));
 					break;
 				default:
-					throw new Error('drawTooltip entered the default case, which is not expected.');
+					throw Tooltip.throwError('drawTooltip entered the default case, which is not expected.');
+			}
+			if (isOutOfBounds && count < 5) {
+				position = Tooltip._rotateOrientation(position);
 			}
 		}
 
 		if (count >= 5) {
-			Tooltip.throwError("There is not enough space in the client window to draw the tooltip.");
+			console.warn("There is not enough space in the client window to draw the tooltip.");
 		}
 
-		/* Now align the tooltip to the left | right | top | bottom  of the target
-			if there's not enough room for it to aligned to the middle of the target
-			NB once this.tooltipRect.top is set, this.tooltipRect.bottom is no longer correct and should be
-			recalculated before use */
-		if (this.tooltipPosition === 'above' || this.tooltipPosition === 'below') {
-			if (Tooltip._isOutOfBounds(this.tooltipRect.left, 'x', this.opts)) {
-				this.tooltipRect.left = this._getLeftFor('right');
-				this.tooltipAlignment = 'right';
-			}
-			if (Tooltip._isOutOfBounds(this.tooltipRect.right, 'x', this.opts)) {
-				this.tooltipRect.left = this._getLeftFor('left');
-				this.tooltipAlignment = 'left';
-			}
-		}
+		// Draw tooltip with latest alignment and position.
+		this.tooltipRect = tooltipRect;
+		this.tooltipAlignment = alignment;
+		this.tooltipPosition = position;
+		const targetLeftOffset = (this.targetNode.offsetParent && this.targetNode.offsetParent.getBoundingClientRect().left);
+		const targetTopOffset = (this.targetNode.offsetParent && this.targetNode.offsetParent.getBoundingClientRect().top);
+		this.tooltipEl.style.top = (this.tooltipRect.top - targetTopOffset) + 'px';
+		this.tooltipEl.style.left = (this.tooltipRect.left - targetLeftOffset) + 'px';
 
-		if (this.tooltipPosition === 'left' || this.tooltipPosition === 'right') {
-			if (Tooltip._isOutOfBounds(this.tooltipRect.top, 'y', this.opts)) {
-				this.tooltipRect.top = this._getTopFor('bottom');
-				this.tooltipAlignment = 'bottom';
-			}
-			if (Tooltip._isOutOfBounds(this.tooltipRect.bottom, 'y', this.opts)) {
-				this.tooltipRect.top = this._getTopFor('top');
-				this.tooltipAlignment = 'top';
-			}
-		}
-
-		this._drawTooltip();
+		// Set Tooltip arrow.
 		this._setArrow();
 	}
 
@@ -397,60 +378,89 @@ class Tooltip {
 	}
 
 	/**
-	 * @returns {Array} dependant on the tooltip being in bounds or not —
-	 * if not, position of the tooltip is not set (false) and a new position is returned
-	 * if it is, position of the tooltip is set (true) and maintains position
+	 * @returns {Boolean} If the set position is out of bounds.
 	*/
-	resetPosition(side, axis) {
-		if (Tooltip._isOutOfBounds(side, axis, this.opts)) {
-			let position = Tooltip._rotateOrientation(this.tooltipPosition);
-			this.calculateTooltipRect(position);
-			return [false, position];
-		} else {
-			return [true, this.tooltipPosition];
+	_evaulateTooltip(position) {
+		const axis = (position == 'above' || position == 'below' ? 'y' : 'x');
+		const alignments = (axis == 'y' ? ['middle', 'right', 'left'] : ['middle', 'top', 'below'])
+
+		// Attempt all position alignments.
+		let isOutOfBounds = true;
+		let tooltipRect;
+		let alignment;
+		for (let index = 0; index < alignments.length && isOutOfBounds == true; index++) {
+			alignment = alignments[index];
+			tooltipRect = this._calculateTooltipRectangle(position, alignment);
+			isOutOfBounds = this._tooltipIsOutOfBounds(tooltipRect);
 		}
+
+		// If all alignments fail to fit in bounds default to the middle alignment.
+		if (isOutOfBounds) {
+			alignment = 'middle';
+			tooltipRect = this._calculateTooltipRectangle(position, alignment);
+		}
+
+		return { tooltipRect, alignment, isOutOfBounds };
 	}
 
 	/**
 	 * @returns {Object} sets this.tooltipRect to `left`, `right`, `top` and `bottom`
 	 * representing the bounding box of the tooltip (including the arrow)
 	*/
-	calculateTooltipRect(position) {
+	_calculateTooltipRectangle(position, alignment) {
 		const rect = {};
-		const width = this.width();
-		const height = this.height();
-		switch (position) {
-			case 'above':
-				rect.top = this.targetNode.getBoundingClientRect().top - height - Tooltip.arrowDepth;
-				rect.left = this.targetNode.getBoundingClientRect().left + (this.targetNode.getBoundingClientRect().width / 2) - (width / 2);
-				break;
+		const axis = (position == 'above' || position == 'below' ? 'y' : 'x');
 
-			case 'below':
-				rect.top = this.targetNode.getBoundingClientRect().bottom + Tooltip.arrowDepth;
-				rect.left = this.targetNode.getBoundingClientRect().left + (this.targetNode.getBoundingClientRect().width / 2) - (width/2);
-				break;
-
-			case 'right':
-				rect.left = this.targetNode.getBoundingClientRect().right + Tooltip.arrowDepth;
-				rect.top = this.targetNode.getBoundingClientRect().top + (this.targetNode.getBoundingClientRect().height / 2) - height;
-				break;
-
-			case 'left':
-				rect.left = this.targetNode.getBoundingClientRect().left - width - Tooltip.arrowDepth;
-				rect.top = this.targetNode.getBoundingClientRect().top + (this.targetNode.getBoundingClientRect().height / 2) - height;
-				break;
-
-			default:
-				throw new Error('drawTooltip entered the default case, which is not expected.');
+		// Calculate for position above/below.
+		if (axis == 'y') {
+			if (alignment == 'left') {
+				rect.left = this.target.right - this.width();
+			}
+			if (alignment == 'right') {
+				rect.left = this.target.centrePoint.x;
+			}
+			if (alignment == 'middle') {
+				rect.left = this.target.centrePoint.x - (this.width() / 2);
+			}
+			if (position == 'above') {
+				rect.top = this.target.top - this.height() - Tooltip.arrowDepth;
+			}
+			if (position == 'below') {
+				rect.top = this.target.bottom + Tooltip.arrowDepth;
+			}
 		}
 
-		rect.right = rect.left + width;
-		rect.bottom = rect.top + height;
+		// Calculate for position right/left.
+		if (axis == 'x') {
+			if (alignment == 'top') {
+				rect.top = this.target.top;
+			}
+			if (alignment == 'below') {
+				rect.top = this.target.bottom - this.height();
+			}
+			if (alignment == 'middle') {
+				rect.top = this.target.centrePoint.y - (this.height() / 2);
+			}
+			if (position == 'right') {
+				rect.left = this.target.right + Tooltip.arrowDepth;
+			}
+			if (position == 'left') {
+				rect.left = this.target.left - this.width() - Tooltip.arrowDepth;
+			}
+		}
 
-		this.tooltipRect = rect;
+		rect.right = rect.left + this.width();
+		rect.bottom = rect.top + this.height();
+
+		return rect;
 	}
 
-	_getTooltipPosition() {
+	calculateTooltipRect(position) {
+		console.warn('`calculateTooltipRect` is deprecated.');
+		return this._calculateTooltipRectangle(position, 'middle');
+	}
+
+	_getConfiguredTooltipPosition() {
 		const { position, positionS, positionM, positionL, positionXl } = this.opts;
 		const currentBreakpoint = Tooltip._getCurrentLayout();
 		switch (currentBreakpoint) {
@@ -464,33 +474,6 @@ class Tooltip {
 				return positionXl || positionL || positionM || positionS || position;
 			default:
 				return position;
-		}
-	}
-
-	_getScrollPosition() { // eslint-disable-line class-methods-use-this
-		return {
-			left: document.body.scrollLeft || document.documentElement.scrollLeft,
-			top: document.body.scrollTop || document.documentElement.scrollTop
-		};
-	}
-
-	_getLeftFor(alignment) {
-		if (alignment === "middle") {
-			return this.target.centrePoint.x - this.width()/2;
-		} else if (alignment === "left") {
-			return this.target.right - this.width();
-		} else if (alignment === "right") {
-			return this.target.left;
-		}
-	}
-
-	_getTopFor(alignment) {
-		if (alignment === "middle") {
-			return this.target.centrePoint.y - this.height()/2;
-		} else if (alignment === "top") {
-			return this.target.top;
-		} else if (alignment === "bottom") {
-			return this.target.bottom - this.height();
 		}
 	}
 
@@ -511,34 +494,19 @@ class Tooltip {
 
 		this.tooltipEl.classList.remove(...classesToRemove);
 		this.tooltipEl.classList.add(arrowClassRoot + Tooltip.positionToArrowPositionMap[this.tooltipPosition]);
-		this.tooltipEl.classList.add(alignmentClassRoot + Tooltip.positionToArrowPositionMap[this.tooltipAlignment]);
+		this.tooltipEl.classList.add(alignmentClassRoot + Tooltip.alignmentToArrowAlignmentMap[this.tooltipAlignment]);
 	}
 
-	_drawTooltip() {
-		switch (this.tooltipPosition) {
-			case 'above':
-				this.tooltipEl.style.top = (this.target.top - this.height() - Tooltip.arrowDepth) + 'px';
-				this.tooltipEl.style.left = this._getLeftFor(this.tooltipAlignment) + 'px';
-				break;
-
-			case 'below':
-				this.tooltipEl.style.top = (this.target.bottom + Tooltip.arrowDepth) + 'px';
-				this.tooltipEl.style.left = this._getLeftFor(this.tooltipAlignment) + 'px';
-				break;
-
-			case 'right':
-				this.tooltipEl.style.left = (this.target.right + Tooltip.arrowDepth) + 'px';
-				this.tooltipEl.style.top = this._getTopFor(this.tooltipAlignment) + 'px';
-				break;
-
-			case 'left':
-				this.tooltipEl.style.left = (this.target.left - this.width() - Tooltip.arrowDepth) + 'px';
-				this.tooltipEl.style.top = this._getTopFor(this.tooltipAlignment) + 'px';
-				break;
-
-			default:
-				throw new Error('drawTooltip entered the default case, which is not expected.');
-		}
+	/**
+	 * Checkes is a hypothetical tooltip is in bounds on all sides.
+	 * @param {Object} tooltipRect - An object which represents a hypothetical tooltip position.
+	*/
+	_tooltipIsOutOfBounds(tooltipRect) {
+		const topOutofBounds = Tooltip._pointIsOutOfBounds(tooltipRect.top, 'y', this.opts);
+		const bottomOutofBounds = Tooltip._pointIsOutOfBounds(tooltipRect.bottom, 'y', this.opts);
+		const leftOutofBounds = Tooltip._pointIsOutOfBounds(tooltipRect.left, 'x', this.opts);
+		const rightOutofBounds = Tooltip._pointIsOutOfBounds(tooltipRect.right, 'x', this.opts);
+		return topOutofBounds || bottomOutofBounds || leftOutofBounds || rightOutofBounds;
 	}
 
 	/*
@@ -546,11 +514,10 @@ class Tooltip {
 		if it is shown on construction, the size of the document body will be consulted
 		in all other cases, it will be the size of the viewport.
 	*/
-	static _isOutOfBounds(point, axis, opts) {
+	static _pointIsOutOfBounds(point, axis, opts) {
 		if (point < 0) {
 			return true;
 		}
-
 		if (opts.showOnConstruction) {
 			if (axis === 'y' && point > document.body.clientHeight) {
 				return true;
@@ -564,7 +531,6 @@ class Tooltip {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -580,10 +546,10 @@ class Tooltip {
 	}
 
 	static throwError(message) {
-		throw new Error('"o-tooltip error": '+ message);
+		throw new Error('"o-tooltip error": ' + message);
 	}
 
-	static init (rootEl, opts) {
+	static init(rootEl, opts) {
 		if (!rootEl) {
 			rootEl = document.body;
 		}
@@ -610,6 +576,12 @@ Tooltip.positionToArrowPositionMap = {
 	"below": "above",
 	"left": "right",
 	"right": "left"
+};
+Tooltip.alignmentToArrowAlignmentMap = {
+	"top": "top",
+	"below": "bottom",
+	"right": "left",
+	"left": "right"
 };
 
 Tooltip.validArrowAlignments = ["top", "bottom", "left", "right"];

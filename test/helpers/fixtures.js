@@ -20,6 +20,43 @@ function insert(html) {
 }
 
 
+function onConstructionCode(float = 'left', leftOffset = 0) {
+	const html = `
+		<style>
+			html,
+			body {
+				overflow: hidden;
+			}
+		</style>
+
+		<div style="max-width: 1000px; margin: 0 auto; position:relative">
+
+			<div style="width: 100px; position: relative; margin-left: ${leftOffset}; float: ${float}; background-color: yellow;">
+				<div class='demo-tooltip-target' style="width: 50px; background-color: green;" id="declarative-tooltip-target">
+					A bit of UI to annotate
+				</div>
+				<div
+					style="white-space: nowrap;"
+					data-o-component="o-tooltip"
+					data-o-tooltip-position="below"
+					data-o-tooltip-target="declarative-tooltip-target"
+					data-o-tooltip-show-on-construction=true
+					id="my-tooltip-element">
+					<div class='o-tooltip-content'>
+						Some text to go in the tooltip
+					</div>
+				</div>
+			</div>
+
+
+			<div style="height: 1000px; background-color: red;"></div>
+
+		</div>
+	`;
+	insert(html);
+}
+
+
 function declarativeCode () {
 	const html = `
 		<div class='tooltip-target' id="demo-tooltip-target">
@@ -96,6 +133,7 @@ function imperativeCode () {
 }
 
 export {
+	onConstructionCode,
 	declarativeCode,
 	imperativeCode,
 	reset
