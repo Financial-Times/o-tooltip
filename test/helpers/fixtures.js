@@ -110,6 +110,19 @@ function declarativeCode () {
 				Tooltip content
 		</div>
 
+
+		<div class='tooltip-target' id="demo-tooltip-target-below">
+				Thing to point the tooltip at.
+		</div>
+
+		<div id="tooltip-demo-below"
+			data-o-tooltip-position="below"
+			data-o-component="o-tooltip"
+			data-o-tooltip-target="demo-tooltip-target-below"
+			data-o-tooltip-show-on-hover="true">
+				Tooltip content
+		</div>
+
 		<!-- note lack of whitespace is there to make sure there is no next sibling (otherwise text node :-O) -->
 		<div id="demo-tooltip-insertion-test-1"><div class='tooltip-target' id="demo-tooltip-insertion-test-1-target">Thing to point the tooltip at.</div></div>
 

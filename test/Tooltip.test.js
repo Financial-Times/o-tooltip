@@ -246,12 +246,63 @@ describe("Tooltip", () => {
 		});
 	});
 
-	describe('is positioned "below" correctly', () => {
-		it(' at the top left of the page', () => {
-			fixtures.onConstructionCode();
-			const tooltip = Tooltip.init()[0];
-			proclaim.equal(tooltip.tooltipPosition, 'below');
-			proclaim.equal(tooltip.tooltipAlignment, 'right');
+	describe.only('drawTooltip', () => {
+		it(' sets tooltip position as requested when in bounds', () => {
+			fixtures.declarativeCode();
+			const evaulateTooltipStub = sandbox.stub(Tooltip.prototype, '_evaulateTooltip');
+			evaulateTooltipStub.withArgs('below').returns({
+				tooltipRect: {},
+				alignment: 'middle',
+				isOutOfBounds: false
+			});
+			const testTooltip = Tooltip.init('#tooltip-demo-below');
+
+			testTooltip.show();
+			proclaim.equal(testTooltip.tooltipPosition, 'below');
+			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
+		});
+
+		it(' when the requested position is out of bounds sets tooltip to the next clockwise position', () => {
+			fixtures.declarativeCode();
+			const evaulateTooltipStub = sandbox.stub(Tooltip.prototype, '_evaulateTooltip');
+			evaulateTooltipStub.withArgs('below').returns({
+				tooltipRect: {},
+				alignment: 'middle',
+				isOutOfBounds: true // requested position out of bound
+			});
+			evaulateTooltipStub.withArgs('left').returns({
+				tooltipRect: {},
+				alignment: 'middle',
+				isOutOfBounds: false
+			});
+			const testTooltip = Tooltip.init('#tooltip-demo-below');
+
+			testTooltip.show();
+			proclaim.equal(testTooltip.tooltipPosition, 'left');
+			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
+		});
+
+		it(' when many tooltip positions are out of bounds evaluates all possible positions', () => {
+			fixtures.declarativeCode();
+			const evaulateTooltipStub = sandbox.stub(Tooltip.prototype, '_evaulateTooltip');
+			const outOfBoundsExample = {
+				tooltipRect: {},
+				alignment: 'middle',
+				isOutOfBounds: true
+			};
+			evaulateTooltipStub.withArgs('below').returns(outOfBoundsExample);
+			evaulateTooltipStub.withArgs('left').returns(outOfBoundsExample);
+			evaulateTooltipStub.withArgs('above').returns(outOfBoundsExample);
+			evaulateTooltipStub.withArgs('right').returns({
+				tooltipRect: {},
+				alignment: 'middle',
+				isOutOfBounds: false
+			});
+			const testTooltip = Tooltip.init('#tooltip-demo-below');
+			testTooltip.show();
+			sinon.assert.callCount(evaulateTooltipStub, 4)
+			proclaim.equal(testTooltip.tooltipPosition, 'right');
+			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
 		});
 		afterEach(() => {
 			fixtures.reset();
