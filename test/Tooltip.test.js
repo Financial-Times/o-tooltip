@@ -300,7 +300,7 @@ describe("Tooltip", () => {
 			});
 			const testTooltip = Tooltip.init('#tooltip-demo-below');
 			testTooltip.show();
-			sinon.assert.callCount(evaulateTooltipStub, 4)
+			sinon.assert.callCount(evaulateTooltipStub, 4);
 			proclaim.equal(testTooltip.tooltipPosition, 'right');
 			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
 		});
