@@ -304,6 +304,25 @@ describe("Tooltip", () => {
 			proclaim.equal(testTooltip.tooltipPosition, 'right');
 			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
 		});
+		it(' when all tooltip positions are out of bounds default to the requested position aligned middle', () => {
+			fixtures.declarativeCode();
+			const evaulateTooltipStub = sandbox.stub(Tooltip.prototype, '_evaulateTooltip');
+			const outOfBoundsExample = {
+				tooltipRect: {},
+				alignment: 'middle',
+				isOutOfBounds: true
+			};
+			evaulateTooltipStub.withArgs('below').returns(outOfBoundsExample);
+			evaulateTooltipStub.withArgs('left').returns(outOfBoundsExample);
+			evaulateTooltipStub.withArgs('above').returns(outOfBoundsExample);
+			evaulateTooltipStub.withArgs('right').returns(outOfBoundsExample);
+
+			const testTooltip = Tooltip.init('#tooltip-demo-below');
+			testTooltip.show();
+
+			proclaim.equal(testTooltip.tooltipPosition, 'below');
+			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
+		});
 		afterEach(() => {
 			fixtures.reset();
 		});
