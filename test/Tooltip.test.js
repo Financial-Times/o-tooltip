@@ -620,6 +620,23 @@ describe("Tooltip", () => {
 			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'right', 'right');
 			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'right', 'left');
 		});
+		it(' sets a tooltip arrow', () => {
+			// Postioned below, aligned right.
+			fixtures.declarativeCode();
+			const evaulateTooltipStub = sandbox.stub(Tooltip.prototype, '_evaulateTooltip');
+			const belowRightInBounds = {
+				tooltipRect: {},
+				alignment: 'right',
+				isOutOfBounds: false
+			};
+			evaulateTooltipStub.withArgs('below').returns(belowRightInBounds);
+
+			const testTooltip = Tooltip.init('#tooltip-demo-below');
+			testTooltip.show();
+
+			proclaim.isTrue(testTooltip.tooltipEl.classList.contains('o-tooltip--arrow-above'));
+			proclaim.isTrue(testTooltip.tooltipEl.classList.contains('o-tooltip-arrow--align-left'));
+		});
 		afterEach(() => {
 			fixtures.reset();
 		});
