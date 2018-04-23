@@ -247,6 +247,68 @@ describe("Tooltip", () => {
 		});
 	});
 
+	describe("render", () => {
+
+		let tooltipEl;
+		const stubEl = document.createElement('div');
+		beforeEach(() => {
+			fixtures.declarativeCode();
+			tooltipEl = document.getElementById('tooltip-demo');
+		});
+
+		afterEach(() => {
+			fixtures.reset();
+		});
+
+		it("gives the tooltip the role `tooltip`", () => {
+			Tooltip.init('#tooltip-demo');
+
+			proclaim.isTrue(tooltipEl.hasAttribute('role'));
+			proclaim.strictEqual(tooltipEl.getAttribute('role'), 'tooltip');
+		});
+
+		it("sets the z-index if a z-index was set in the opts", () => {
+			const tooltip = Tooltip.init('#tooltip-demo');
+			const fakeZ = "4";
+			tooltip.opts.zIndex = fakeZ;
+
+			tooltip.render();
+			proclaim.strictEqual(tooltipEl.style.zIndex, fakeZ);
+		});
+
+		it("adds a close button with an aria label, role and title", () => {
+			Tooltip.init('#tooltip-demo');
+			const buttonEl = tooltipEl.querySelector('.o-tooltip-close');
+			proclaim.isDefined(buttonEl);
+			proclaim.isTrue(buttonEl.hasAttribute('aria-label'));
+			proclaim.isTrue(buttonEl.hasAttribute('title'));
+		});
+
+		it("Inserts adjacent to target element when target has no next sibling", () => {
+			const parent = document.getElementById('demo-tooltip-insertion-test-1');
+			sinon.stub(parent, 'appendChild');
+			new Tooltip(stubEl, {
+				target: 'demo-tooltip-insertion-test-1-target',
+				content: 'content'
+			});
+			proclaim.isTrue(parent.appendChild.called);
+			proclaim.isTrue(parent.appendChild.args[0][0].textContent === "content");
+		});
+
+		it("Inserts adjacent to target element when target has no next sibling", () => {
+			const parent = document.getElementById('demo-tooltip-insertion-test-2');
+			sinon.stub(parent, 'insertBefore');
+			new Tooltip(stubEl, {
+				target: 'demo-tooltip-insertion-test-2-target',
+				content: 'content'
+			});
+
+			proclaim.isTrue(parent.insertBefore.called);
+			proclaim.isTrue(parent.insertBefore.args[0][0].textContent === "content");
+		});
+
+	});
+
 	describe("show", () => {
 		let checkOptionsStub;
 		let getOptionsStub;
