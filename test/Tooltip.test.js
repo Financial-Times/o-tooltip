@@ -306,7 +306,93 @@ describe("Tooltip", () => {
 			proclaim.isTrue(parent.insertBefore.called);
 			proclaim.isTrue(parent.insertBefore.args[0][0].textContent === "content");
 		});
+	});
 
+	describe("_getConfiguredTooltipPosition", () => {
+		let checkStub;
+		let getStub;
+		let targetStub;
+		let widthStub;
+		let heightStub;
+		let oGridStub;
+
+		let testTooltip;
+
+		beforeEach(() => {
+			getStub = sinon.stub(Tooltip, 'getOptions');
+			targetStub = sinon.stub(Tooltip, 'Target').returns({ left: 0, right: 7, centrePoint: { x: 5 } });
+			widthStub = sinon.stub(Tooltip.prototype, 'width').returns(100);
+			heightStub = sinon.stub(Tooltip.prototype, 'height').returns(500);
+		});
+
+		afterEach(() => {
+			oGridStub.restore();
+			getStub.restore();
+			checkStub.restore();
+			targetStub.restore();
+			heightStub.restore();
+			widthStub.restore();
+		});
+
+		const tooltipOptions = opts => { checkStub = sinon.stub(Tooltip, 'checkOptions').returns(opts); };
+		const createTooltip = () => new Tooltip(document.createElement('div'));
+		const setViewportWidth = width => { oGridStub = sinon.stub(Tooltip, '_getCurrentLayout').returns(width); };
+
+		it("returns default options position if there are no responsive overrides declared", () => {
+			tooltipOptions({ 'position': 'above' });
+			testTooltip = createTooltip();
+			setViewportWidth('default');
+			proclaim.strictEqual(testTooltip._getConfiguredTooltipPosition(), 'above');
+		});
+
+		it("returns small options position if one is declared, and viewport is Small", () => {
+			tooltipOptions({ 'position': 'above', 'positionS': 'right' });
+			testTooltip = createTooltip();
+			setViewportWidth('S');
+			proclaim.strictEqual(testTooltip._getConfiguredTooltipPosition(), 'right');
+		});
+
+		it("falls back to  small options position if one is declared, and viewport is Medium", () => {
+			tooltipOptions({ 'position': 'above', 'positionS': 'right' });
+			testTooltip = createTooltip();
+			setViewportWidth('M');
+			proclaim.strictEqual(testTooltip._getConfiguredTooltipPosition(), 'right');
+		});
+
+		it("returns medium options position if one is declared, and viewport is Medium", () => {
+			tooltipOptions({ 'position': 'left', 'positionM': 'below' });
+			testTooltip = createTooltip();
+			setViewportWidth('M');
+			proclaim.strictEqual(testTooltip._getConfiguredTooltipPosition(), 'below');
+		});
+
+		it("falls back to  medium options position if one is declared, and viewport is Large", () => {
+			tooltipOptions({ 'position': 'above', 'positionM': 'right' });
+			testTooltip = createTooltip();
+			setViewportWidth('L');
+			proclaim.strictEqual(testTooltip._getConfiguredTooltipPosition(), 'right');
+		});
+
+		it("returns large options position if one is declared, and viewport is Large", () => {
+			tooltipOptions({ 'position': 'below', 'positionL': 'left' });
+			testTooltip = createTooltip();
+			setViewportWidth('L');
+			proclaim.strictEqual(testTooltip._getConfiguredTooltipPosition(), 'left');
+		});
+
+		it("falls back to large options position if one is declared, and viewport is X-Large", () => {
+			tooltipOptions({ 'position': 'above', 'positionL': 'right' });
+			testTooltip = createTooltip();
+			setViewportWidth('XL');
+			proclaim.strictEqual(testTooltip._getConfiguredTooltipPosition(), 'right');
+		});
+
+		it("returns x-large options position if one is declared, and viewport is X-Large", () => {
+			tooltipOptions({ 'position': 'below', 'positionXl': 'top' });
+			testTooltip = createTooltip();
+			setViewportWidth('XL');
+			proclaim.strictEqual(testTooltip._getConfiguredTooltipPosition(), 'top');
+		});
 	});
 
 	describe("show", () => {
