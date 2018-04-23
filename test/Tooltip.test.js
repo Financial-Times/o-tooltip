@@ -563,29 +563,6 @@ describe("Tooltip", () => {
 			proclaim.equal(testTooltip.tooltipPosition, 'left');
 			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
 		});
-
-		it(' when many tooltip positions are out of bounds evaluates all possible positions', () => {
-			fixtures.declarativeCode();
-			const evaulateTooltipStub = sandbox.stub(Tooltip.prototype, '_evaulateTooltip');
-			const outOfBoundsExample = {
-				tooltipRect: {},
-				alignment: 'middle',
-				isOutOfBounds: true
-			};
-			evaulateTooltipStub.withArgs('below').returns(outOfBoundsExample);
-			evaulateTooltipStub.withArgs('left').returns(outOfBoundsExample);
-			evaulateTooltipStub.withArgs('above').returns(outOfBoundsExample);
-			evaulateTooltipStub.withArgs('right').returns({
-				tooltipRect: {},
-				alignment: 'middle',
-				isOutOfBounds: false
-			});
-			const testTooltip = Tooltip.init('#tooltip-demo-below');
-			testTooltip.show();
-			sinon.assert.callCount(evaulateTooltipStub, 4);
-			proclaim.equal(testTooltip.tooltipPosition, 'right');
-			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
-		});
 		it(' when all tooltip positions are out of bounds default to the requested position aligned middle', () => {
 			fixtures.declarativeCode();
 			const evaulateTooltipStub = sandbox.stub(Tooltip.prototype, '_evaulateTooltip');
@@ -604,6 +581,44 @@ describe("Tooltip", () => {
 
 			proclaim.equal(testTooltip.tooltipPosition, 'below');
 			proclaim.equal(testTooltip.tooltipAlignment, 'middle');
+		});
+		it(' evaluates all possible tooltip position and alignments when none are in bounds', () => {
+			fixtures.declarativeCode();
+
+			const calculateTooltipRectangleStub = sandbox.stub(Tooltip.prototype, '_calculateTooltipRectangle');
+			const tooltipIsOutOfBoundsStub = sandbox.stub(Tooltip.prototype, '_tooltipIsOutOfBounds');
+
+			// Tooltip always out of bounds.
+			tooltipIsOutOfBoundsStub.returns(true);
+			calculateTooltipRectangleStub.returns({top: 0, bottom: 0, left: 0, right: 0});
+			const testTooltip = Tooltip.init('#tooltip-demo-below');
+			testTooltip.show();
+
+			// Every position and alignment considered.
+			// - Below (middle, left, right)
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'below', 'middle');
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'below', 'left');
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'below', 'right');
+			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'below', 'top');
+			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'below', 'bottom');
+			// - Above (middle, left, right)
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'above', 'middle');
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'above', 'left');
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'above', 'right');
+			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'above', 'top');
+			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'above', 'bottom');
+			// - Left (middle, top, bottom)
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'left', 'middle');
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'left', 'top');
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'left', 'bottom');
+			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'left', 'right');
+			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'left', 'left');
+			// - Right (middle, top, bottom)
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'right', 'middle');
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'right', 'top');
+			sinon.assert.calledWith(calculateTooltipRectangleStub, 'right', 'bottom');
+			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'right', 'right');
+			sinon.assert.neverCalledWith(calculateTooltipRectangleStub, 'right', 'left');
 		});
 		afterEach(() => {
 			fixtures.reset();

@@ -382,7 +382,7 @@ class Tooltip {
 	*/
 	_evaulateTooltip(position) {
 		const axis = (position === 'above' || position === 'below' ? 'y' : 'x');
-		const alignments = (axis === 'y' ? ['middle', 'right', 'left'] : ['middle', 'top', 'below']);
+		const alignments = (axis === 'y' ? ['middle', 'right', 'left'] : ['middle', 'top', 'bottom']);
 
 		// Attempt all position alignments.
 		let isOutOfBounds = true;
@@ -435,7 +435,7 @@ class Tooltip {
 			if (alignment === 'top') {
 				rect.top = this.target.top;
 			}
-			if (alignment === 'below') {
+			if (alignment === 'bottom') {
 				rect.top = this.target.bottom - this.height();
 			}
 			if (alignment === 'middle') {
@@ -489,7 +489,8 @@ class Tooltip {
 			"o-tooltip-arrow--align-top",
 			"o-tooltip-arrow--align-bottom",
 			"o-tooltip-arrow--align-left",
-			"o-tooltip-arrow--align-right"
+			"o-tooltip-arrow--align-right",
+			"o-tooltip-arrow--align-middle"
 		];
 
 		this.tooltipEl.classList.remove(...classesToRemove);
@@ -579,9 +580,10 @@ Tooltip.positionToArrowPositionMap = {
 };
 Tooltip.alignmentToArrowAlignmentMap = {
 	"top": "top",
-	"below": "bottom",
+	"bottom": "bottom",
 	"right": "left",
-	"left": "right"
+	"left": "right",
+	"middle": "middle"
 };
 
 Tooltip.validArrowAlignments = ["top", "bottom", "left", "right"];
