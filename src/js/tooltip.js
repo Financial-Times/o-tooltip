@@ -417,7 +417,7 @@ class Tooltip {
 				rect.left = this.target.right - this.width();
 			}
 			if (alignment === 'right') {
-				rect.left = this.target.centrePoint.x;
+				rect.left = this.target.left;
 			}
 			if (alignment === 'middle') {
 				rect.left = this.target.centrePoint.x - (this.width() / 2);
