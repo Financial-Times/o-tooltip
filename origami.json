@@ -28,12 +28,6 @@
 			"description": "Basic demo"
 		},
 		{
-			"title": "Construction",
-			"name": "construction",
-			"template": "demos/src/construction.mustache",
-			"description": "Display on construction"
-		},
-		{
 			"title": "Hover",
 			"name": "hover",
 			"template": "demos/src/hover.mustache",
