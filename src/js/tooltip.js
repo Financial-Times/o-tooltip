@@ -4,8 +4,6 @@ import oGrid from 'o-grid';
 import Target from './target';
 
 class Tooltip {
-	idSufix = '-tooltip';
-
 	static _getCurrentLayout() {
 		return oGrid.getCurrentLayout();
 	}
@@ -588,6 +586,8 @@ class Tooltip {
 		return Array.from(rootEl.querySelectorAll('[data-o-component="o-tooltip"]'), rootEl => new Tooltip(rootEl, opts));
 	}
 }
+
+Tooltip.idSufix = '-tooltip';
 
 Tooltip.arrowDepth = 10;
 Tooltip.positionToArrowPositionMap = {
