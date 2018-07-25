@@ -140,7 +140,7 @@ class Tooltip {
 		// Make sure the tooltip is attached to the DOM
 		if (this.opts.appendToBody) {
 			// either appended directly into the body
-			if (!document.getElementById(this.opts.target + idSufix)) {
+			if (!document.getElementById(this.opts.target + this.idSuffix)) {
 				document.body.appendChild(this.tooltipEl);
 			}
 		} else if (this.targetNode && this.targetNode.nextSibling !== this.tooltipEl) {
@@ -369,7 +369,7 @@ class Tooltip {
 			// set `fixed` position
 			this.tooltipEl.style.position = 'fixed';
 			// set an ID in order to be identified
-			this.tooltipEl.id = this.opts.target + this.idSufix;
+			this.tooltipEl.id = this.opts.target + this.idSuffix;
 		} else {
 			this.tooltipEl.style.top = (this.tooltipRect.top - targetTopOffset) + 'px';
 			this.tooltipEl.style.left = (this.tooltipRect.left - targetLeftOffset) + 'px';
@@ -587,7 +587,7 @@ class Tooltip {
 	}
 }
 
-Tooltip.idSufix = '-tooltip';
+Tooltip.idSuffix = '-tooltip';
 
 Tooltip.arrowDepth = 10;
 Tooltip.positionToArrowPositionMap = {
