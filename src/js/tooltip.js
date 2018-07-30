@@ -363,15 +363,12 @@ class Tooltip {
 
 		if (this.opts.appendToBody) {
 			// If the tooltip will be apended directly to body:
-			// use absolute coordinates of the target relative to its position inside the page
-			this.tooltipEl.style.top = this.tooltipRect.top + 'px';
-			this.tooltipEl.style.left = this.tooltipRect.left + 'px';
 			// set an ID in order to be identified
 			this.tooltipEl.id = this.opts.target + this.constructor.idSuffix;
-		} else {
-			this.tooltipEl.style.top = (this.tooltipRect.top - targetTopOffset) + 'px';
-			this.tooltipEl.style.left = (this.tooltipRect.left - targetLeftOffset) + 'px';
 		}
+
+		this.tooltipEl.style.top = (this.tooltipRect.top - targetTopOffset) + 'px';
+		this.tooltipEl.style.left = (this.tooltipRect.left - targetLeftOffset) + 'px';
 
 		// Set Tooltip arrow.
 		this._setArrow();
