@@ -366,8 +366,6 @@ class Tooltip {
 			// use absolute coordinates of the target relative to its position inside the page
 			this.tooltipEl.style.top = this.tooltipRect.top + 'px';
 			this.tooltipEl.style.left = this.tooltipRect.left + 'px';
-			// set `fixed` position
-			this.tooltipEl.style.position = 'fixed';
 			// set an ID in order to be identified
 			this.tooltipEl.id = this.opts.target + this.constructor.idSuffix;
 		} else {
