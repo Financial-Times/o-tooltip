@@ -365,10 +365,12 @@ class Tooltip {
 			// If the tooltip will be apended directly to body:
 			// set an ID in order to be identified
 			this.tooltipEl.id = this.opts.target + this.constructor.idSuffix;
+			this.tooltipEl.style.top = (this.tooltipRect.top + document.documentElement.scrollTop) + 'px';
+			this.tooltipEl.style.left = (this.tooltipRect.left + document.documentElement.scrollLeft) + 'px';
+		} else {
+			this.tooltipEl.style.top = (this.tooltipRect.top - targetTopOffset) + 'px';
+			this.tooltipEl.style.left = (this.tooltipRect.left - targetLeftOffset) + 'px';
 		}
-
-		this.tooltipEl.style.top = (this.tooltipRect.top - targetTopOffset) + 'px';
-		this.tooltipEl.style.left = (this.tooltipRect.left - targetLeftOffset) + 'px';
 
 		// Set Tooltip arrow.
 		this._setArrow();
