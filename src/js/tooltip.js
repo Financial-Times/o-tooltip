@@ -140,7 +140,7 @@ class Tooltip {
 		// Make sure the tooltip is attached to the DOM
 		if (this.opts.appendToBody) {
 			// either appended directly into the body
-			if (!document.getElementById(this.opts.target + this.constructor.idSuffix)) {
+			if (!document.getElementById(this.opts.target + Tooltip.idSuffix)) {
 				document.body.appendChild(this.tooltipEl);
 			}
 		} else if (this.targetNode && this.targetNode.nextSibling !== this.tooltipEl) {
@@ -364,7 +364,7 @@ class Tooltip {
 		if (this.opts.appendToBody) {
 			// If the tooltip will be apended directly to body:
 			// set an ID in order to be identified
-			this.tooltipEl.id = this.opts.target + this.constructor.idSuffix;
+			this.tooltipEl.id = this.opts.target + Tooltip.idSuffix;
 			this.tooltipEl.style.top = (this.tooltipRect.top + document.documentElement.scrollTop) + 'px';
 			this.tooltipEl.style.left = (this.tooltipRect.left + document.documentElement.scrollLeft) + 'px';
 		} else {
