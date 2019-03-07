@@ -1,9 +1,9 @@
 /* eslint-env mocha, proclaim */
 
-import proclaim from 'proclaim';
-import * as fixtures from './helpers/fixtures';
+const proclaim = require('proclaim');
+const fixtures = require('./helpers/fixtures');
 
-import Target from'./../src/js/target';
+const Target = require('./../src/js/target');
 
 describe('Target', () => {
 	let target;

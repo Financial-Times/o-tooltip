@@ -1,10 +1,10 @@
 /* eslint-env mocha, sinon, proclaim */
-import proclaim from 'proclaim';
-import sinon from 'sinon/pkg/sinon';
-import * as fixtures from './helpers/fixtures';
-import createMockRaf from 'mock-raf';
-import Tooltip from './../main';
-import Viewport from 'o-viewport';
+const proclaim = require('proclaim');
+const sinon = require('sinon/pkg/sinon');
+const fixtures = require('./helpers/fixtures');
+const createMockRaf = require('mock-raf');
+const Tooltip = require('./../main');
+const Viewport = require('o-viewport');
 
 describe("Tooltip", () => {
 
@@ -114,7 +114,7 @@ describe("Tooltip", () => {
 			afterEach(fixtures.reset);
 
 			it('adds event listeners when opts.showOnClick is set to true', () => {
-				getOptionsStub.restore(); // !! IMPORTANT !!
+				getOptionsStub.restore();
 				targetStub.restore();
 				new Tooltip(document.getElementById('tooltip-demo-3'));
 
@@ -124,7 +124,7 @@ describe("Tooltip", () => {
 			});
 
 			it('adds event listeners when opts.showOnHover is set to true', () => {
-				getOptionsStub.restore(); // !! IMPORTANT !!
+				getOptionsStub.restore();
 				targetStub.restore();
 				new Tooltip(document.getElementById('tooltip-demo-4'));
 
