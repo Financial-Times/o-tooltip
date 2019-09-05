@@ -17,8 +17,8 @@
 		display: none;
 
 		opacity: 0;
-		transition: opacity $o-tooltip-animation-duration $o-visual-effects-transition-fade,
-					transform $o-tooltip-animation-duration $o-visual-effects-transition-slide;
+		transition: opacity $_o-tooltip-animation-duration $o-visual-effects-transition-fade,
+					transform $_o-tooltip-animation-duration $o-visual-effects-transition-slide;
 
 		&.visible {
 			transform: translate(0, 0);
@@ -26,16 +26,16 @@
 		}
 
 		&[data-o-tooltip-position="left"]:not(.visible) {
-			transform: translate(-$o-tooltip-animation-distance, 0);
+			transform: translate(-$_o-tooltip-animation-distance, 0);
 		}
 		&[data-o-tooltip-position="right"]:not(.visible) {
-			transform: translate($o-tooltip-animation-distance, 0);
+			transform: translate($_o-tooltip-animation-distance, 0);
 		}
 		&[data-o-tooltip-position="top"]:not(.visible) {
-			transform: translate(0, -$o-tooltip-animation-distance);
+			transform: translate(0, -$_o-tooltip-animation-distance);
 		}
 		&[data-o-tooltip-position="bottom"]:not(.visible) {
-			transform: translate(0, $o-tooltip-animation-distance);
+			transform: translate(0, $_o-tooltip-animation-distance);
 		}
 	}
 	.o-tooltip-content {

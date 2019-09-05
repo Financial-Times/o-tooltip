@@ -13,6 +13,9 @@
   - `oTooltipLeftArrow`
   - `oTooltipRightArrow`
   - `oTooltipClose`
+- The following global variables have been removed:
+  - `$o-tooltip-animation-distance`
+  - `$o-tooltip-animation-duration`
 
 ## Migrating from v2 to v3
 

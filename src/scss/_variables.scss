@@ -9,14 +9,14 @@ $o-tooltip-is-silent: true !default;
 /// How far a tooltip should animate from when opened.
 ///
 /// @type {Number}
-/// @access public
-$o-tooltip-animation-distance: 50px;
+/// @access private
+$_o-tooltip-animation-distance: 50px;
 
 /// The amount of time that a tooltip should animate for when opened.
 ///
 /// @type {Number}
-/// @access public
-$o-tooltip-animation-duration: 0.5s;
+/// @access private
+$_o-tooltip-animation-duration: 0.5s;
 
 /// The background colour for tooltips.
 ///
