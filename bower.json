@@ -19,6 +19,7 @@
     "o-viewport": "4.0.0-beta.1",
     "o-visual-effects": "3.0.0-beta.2",
     "o-grid": "5.0.0-beta.2",
-    "o-typography": "6.0.0-beta.4"
+    "o-typography": "6.0.0-beta.4",
+    "o-overlay": "3.0.0-beta.1"
   }
 }
