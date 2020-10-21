@@ -1,12 +1,26 @@
 {
-	"private": true,
-	"main": "main.js",
-	"devDependencies": {
-		"eslint": "^7.9.0",
-		"eslint-config-origami-component": "^2.1.0",
-		"mock-raf": "^1.0.1",
-		"origami-ci-tools": "^2.1.0",
-		"stylelint-config-origami-component": "^1.0.4"
-	},
-	"name": "o-tooltip"
+    "main": "main.js",
+    "devDependencies": {
+        "eslint": "^7.9.0",
+        "eslint-config-origami-component": "^2.1.0",
+        "mock-raf": "^1.0.1",
+        "origami-ci-tools": "^2.1.0",
+        "stylelint-config-origami-component": "^1.0.4"
+    },
+    "name": "o-tooltip",
+    "peerDependencies": {
+        "@financial-times/o-grid": "^5.0.2",
+        "@financial-times/o-icons": "^6.0.0",
+        "@financial-times/o-normalise": "^2.0.0",
+        "@financial-times/o-overlay": "^3.0.0",
+        "@financial-times/o-typography": "^6.0.0",
+        "@financial-times/o-viewport": "^4.0.0",
+        "@financial-times/o-visual-effects": "^3.0.0",
+        "ftdomdelegate": "^4.0.0"
+    },
+    "description": "Provides a viewport-aware tooltip for annotating or or highlighting other aspects of a product's UI",
+    "publishConfig": {
+        "registry": "http://localhost:4873"
+    },
+    "version": "5.0.0-0"
 }
