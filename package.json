@@ -9,18 +9,18 @@
     },
     "name": "o-tooltip",
     "peerDependencies": {
-        "@financial-times/o-grid": "^100.0.0-3",
-        "@financial-times/o-icons": "^100.0.0-3",
-        "@financial-times/o-normalise": "^100.0.0-3",
-        "@financial-times/o-overlay": "^100.0.0-3",
-        "@financial-times/o-typography": "^100.0.0-3",
-        "@financial-times/o-viewport": "^100.0.0-3",
-        "@financial-times/o-visual-effects": "^100.0.0-3",
-        "ftdomdelegate": "^100.0.0-3"
+        "@financial-times/o-grid": "^100.0.0-4",
+        "@financial-times/o-icons": "^100.0.0-4",
+        "@financial-times/o-normalise": "^100.0.0-4",
+        "@financial-times/o-overlay": "^100.0.0-4",
+        "@financial-times/o-typography": "^100.0.0-4",
+        "@financial-times/o-viewport": "^100.0.0-4",
+        "@financial-times/o-visual-effects": "^100.0.0-4",
+        "ftdomdelegate": "^100.0.0-4"
     },
     "description": "Provides a viewport-aware tooltip for annotating or or highlighting other aspects of a product's UI",
     "publishConfig": {
         "registry": "http://localhost:4873"
     },
-    "version": "100.0.0-3"
+    "version": "100.0.0-4"
 }
