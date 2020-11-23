@@ -88,19 +88,20 @@ class Tooltip {
 	*/
 	static getOptions(tooltipEl) {
 		const dataset = tooltipEl.dataset;
-		return Object.keys(dataset).reduce((col, key) => { // Phantom doesn't like Object.entries :sob:
-			if (key === 'oComponent') {
-				return col; // Bail on data-o-component
+		return Object.keys(dataset).reduce((options, key) => { // Phantom doesn't like Object.entries :sob:
+			// Ignore keys which are not in the component's namespace
+			if (!key.match(/^oTooltip(\w)(\w+)$/)) {
+				return options;
 			}
 			const shortKey = key.replace(/^oTooltip(\w)(\w+)$/, (m, m1, m2) => m1.toLowerCase() + m2);
 
 			try {
-				col[shortKey] = JSON.parse(dataset[key].replace(/\'/g, '"'));
+				options[shortKey] = JSON.parse(dataset[key].replace(/\'/g, '"'));
 			} catch (e) {
-				col[shortKey] = dataset[key];
+				options[shortKey] = dataset[key];
 			}
 
-			return col;
+			return options;
 		}, {});
 	}
 
