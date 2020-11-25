@@ -134,6 +134,19 @@ describe("Tooltip", () => {
 				proclaim.isTrue(showStub.called);
 				proclaim.isTrue(closeStub.called);
 			});
+			
+			it('does not add close event listener to mouseout when opts.hideOnLeave is set to false', () => {
+				getOptionsStub.restore(); // !! IMPORTANT !!
+				targetStub.restore();
+				new Tooltip(document.getElementById('tooltip-demo-4'));
+
+				document.getElementById('demo-tooltip-target-4').dispatchEvent(new Event('mouseover'));
+				document.getElementById('demo-tooltip-target-4').dispatchEvent(new Event('mouseout'));
+
+				proclaim.isTrue(showStub.called);
+				proclaim.isFalse(closeStub.called);
+			});
+
 
 			it('adds event listeners when opts.showOnFocus is set to true', () => {
 				getOptionsStub.restore(); // !! IMPORTANT !!
