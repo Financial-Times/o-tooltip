@@ -52,7 +52,9 @@ class Tooltip {
 
 		if (this.opts.showOnHover) {
 			this.delegates.target.on('mouseover', this.show.bind(this));
-			this.delegates.target.on('mouseout', this.close.bind(this));
+			if (this.opts.hideOnLeave) {
+				this.delegates.target.on('mouseout', this.close.bind(this));
+			}
 		}
 
 		if(this.opts.showOnFocus) {
@@ -125,6 +127,10 @@ class Tooltip {
 			}
 		} else {
 			opts.position = "below";
+		}
+		
+		if (opts.showOnHover === true && opts.hideOnLeave == null) {
+			opts.hideOnLeave = true
 		}
 
 		return opts;
