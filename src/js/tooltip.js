@@ -57,7 +57,7 @@ class Tooltip {
 			}
 		}
 
-		if(this.opts.showOnFocus) {
+		if (this.opts.showOnFocus) {
 			this.delegates.target.on('focusin', this.show.bind(this));
 			this.delegates.target.on('focusout', this.close.bind(this));
 		}
@@ -128,9 +128,9 @@ class Tooltip {
 		} else {
 			opts.position = "below";
 		}
-		
-		if (opts.showOnHover === true && opts.hideOnLeave == null) {
-			opts.hideOnLeave = true
+
+		if (opts.showOnHover === true && opts.hideOnLeave !== false) {
+			opts.hideOnLeave = true;
 		}
 
 		return opts;
