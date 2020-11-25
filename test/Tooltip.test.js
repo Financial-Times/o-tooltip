@@ -134,7 +134,6 @@ describe("Tooltip", () => {
 				proclaim.isTrue(showStub.called);
 				proclaim.isTrue(closeStub.called);
 			});
-			
 			it('does not add close event listener to mouseout when opts.hideOnLeave is set to false', () => {
 				getOptionsStub.restore(); // !! IMPORTANT !!
 				targetStub.restore();
